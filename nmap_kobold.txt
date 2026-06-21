@@ -1,0 +1,1 @@
+# Nmap 7.99 scan initiated Fri Jun 19 10:12:53 2026 as: /usr/lib/nmap/nmap --privileged -sC -sV -oN nmap_kobold.txt 10.129.31.17
