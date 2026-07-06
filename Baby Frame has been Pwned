@@ -1,0 +1,70 @@
+The Command Breakdown
+bash
+echo "000c0c1500102ac000000a4845414c5448434845434b" | xxd -r -p | nc 154.57.164.63 30374
+Table
+Part	What it does
+echo "..."	Outputs the hex string
+xxd -r -p	Reverse hex dump — converts hex string back to raw binary bytes
+nc 154.57.164.63 30374	Sends the raw bytes to the target server via netcat
+Packet Structure (22 bytes total)
+1. TC Transfer Frame Header (5 bytes)
+Table
+Bytes	Hex	Field	Value
+0–1	00 0c	Version(0) + Spacecraft ID(12)	0x000c
+2–3	0c 15	Virtual Channel ID(3) + Frame Length(21)	0x0c15
+4	00	Frame Sequence Number	0x00
+Frame Length = 21 means total frame size = 22 bytes (21 + 1).
+2. Space Packet Header (6 bytes)
+Table
+Bytes	Hex	Field	Value
+5–6	10 2a	Version(0) + Type(1=Command) + APID(42)	0x102a
+7–8	c0 00	Seq Flags(3=Unsegmented) + Seq Count(0)	0xc000
+9–10	00 0a	Packet Data Length = 11−1 = 10	0x000a
+3. Payload (11 bytes)
+Table
+Bytes	ASCII	Hex
+11	H	48
+12	E	45
+13	A	41
+14	L	4c
+15	T	54
+16	H	48
+17	C	43
+18	H	48
+19	E	45
+20	C	43
+21	K	4b
+CyberChef Recipe
+Input: 000c0c1500102ac000000a4845414c5448434845434b
+Recipe steps:
+From Hex — converts hex string to raw bytes
+TCP Client — sends to 154.57.164.63:30374 (if CyberChef has network access)
+Or just use From Hex to verify the bytes decode correctly, then pipe to netcat.
+Key Learnings
+Table
+Concept	Explanation
+xxd -r -p	Converts plaintext hex → raw binary. -r = reverse, -p = plain hex without offsets
+CCSDS Packet	Standard space communication protocol. Header fields are bit-packed
+Big-endian	All multi-byte fields use big-endian (MSB first)
+Frame Length − 1	CCSDS convention: length field = actual size − 1
+APID	Application Process ID — identifies the onboard subsystem (42 = diagnostic app)
+Why It Failed Before
+Table
+Mistake	Fix
+Sent frame + space_packet (duplicated payload)	Send only frame (space packet is already inside)
+Wrong TC header bit layout	0c 15 instead of 60 15 — VCID shifted correctly by 10 bits
+Used recv() instead of recvall()	Server may not respond with newline; use nc or recvall
+Alternative: Pure Python (No Shell)
+Python
+from pwn import remote
+
+payload = bytes.fromhex("000c0c1500102ac000000a4845414c5448434845434b")
+r = remote('154.57.164.63', 30374)
+r.send(payload)
+print(r.recvall(timeout=5))
+r.close()
+Result
+If the packet is correct, the server responds with the flag:
+plain
+HTB{...}
+HTB{7a0ae15b2623b205c9c6c99573fb528d} 
