@@ -1,0 +1,440 @@
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl -s -X POST http://154.57.164.62:31471/serial.php                
+N2gxNV8xNV9hX3MzY3IzN19tMzU1NGcz                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ echo "N2gxNV8xNV9hX3MzY3IzN19tMzU1NGcz " | base64 -d     
+7h15_15_a_s3cr37_m3554g3base64: invalid input
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl -s -X POST http://154.57.164.62:31471/serial.php -d 
+curl: option -d: requires parameter
+curl: try 'curl --help' or 'curl --manual' for more information
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl -s -X POST http://154.57.164.62:31471/serial.php -d "serial=7h15_15_a_s3cr37_m3554g3"
+HTB{ju57_4n07h3r_r4nd0m_53r14l}                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl -s http://154.57.164.62:31471/secret.js -o secret.js
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl -s http://154.57.164.62:31471/secret.js head -n 1 secret.js                          
+
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl -s http://154.57.164.62:31471/secret.js                    
+eval(function (p, a, c, k, e, d) { e = function (c) { return c.toString(36) }; if (!''.replace(/^/, String)) { while (c--) { d[c.toString(a)] = k[c] || c.toString(a) } k = [function (e) { return d[e] }]; e = function () { return '\\w+' }; c = 1 }; while (c--) { if (k[c]) { p = p.replace(new RegExp('\\b' + e(c) + '\\b', 'g'), k[c]) } } return p }('g 4(){0 5="6{7!}";0 1=8 a();0 2="/9.c";1.d("e",2,f);1.b(3)}', 17, 17, 'var|xhr|url|null|generateSerial|flag|HTB|1_4m_7h3_53r14l_g3n3r470r|new|serial|XMLHttpRequest|send|php|open|POST|true|function'.split('|'), 0, {}))                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ # Download the file
+curl -s http://154.57.164.62:31471/secret.js -o secret.js
+
+# Replace 'eval' with 'console.log' and run
+sed 's/^eval/console.log/' secret.js | node
+function generateSerial(){var flag="HTB{1_4m_7h3_53r14l_g3n3r470r!}";var xhr=new XMLHttpRequest();var url="/serial.php";xhr.open("POST",url,true);xhr.send(null)}
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl -s http://154.57.164.62:31471 grep -o "HTB{[^}]*}" deobfuscated.js
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl -X POST http://154.57.164.62:31471/serial.php -d "serial=7h15_15_a_s3cr37_m3554g3"
+# Returned: HTB{ju57_4n07h3r_r4nd0m_53r14l}
+HTB{ju57_4n07h3r_r4nd0m_53r14l}                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ # Fetch the target file                                                                
+curl -s http://154.57.164.62:31471/secret.js -o secret.js
+
+# Inspect the structure
+file secret.js
+wc -l secret.js
+head -n 5 secret.js
+secret.js: JavaScript source, ASCII text, with very long lines (566), with no line terminators
+0 secret.js
+eval(function (p, a, c, k, e, d) { e = function (c) { return c.toString(36) }; if (!''.replace(/^/, String)) { while (c--) { d[c.toString(a)] = k[c] || c.toString(a) } k = [function (e) { return d[e] }]; e = function () { return '\\w+' }; c = 1 }; while (c--) { if (k[c]) { p = p.replace(new RegExp('\\b' + e(c) + '\\b', 'g'), k[c]) } } return p }('g 4(){0 5="6{7!}";0 1=8 a();0 2="/9.c";1.d("e",2,f);1.b(3)}', 17, 17, 'var|xhr|url|null|generateSerial|flag|HTB|1_4m_7h3_53r14l_g3n3r470r|new|serial|XMLHttpRequest|send|php|open|POST|true|function'.split('|'), 0, {}))                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl http://154.57.164.76:32579/serial.php -X POST -d "param1=hey"                     
+N2gxNV8xNV9hX3MzY3IzN19tMzU1NGcz                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ echo "N2gxNV8xNV9hX3MzY3IzN19tMzU1NGcz " | base64 -d
+7h15_15_a_s3cr37_m3554g3base64: invalid input
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl -X POST http://154.57.164.62:31471/serial.php -d "serial=7h15_15_a_s3cr37_m3554g3"
+# Returned: HTB{ju57_4n07h3r_r4nd0m_53r14l}                                                                                                               
+curl: (7) Failed to connect to 154.57.164.62 port 31471 after 223 ms: Could not connect to server
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl http://154.57.164.76:32579/serial.php -X POST -d "serial=7h15_15_a_s3cr37_m3554g3"
+HTB{ju57_4n07h3r_r4nd0m_53r14l}                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ HTB{4v45c_r1p7_3num3r4710n_15_k3y}
+HTB{4v45c_r1p7_3num3r4710n_15_k3y}: command not found
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl -X POST http://154.57.164.64:31893                                                
+</html>
+<!DOCTYPE html>
+
+<head>
+    <title>Secret Serial Generator</title>
+    <style>
+        *,
+        html {
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+
+        html {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #6fb3eb;
+        }
+
+        .center {
+            width: 100%;
+            height: 50%;
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-family: "Helvetica", Helvetica, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 144px;
+        }
+
+        p {
+            font-size: 64px;
+        }
+    </style>
+    <script src="api.min.js"></script>
+</head>
+
+<body>
+    <div class="center">
+        <h1>API Keys</h1>
+        <p>API Keys control panel</p>
+    </div>
+</body>
+
+</html>                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl -X POST http://154.57.164.64:31893/api.min.js
+eval(function (p, a, c, k, e, d) { e = function (c) { return c.toString(36) }; if (!''.replace(/^/, String)) { while (c--) { d[c.toString(a)] = k[c] || c.toString(a) } k = [function (e) { return d[e] }]; e = function () { return '\\w+' }; c = 1 }; while (c--) { if (k[c]) { p = p.replace(new RegExp('\\b' + e(c) + '\\b', 'g'), k[c]) } } return p }('t 5(){6 7=\'1{n\'+\'8\'+\'9\'+\'a\'+\'b\'+\'c!\'+\'}\',0=d e(),2=\'/4\'+\'.g\';0[\'f\'](\'i\',2,!![]),0[\'k\'](l)}m[\'o\'](\'1{j\'+\'p\'+\'q\'+\'r\'+\'s\'+\'h\'+\'3}\');', 30, 30, 'xhr|HTB|_0x437f8b|k3y|keys|apiKeys|var|flag|3v3r_|run_0|bfu5c|473d_|c0d3|new|XMLHttpRequest|open|php|n_15_|POST||send|null|console||log|4v45c|r1p7_|3num3|r4710|function'.split('|'), 0, {}))                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl -X POST http://154.57.164.64:31893/keys.php
+4150495f70336e5f37333537316e365f31355f66756e                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ # Hex to ASCII
+echo "4150495f70336e5f37333537316e365f31355f66756e" | xxd -r -p
+API_p3n_73571n6_15_fun                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ # Try sending it as a parameter
+curl -X POST http://154.57.164.64:31893/keys.php \
+  -d "API_p3n_73571n6_15_fun=1"
+
+# Or as a header
+curl -X POST http://154.57.164.64:31893/keys.php \
+  -H "X-Key: API_p3n_73571n6_15_fun"
+
+# Or just the decoded string as data
+curl -X POST http://154.57.164.64:31893/keys.php \
+  -d "API_p3n_73571n6_15_fun"
+4150495f70336e5f37333537316e365f31355f66756e4150495f70336e5f37333537316e365f31355f66756e4150495f70336e5f37333537316e365f31355f66756e                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl -s http://154.57.164.64:31893/api.min.js -o api.min.js
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ # Replace eval with console.log and run through Node.js
+sed 's/^eval/console.log/' api.min.js | node
+function apiKeys(){var flag='HTB{n'+'3v3r_'+'run_0'+'bfu5c'+'473d_'+'c0d3!'+'}',xhr=new XMLHttpRequest(),_0x437f8b='/keys'+'.php';xhr['open']('POST',_0x437f8b,!![]),xhr['send'](null)}console['log']('HTB{j'+'4v45c'+'r1p7_'+'3num3'+'r4710'+'n_15_'+'k3y}');
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ # Pipe the deobfuscated output to grep
+sed 's/^eval/console.log/' api.min.js | node | grep -o "HTB{[^}]*}"
+HTB{n'+'3v3r_'+'run_0'+'bfu5c'+'473d_'+'c0d3!'+'}
+HTB{j'+'4v45c'+'r1p7_'+'3num3'+'r4710'+'n_15_'+'k3y}
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl -s http://154.57.164.64:31893/api.min.js | sed 's/^eval/console.log/' | node | grep -o "HTB{[^}]*}"
+HTB{n'+'3v3r_'+'run_0'+'bfu5c'+'473d_'+'c0d3!'+'}
+HTB{j'+'4v45c'+'r1p7_'+'3num3'+'r4710'+'n_15_'+'k3y}
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ # Full one-liner to fetch, deobfuscate, and extract the flag
+curl -s http://154.57.164.64:31893/api.min.js | sed 's/^eval/console.log/' | node | grep -o "HTB{[^}]*}"
+HTB{n'+'3v3r_'+'run_0'+'bfu5c'+'473d_'+'c0d3!'+'}
+HTB{j'+'4v45c'+'r1p7_'+'3num3'+'r4710'+'n_15_'+'k3y}
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl -s http://154.57.164.64:31893/api.min.js | sed 's/eval/console.log/' | node | grep -o "HTB{[^}]*}"
+HTB{n'+'3v3r_'+'run_0'+'bfu5c'+'473d_'+'c0d3!'+'}
+HTB{j'+'4v45c'+'r1p7_'+'3num3'+'r4710'+'n_15_'+'k3y}
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ const https = require('https');
+const http = require('http');
+
+const url = 'http://154.57.164.64:31893/api.min.js';
+
+http.get(url, (res) => {
+    let data = '';
+    res.on('data', chunk => data += chunk);
+    res.on('end', () => {
+        // Replace eval with console.log
+        const modified = data.replace(/eval\s*\(/, 'console.log(');
+        // Execute and capture output
+        try {
+            eval(modified.replace('console.log', 'return '));
+        } catch(e) {
+            // If that fails, try direct execution
+            const fn = new Function(modified);
+            fn();
+        }
+    });  
+});
+zsh: parse error near `)'
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ # Step 1: Download
+curl -s http://154.57.164.64:31893/api.min.js -o api.min.js
+
+# Step 2: Replace eval with return and wrap in console.log
+sed 's/eval/var result =/' api.min.js > temp.js
+echo "console.log(result);" >> temp.js
+
+# Step 3: Run
+node temp.js
+/home/white/white/Documents/htb/temp.js:1
+var result =(function (p, a, c, k, e, d) { e = function (c) { return c.toString(36) }; if (!''.replace(/^/, String)) { while (c--) { d[c.toString(a)] = k[c] || c.toString(a) } k = [function (e) { return d[e] }]; e = function () { return '\\w+' }; c = 1 }; while (c--) { if (k[c]) { p = p.replace(new RegExp('\\b' + e(c) + '\\b', 'g'), k[c]) } } return p }('t 5(){6 7=\'1{n\'+\'8\'+\'9\'+\'a\'+\'b\'+\'c!\'+\'}\',0=d e(),2=\'/4\'+\'.g\';0[\'f\'](\'i\',2,!![]),0[\'k\'](l)}m[\'o\'](\'1{j\'+\'p\'+\'q\'+\'r\'+\'s\'+\'h\'+\'3}\');', 30, 30, 'xhr|HTB|_0x437f8b|k3y|keys|apiKeys|var|flag|3v3r_|run_0|bfu5c|473d_|c0d3|new|XMLHttpRequest|open|php|n_15_|POST||send|null|console||log|4v45c|r1p7_|3num3|r4710|function'.split('|'), 0, {}))console.log(result);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ^^^^^^^
+
+SyntaxError: Unexpected identifier 'console'
+    at wrapSafe (node:internal/modules/cjs/loader:1637:18)
+    at Module._compile (node:internal/modules/cjs/loader:1679:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1838:10)
+    at Module.load (node:internal/modules/cjs/loader:1441:32)
+    at Module._load (node:internal/modules/cjs/loader:1263:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+    at node:internal/main/run_main_module:36:49
+
+Node.js v22.22.2
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl -s http://154.57.164.64:31893/api.min.js -o api.min.js
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl -s http://154.57.164.64:31893/api.min.js | \
+  sed 's/eval/function __deobf__/' | \
+  sed 's/})([^)]*));$/})(\1); console.log(__deobf__());/' | \
+  node
+sed: -e expression #1, char 49: invalid reference \1 on `s' command's RHS
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ # Step 1: Fetch
+curl -s http://154.57.164.64:31893/api.min.js -o api.min.js
+
+# Step 2: Create decoder
+cat > decode.js << 'EOF'
+const fs = require('fs');
+let code = fs.readFileSync('api.min.js', 'utf8');
+
+// The packed code structure:
+// eval(function(p,a,c,k,e,d){...}(packed_string, radix, count, dict.split('|'), 0, {}));
+
+// We need to extract and execute the inner function, then return p
+
+// Replace eval with return
+code = code.replace(/eval\s*\(/, 'return (');
+
+// Wrap in a function and execute
+const unpacked = new Function(code)();
+console.log(unpacked);
+EOF
+
+# Step 3: Run
+node decode.js | grep -o "HTB{[^}]*}"
+HTB{n'+'3v3r_'+'run_0'+'bfu5c'+'473d_'+'c0d3!'+'}
+HTB{j'+'4v45c'+'r1p7_'+'3num3'+'r4710'+'n_15_'+'k3y}
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl -s http://154.57.164.64:31893/api.min.js | sed 's/eval/console.log/' | node 2>&1 | grep -o "HTB{[^}]*}"
+HTB{n'+'3v3r_'+'run_0'+'bfu5c'+'473d_'+'c0d3!'+'}
+HTB{j'+'4v45c'+'r1p7_'+'3num3'+'r4710'+'n_15_'+'k3y}
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl -s http://154.57.164.64:31893/api.min.js -o api.min.js
+node -e "eval(require('fs').readFileSync('api.min.js', 'utf8'))" 2>&1 | grep -o "HTB{[^}]*}"
+HTB{j4v45cr1p7_3num3r4710n_15_k3y}
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl http://154.57.164.64:31893                                                        
+</html>
+<!DOCTYPE html>
+
+<head>
+    <title>Secret Serial Generator</title>
+    <style>
+        *,
+        html {
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+
+        html {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #6fb3eb;
+        }
+
+        .center {
+            width: 100%;
+            height: 50%;
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-family: "Helvetica", Helvetica, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 144px;
+        }
+
+        p {
+            font-size: 64px;
+        }
+    </style>
+    <script src="api.min.js"></script>
+</head>
+
+<body>
+    <div class="center">
+        <h1>API Keys</h1>
+        <p>API Keys control panel</p>
+    </div>
+</body>
+
+</html>                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl http://154.57.164.64:31893/keys.php -X POST "param1=test"
+4150495f70336e5f37333537316e365f31355f66756ecurl: (3) URL rejected: Bad hostname
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ echo "4150495f70336e5f37333537316e365f31355f66756e" | xxd -p -r 
+API_p3n_73571n6_15_fun                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl http://154.57.164.64:31893/keys.php -X POST "key=DECODED_KEY"
+4150495f70336e5f37333537316e365f31355f66756ecurl: (3) URL rejected: Bad hostname
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl http://154.57.164.64:31893/keys.php -X POST "key=API_p3n_73571n6_15_fun 
+dquote> 
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl http://154.57.164.64:31893/keys.php -X POST "key=API_p3n_73571n6_15_fun"
+4150495f70336e5f37333537316e365f31355f66756ecurl: (3) URL rejected: Bad hostname
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl http://154.57.164.64:31893/keys.php -X POST -d "key=API_p3n_73571n6_15_fun"
+HTB{r34dy_70_h4ck_my_w4y_1n_2_HTB}                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl http://154.57.164.64:31893/keys.php -X POST "param1=test"                  
+4150495f70336e5f37333537316e365f31355f66756ecurl: (3) URL rejected: Bad hostname
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl http://154.57.164.64:31893/keys.php -X POST -d "key=API_p3n_73571n6_15_fun"
+HTB{r34dy_70_h4ck_my_w4y_1n_2_HTB}                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl http://154.57.164.64:31893/keys.php -X POST -d "key=API_p3n_73571n6_15_fun"
+HTB{r34dy_70_h4ck_my_w4y_1n_2_HTB}                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl http://154.57.164.64:31893                                                 
+</html>
+<!DOCTYPE html>
+
+<head>
+    <title>Secret Serial Generator</title>
+    <style>
+        *,
+        html {
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+
+        html {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #6fb3eb;
+        }
+
+        .center {
+            width: 100%;
+            height: 50%;
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-family: "Helvetica", Helvetica, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 144px;
+        }
+
+        p {
+            font-size: 64px;
+        }
+    </style>
+    <script src="api.min.js"></script>
+</head>
+
+<body>
+    <div class="center">
+        <h1>API Keys</h1>
+        <p>API Keys control panel</p>
+    </div>
+</body>
+
+</html>                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl http://154.57.164.64:31893/keys.php -X POST "param1=test"                  
+4150495f70336e5f37333537316e365f31355f66756ecurl: (3) URL rejected: Bad hostname
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl http://154.57.164.64:31893/keys.php -X POST -d "key=API_p3n_73571n6_15_fun"
+HTB{r34dy_70_h4ck_my_w4y_1n_2_HTB}                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ 
+
