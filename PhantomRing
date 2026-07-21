@@ -1,0 +1,103 @@
+====================================================
+PhantomRing (agent) - Static Analysis Notes
+====================================================
+
+APPROACH
+--------
+Binary was not stripped, so symbol names were visible.
+Method: strings -> symbol names -> disassembly around
+key calls -> raw .rodata bytes to confirm exact strings.
+
+
+STEP-BY-STEP METHOD
+--------------------
+
+1. Identify file type
+   $ file agent
+   -> ELF 64-bit PIE, dynamically linked, not stripped
+
+2. Hash the sample
+   $ sha256sum agent
+
+3. Grep strings for quick wins (IP, keywords)
+   $ strings agent | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}"
+   $ strings agent | grep -iE "port|connect|sleep|reconnect"
+   -> found C2 IP and io_uring_prep_connect symbol
+
+4. Disassemble around connect logic for the port
+   $ objdump -d agent | grep -B10 "io_uring_prep_connect"
+   -> mov $0x115d,%edi ; call htons@plt
+   -> 0x115d = 4445 decimal
+
+5. Find reconnect delay
+   $ objdump -d agent | grep -B10 "call.*sleep@plt"
+   -> mov $0x78,%edi -> 120 seconds
+
+6. Enumerate command handlers
+   $ strings agent | grep -B3 -A3 "cmd_"
+   $ objdump -d agent | grep -A20 "<main>"
+   -> 11 handler symbols found directly
+
+7. Trace each handler for target paths/strings
+   $ objdump -d agent | grep -A30 "<cmd_users>"
+     -> /var/run/utmp
+   $ objdump -d agent | grep -A40 "<cmd_killbpf>"
+   $ strings agent | grep -iE "bpf|\.so|maps"
+     -> /proc/%s/maps , anon_inode:bpf-map
+   $ strings agent | grep -iE "tracing|ftrace|debugfs"
+     -> tracing_on, set_event, current_tracer
+   $ strings agent | grep "/proc"
+     -> /proc/self/exe
+
+8. Confirm exact self-destruct command string from raw bytes
+   $ objdump -d agent | grep -B15 "call.*cmd_selfdestruct"
+     (find .rodata offset used in strcmp)
+   $ objdump -s -j .rodata agent | grep -A1 "54c0|54c8|54d0"
+     (dump that exact offset)
+   -> ASCII decode confirmed: sdestruct
+
+
+FINDINGS SUMMARY
+-----------------
+SHA256                    : 2d7b1b2178f76c26893b2a56cbf9b36700235259e76b893d53817d5b66b634a5
+C2 IP                     : 192.168.56.1
+C2 Port                   : 4445
+Reconnect delay           : 120 seconds
+Command count              : 11
+EDR-evasion interface      : io_uring
+Users file                : /var/run/utmp
+SUID scan dir              : /usr/bin
+eBPF-map marker string     : anon_inode:bpf-map
+First tracing file disabled: /sys/kernel/debug/tracing/tracing_on
+Self-path lookup           : /proc/self/exe
+Self-destruct command      : sdestruct
+
+
+COMMAND TABLE
+--------------
+Wire cmd     Handler             Function
+--------     -------             --------
+(none)       cmd_recv            receive C2 data
+users        cmd_users           read /var/run/utmp
+exit         cmd_exit            close session
+killbpf      cmd_killbpf         kill PIDs w/ eBPF maps, delete /sys/fs/bpf/%s
+privesc      cmd_privesc         scan /usr/bin for SUID binaries
+get          cmd_get             file retrieval
+kick         cmd_kick            kill target PID
+sdestruct    cmd_selfdestruct    unlink own binary via io_uring
+ss           cmd_ss              read /proc/net/tcp
+me           cmd_me              self-info via getpid()
+ps           cmd_ps              enumerate /proc for processes
+
+
+KEY TECHNIQUE TO REMEMBER
+---------------------------
+When strings/plain grep misses something (e.g. port or exact
+wire-command string), fall back to:
+  1. Disassemble around the relevant call instruction
+  2. Note the RIP-relative offset comment (# 54cc <...>)
+  3. Dump that exact offset from .rodata with:
+     objdump -s -j .rodata agent
+  4. Read the ASCII column directly - don't trust strings'
+     line-splitting near string boundaries
+====================================================
