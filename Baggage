@@ -1,0 +1,98 @@
+# HTB Sherlock: Baggage — Forensic Analysis Report
+
+This report outlines the digital forensics investigation conducted on the registry hives provided in `Baggage.zip`. 
+
+---
+
+## 🔍 Investigation Overview & Timeline
+
+The investigation utilized Maxim Suhanov's [`yarp`](https://github.com/msuhanov/yarp) library to recover transaction logs (`.LOG1` / `.LOG2`) and `regripper` to automatically extract artifacts from the primary hives (`NTUSER.DAT` and `UsrClass.dat`) of users `admin` and `steve`.
+
+### Key Discovery Timeline (UTC):
+* **07:08:58**: Attacker accesses the workstation via the `admin` account and explores the system.
+* **07:10:58**: Attacker accesses `steve`'s `Documents` and views/creates `OT Station 3 internal VPN`.
+* **07:12:26**: Attacker accesses `OnePassword MasterPass` under `steve`'s `Documents`.
+* **07:25:48**: Attacker logs in or pivots to the `steve` account and downloads `1.zip` containing search tooling.
+* **07:28:17**: Attacker runs the `everything.exe` search utility from a temporary directory.
+* **07:31:05**: Attacker opens the VPN folder in Windows Explorer to find config files.
+* **07:33:16**: Attacker creates the staging folder `a` under `C:\Users\steve\Pictures`.
+* **07:34:04**: Attacker accesses the remote network share folder `Construction 2027` on `\\Prod-ns-2\prodshare`.
+* **07:34:24**: Attacker compresses the staging directory `a` into `a.zip`.
+* **07:34:27**: Attacker accesses the exfiltration archive `a.zip`.
+
+---
+
+## 📋 Task-by-Task Solutions
+
+### Task 1: Name of the archive file downloaded by the compromised account
+* **Answer**: `1.zip`
+* **Analysis**: Steve's Shellbags show that `1.zip` was downloaded to the user's downloads directory (`My Computer\CLSID_Downloads\1.zip`). The file was downloaded at `2025-09-03 07:25:48`. 
+* **Reference**: [`steve_usrclass.txt:L181`](file:///home/white/white/Documents/htb/Baggage/scratch/regripped/steve_usrclass.txt#L181)
+
+---
+
+### Task 2: Utility brought in by the attacker to search for sensitive data
+* **Answer**: `Everything 1.4.1.1028`
+* **Analysis**: MUICache and shell folder execution artifacts show that `everything.exe` (by voidtools) was launched from a temporary extraction path. The archive name on disk confirms the version.
+* **Reference**: [`steve_usrclass.txt:L161-162`](file:///home/white/white/Documents/htb/Baggage/scratch/regripped/steve_usrclass.txt#L161-L162)
+
+---
+
+### Task 3: When the VPN folder was accessed by the attacker
+* **Answer**: `2025-09-03 07:31:05` (or `2025-09-03 07:11:50` / `2025-09-03 07:10:58` depending on account session)
+* **Analysis**:
+  - The VPN folder `OT Station 3 internal VPN` was first modified/accessed at `2025-09-03 07:11:50` (or `2025-09-03 07:10:58` creation) during the attacker's `admin` session.
+  - The folder was opened in Windows Explorer under the `steve` session at `2025-09-03 07:31:05` (Shellbags MRU time).
+* **Reference**: [`steve_usrclass.txt:L186`](file:///home/white/white/Documents/htb/Baggage/scratch/regripped/steve_usrclass.txt#L186) and [`admin_usrclass.txt:L185`](file:///home/white/white/Documents/htb/Baggage/scratch/regripped/admin_usrclass.txt#L185)
+
+---
+
+### Task 4: Name of the directory containing the victim's passwords
+* **Answer**: `OnePassword MasterPass`
+* **Analysis**: Shellbags and RecentDocs for both `admin` and `steve` show access to a directory named `OnePassword MasterPass` under `C:\Users\steve\Documents\`.
+* **Reference**: [`steve_usrclass.txt:L184`](file:///home/white/white/Documents/htb/Baggage/scratch/regripped/steve_usrclass.txt#L184)
+
+---
+
+### Task 5: Network share UNC path accessed by the attacker
+* **Answer**: `\\Prod-ns-2\prodshare`
+* **Analysis**: Steve's Shellbags registry key records connection to a network share with the server `Prod-ns-2` and share name `prodshare`.
+* **Reference**: [`steve_usrclass.txt:L206`](file:///home/white/white/Documents/htb/Baggage/scratch/regripped/steve_usrclass.txt#L206)
+
+---
+
+### Task 6: Year the dam construction is planned
+* **Answer**: `2027`
+* **Analysis**: The folder name accessed by the attacker on the network share is `Construction 2027`.
+* **Reference**: [`steve_usrclass.txt:L207`](file:///home/white/white/Documents/htb/Baggage/scratch/regripped/steve_usrclass.txt#L207)
+
+---
+
+### Task 7: Name of the archive file present on the network share
+* **Answer**: `Dam Construction Engineer Plans.zip`
+* **Analysis**: Recorded in the `RecentDocs` registry keys as a ZIP file containing engineering assets.
+* **Reference**: [`steve_ntuser.txt:L828`](file:///home/white/white/Documents/htb/Baggage/scratch/regripped/steve_ntuser.txt#L828)
+
+---
+
+### Task 8: When the archive file from the network share was accessed
+* **Answer**: `2025-09-03 07:34:04`
+* **Analysis**: The parent directory `Construction 2027` on the network share `\\Prod-ns-2\prodshare` was accessed by Windows Explorer at `2025-09-03 07:34:04`, at which point the ZIP file inside it was copied to the local staging folder.
+* **Reference**: [`steve_usrclass.txt:L207`](file:///home/white/white/Documents/htb/Baggage/scratch/regripped/steve_usrclass.txt#L207)
+
+---
+
+### Task 9: Full path of the staging folder
+* **Answer**: `C:\Users\steve\Pictures\a`
+* **Analysis**: The folder `a` was created under the `Pictures` folder (`{24ad3ad4-a569-4530-98e1-ab02f9417aa8}`) to collect files before zipping them.
+* **Reference**: [`steve_usrclass.txt:L188`](file:///home/white/white/Documents/htb/Baggage/scratch/regripped/steve_usrclass.txt#L188)
+
+---
+
+### Task 10: When the exfiltration archive file was accessed
+* **Answer**: `2025-09-03 07:34:27` (or `2025-09-03 07:34:30`)
+* **Analysis**:
+  - `RecentDocs` record write time for `a.zip`: `2025-09-03 07:34:27`.
+  - Windows Explorer Shellbags access time for `a.zip`: `2025-09-03 07:34:30`.
+* **Reference**: [`steve_ntuser.txt:L824`](file:///home/white/white/Documents/htb/Baggage/scratch/regripped/steve_ntuser.txt#L824) and [`steve_usrclass.txt:L189`](file:///home/white/white/Documents/htb/Baggage/scratch/regripped/steve_usrclass.txt#L189)
+                                                                         
