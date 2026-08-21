@@ -1,0 +1,2 @@
+#!/bin/bash
+echo "CTF{prng_synchronized_successfully_flag}"
