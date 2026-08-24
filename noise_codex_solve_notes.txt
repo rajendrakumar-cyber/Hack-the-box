@@ -1,0 +1,281 @@
+Noise Codex - Solve Notes
+=========================
+
+Challenge idea
+--------------
+
+We are given source.py and output.txt.
+
+The encryption code is:
+
+    c = anchor * distortion + 2 * entropy + b
+
+Rename the variables:
+
+    c = p*q + 2*r + b
+
+where:
+
+    p = hidden 1024-bit prime
+    q = random large multiplier
+    r = random noise
+    b = message bit, either 0 or 1
+
+The flag is converted to bits, and each bit is encrypted into one huge number.
+
+
+Key observation
+---------------
+
+If we know p, decoding is easy.
+
+Because:
+
+    c = p*q + 2*r + b
+
+Taking modulo p removes p*q:
+
+    c mod p = 2*r + b
+
+Now take modulo 2:
+
+    (c mod p) mod 2 = b
+
+Why?
+
+    2*r is always even
+    b is either 0 or 1
+
+So each bit can be recovered with:
+
+    bit = (c % p) & 1
+
+The whole challenge is finding p.
+
+
+Why normal GCD fails
+--------------------
+
+A tempting idea is:
+
+    gcd(c1 - c0, c2 - c1, ...)
+
+But this does not work.
+
+Because:
+
+    c1 - c0 = p(q1 - q0) + 2(r1 - r0) + (b1 - b0)
+
+The extra noise terms are still there:
+
+    2(r1 - r0) + (b1 - b0)
+
+So the differences are not exact multiples of p.
+
+This is not a normal GCD problem.
+It is an Approximate Common Divisor problem.
+
+
+Why LLL works
+-------------
+
+Each ciphertext is very close to a multiple of p:
+
+    c = p*q + small_noise
+
+The noise is:
+
+    2*r + b
+
+r is at most about 2^512, so the noise is about 513 bits.
+
+But c is about 3072 bits.
+
+So the noise is tiny compared to the ciphertext.
+
+LLL can recover the hidden structure from these approximate multiples.
+
+
+Step 1: Parse the ciphertexts
+-----------------------------
+
+Use Python to load output.txt:
+
+    import ast
+
+    cs = ast.literal_eval(open("output.txt").read())
+
+    print(len(cs))
+    print(cs[0].bit_length())
+
+Expected result:
+
+    328
+    around 3070 bits
+
+That means the encrypted flag has:
+
+    328 bits = 41 bytes
+
+
+Step 2: Recover the hidden prime using LLL
+-----------------------------------------
+
+Use LLL to recover the multiplier q0 for the first ciphertext.
+After q0 is recovered:
+
+    p = c0 // q0
+
+Code:
+
+    import ast
+    from fpylll import IntegerMatrix, LLL
+
+    cs = ast.literal_eval(open("output.txt").read())
+
+    c0 = cs[0]
+
+    n = 6
+    K = 2520
+    C = 1 << K
+
+    alphas = [(cs[i] * C) // c0 for i in range(1, n + 1)]
+
+    rows = [[1] + alphas]
+
+    for i in range(n):
+        row = [0] * (n + 1)
+        row[i + 1] = C
+        rows.append(row)
+
+    A = IntegerMatrix.from_matrix(rows)
+    LLL.reduction(A)
+
+    q0 = abs(int(A[0, 0]))
+    p = c0 // q0
+
+    print(p)
+    print(p.bit_length())
+
+The important result is:
+
+    p.bit_length() = 1024
+
+That means we recovered the hidden prime-sized anchor.
+
+
+Step 3: Verify that p is correct
+--------------------------------
+
+Run:
+
+    print(max((c % p).bit_length() for c in cs))
+
+Expected result:
+
+    around 513
+
+This makes sense because:
+
+    c % p = 2*r + b
+
+and r was generated up to 2^512.
+
+So this confirms p is correct.
+
+
+Step 4: Extract the bits
+------------------------
+
+Run:
+
+    bits = ""
+
+    for c in cs:
+        bit = (c % p) & 1
+        bits += str(bit)
+
+    print(bits[:64])
+
+Each bit is recovered by:
+
+    (c % p) & 1
+
+
+Step 5: Convert bits to text
+----------------------------
+
+Run:
+
+    flag = ""
+
+    for i in range(0, len(bits), 8):
+        byte = bits[i:i+8]
+        flag += chr(int(byte, 2))
+
+    print(flag)
+
+Output:
+
+    HTB{LLL_r3c0V3R_7H3_tRu7H_fR0m_7H3_n0153}
+
+
+Full solver
+-----------
+
+    import ast
+    from fpylll import IntegerMatrix, LLL
+
+    cs = ast.literal_eval(open("output.txt").read())
+
+    c0 = cs[0]
+
+    n = 6
+    K = 2520
+    C = 1 << K
+
+    alphas = [(cs[i] * C) // c0 for i in range(1, n + 1)]
+
+    rows = [[1] + alphas]
+
+    for i in range(n):
+        row = [0] * (n + 1)
+        row[i + 1] = C
+        rows.append(row)
+
+    A = IntegerMatrix.from_matrix(rows)
+    LLL.reduction(A)
+
+    q0 = abs(int(A[0, 0]))
+    p = c0 // q0
+
+    print("[+] recovered p")
+    print("[+] p bits:", p.bit_length())
+
+    bits = ''.join(str((c % p) & 1) for c in cs)
+
+    flag = ''.join(
+        chr(int(bits[i:i+8], 2))
+        for i in range(0, len(bits), 8)
+    )
+
+    print("[+] flag:", flag)
+
+
+Final flag
+----------
+
+    HTB{LLL_r3c0V3R_7H3_tRu7H_fR0m_7H3_n0153}
+
+
+Short summary
+-------------
+
+The challenge hides each bit as:
+
+    c = p*q + even_noise + bit
+
+Recover p using LLL because the values are approximate multiples of the same
+secret prime. Then every flag bit is:
+
+    (c % p) & 1
