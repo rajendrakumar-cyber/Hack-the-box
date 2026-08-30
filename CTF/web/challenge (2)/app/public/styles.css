@@ -1,0 +1,489 @@
+:root {
+  --ink: #24140b;
+  --ink-soft: #68462c;
+  --wood: #1d130d;
+  --mud: #2a2018;
+  --iron: #20252a;
+  --brass: #8c7644;
+  --moss: #2f412d;
+  --wax: #6f1a16;
+  --wax-light: #9d372d;
+  --paper: #f1d7a2;
+  --chalk: #d8d0ba;
+  --tallow: #d8bf86;
+  --font-medieval: Luminari, Papyrus, "Apple Chancery", "Iowan Old Style", Georgia, serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background:
+    linear-gradient(180deg, rgba(6, 5, 4, 0.38), rgba(6, 5, 4, 0.72)),
+    url("/assets/background.png");
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
+  color: var(--ink);
+  font-family: var(--font-medieval);
+  min-height: 100vh;
+}
+
+nav {
+  align-items: center;
+  background: rgba(15, 10, 7, 0.92);
+  border-bottom: 2px solid #352415;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 16px 24px;
+}
+
+nav form {
+  display: block;
+  margin: 0;
+}
+
+nav span {
+  color: var(--chalk);
+  font-size: 20px;
+  font-weight: 700;
+  margin-right: auto;
+  text-shadow: 1px 2px 0 #060403;
+  text-transform: uppercase;
+}
+
+nav a,
+nav button,
+.button {
+  background: var(--moss);
+  border: 2px solid var(--brass);
+  color: var(--chalk);
+  cursor: pointer;
+  display: inline-block;
+  font: 700 15px var(--font-medieval);
+  padding: 9px 14px;
+  text-decoration: none;
+}
+
+nav a:hover,
+nav button:hover,
+.button:hover {
+  background: #3f523a;
+}
+
+main {
+  margin: 30px auto;
+  max-width: 1120px;
+  padding: 0 16px 42px;
+}
+
+h1 {
+  color: var(--chalk);
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0 0 18px;
+  text-shadow: 2px 2px 0 #060403;
+  text-transform: uppercase;
+}
+
+form {
+  display: grid;
+  gap: 14px;
+}
+
+label {
+  display: grid;
+  gap: 6px;
+  font-weight: 700;
+}
+
+input,
+textarea {
+  background: #fff1c9;
+  border: 2px solid #3b2115;
+  color: var(--ink);
+  font: inherit;
+  padding: 10px 12px;
+  width: 100%;
+}
+
+input[type="hidden"] {
+  display: none;
+}
+
+textarea {
+  min-height: 190px;
+  resize: vertical;
+}
+
+.panel {
+  background: rgba(241, 215, 162, 0.92);
+  border: 2px solid #3b2115;
+  box-shadow: 0 12px 0 rgba(0, 0, 0, 0.32);
+  padding: 24px;
+}
+
+.muted {
+  color: var(--ink-soft);
+}
+
+.error {
+  background: #f4c3a5;
+  border: 2px solid var(--wax);
+  color: #651414;
+  margin-bottom: 18px;
+  padding: 10px 12px;
+}
+
+pre {
+  font: inherit;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.actual-scroll {
+  aspect-ratio: 1 / 1;
+  background-image: url("/assets/medieval-scroll.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  filter: drop-shadow(0 24px 22px rgba(0, 0, 0, 0.5));
+  margin: 0 auto;
+  max-width: 920px;
+  position: relative;
+  width: min(94vw, 920px);
+}
+
+.sealed-scroll {
+  aspect-ratio: 1 / 1;
+  background-image: url("/assets/unopened-scroll.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  filter: drop-shadow(0 24px 22px rgba(0, 0, 0, 0.5));
+  margin: 0 auto;
+  max-width: 920px;
+  position: relative;
+  width: min(94vw, 920px);
+}
+
+.open-seal-button {
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  height: 21%;
+  left: 50%;
+  padding: 0;
+  position: absolute;
+  top: 49%;
+  transform: translate(-50%, -50%);
+  width: 21%;
+}
+
+.open-seal-button:focus-visible,
+.open-seal-button:hover {
+  outline: none;
+}
+
+.compose-scroll {
+  isolation: isolate;
+}
+
+.compose-scroll .scroll-content {
+  bottom: 13%;
+  overflow: visible;
+}
+
+.actual-scroll input {
+  display: none;
+}
+
+.scroll-content {
+  bottom: 18%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  left: 19%;
+  overflow: hidden;
+  position: absolute;
+  right: 19%;
+  top: 20%;
+}
+
+.scroll-top {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.address-block {
+  display: grid;
+  gap: 12px;
+}
+
+.scribe-row {
+  align-items: end;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 58px minmax(0, 1fr);
+}
+
+.scribe-label {
+  color: var(--ink-soft);
+  font-size: 18px;
+  font-style: italic;
+  font-weight: 700;
+}
+
+.scribe-field,
+.scroll-body {
+  color: var(--ink);
+  outline: none;
+  text-shadow: 0 1px 0 rgba(255, 239, 189, 0.45);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.scribe-field {
+  border-bottom: 1px solid rgba(86, 50, 28, 0.6);
+  min-height: 30px;
+  padding: 2px 0 4px;
+}
+
+.letter-greeting,
+.letter-closing {
+  color: var(--ink-soft);
+  font-size: 20px;
+  font-style: italic;
+}
+
+.scroll-body {
+  flex: 1;
+  font-size: 20px;
+  line-height: 1.55;
+  min-height: 0;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.scribe-field:empty::before,
+.scroll-body:empty::before {
+  color: rgba(36, 20, 11, 0.42);
+  content: attr(data-placeholder);
+  pointer-events: none;
+}
+
+.seal-button {
+  align-items: center;
+  align-self: end;
+  background: url("/assets/stamp.png") center / contain no-repeat;
+  border: 0;
+  border-radius: 50%;
+  color: #f4d6aa;
+  cursor: pointer;
+  display: flex;
+  font: 700 14px var(--font-medieval);
+  height: 112px;
+  justify-content: center;
+  line-height: 1.1;
+  margin-bottom: -16px;
+  margin-top: 8px;
+  padding: 10px;
+  text-align: center;
+  text-shadow: 1px 2px 0 rgba(0, 0, 0, 0.55);
+  width: 112px;
+}
+
+.seal-button:hover {
+  filter: brightness(1.08);
+}
+
+.read-scroll .scroll-content {
+  gap: 18px;
+  top: 21%;
+}
+
+.letter-meta {
+  border-bottom: 1px solid rgba(86, 50, 28, 0.62);
+  display: grid;
+  gap: 7px;
+  padding-bottom: 12px;
+}
+
+.letter-meta strong {
+  font-size: 24px;
+}
+
+.letter-copy {
+  flex: 1;
+  font-size: 20px;
+  line-height: 1.55;
+  margin: 0;
+  overflow: auto;
+}
+
+.message-list {
+  display: grid;
+  gap: 18px;
+  list-style: none;
+  padding: 0;
+}
+
+.message-list a {
+  align-items: center;
+  background: rgba(18, 15, 13, 0.9);
+  border: 2px solid #5f4a2b;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.42), inset 0 0 0 1px rgba(216, 191, 134, 0.1);
+  color: var(--chalk);
+  display: grid;
+  gap: 22px;
+  grid-template-columns: 132px minmax(0, 1fr);
+  min-height: 168px;
+  overflow: hidden;
+  padding: 18px 22px;
+  position: relative;
+  text-decoration: none;
+}
+
+.message-list a::before {
+  background:
+    linear-gradient(90deg, transparent, rgba(140, 118, 68, 0.34), transparent);
+  content: "";
+  height: 1px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 14px;
+}
+
+.message-list a:hover {
+  border-color: var(--tallow);
+  transform: translateY(-2px);
+}
+
+.raven-icon {
+  filter: drop-shadow(0 10px 8px rgba(0, 0, 0, 0.55));
+  height: 132px;
+  object-fit: contain;
+  width: 132px;
+}
+
+.raven-meta {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.raven-label {
+  color: var(--tallow);
+  font-size: 18px;
+  font-style: italic;
+}
+
+.raven-meta strong {
+  color: var(--chalk);
+  display: block;
+  font-size: 26px;
+  overflow-wrap: anywhere;
+}
+
+.raven-date {
+  color: #c8b98d;
+  font-size: 17px;
+}
+
+.ink-pot {
+  bottom: 3%;
+  filter: drop-shadow(0 14px 12px rgba(0, 0, 0, 0.5));
+  left: -15%;
+  pointer-events: none;
+  position: absolute;
+  transform: scaleX(-1);
+  width: 60%;
+  z-index: 0;
+}
+
+@media (max-width: 760px) {
+  nav {
+    padding: 14px;
+  }
+
+  h1 {
+    font-size: 29px;
+  }
+
+  .message-list a {
+    gap: 14px;
+    grid-template-columns: 96px minmax(0, 1fr);
+    min-height: 128px;
+    padding: 14px;
+  }
+
+  .raven-icon {
+    height: 96px;
+    width: 96px;
+  }
+
+  .raven-label {
+    font-size: 17px;
+  }
+
+  .raven-meta strong {
+    font-size: 21px;
+  }
+
+  .actual-scroll {
+    width: min(100vw, 680px);
+  }
+
+  .sealed-scroll {
+    width: min(100vw, 680px);
+  }
+
+  .scroll-content {
+    bottom: 17%;
+    gap: 10px;
+    left: 17%;
+    right: 17%;
+    top: 19%;
+  }
+
+  .compose-scroll .scroll-content {
+    bottom: 11%;
+    overflow: visible;
+  }
+
+  .scroll-top,
+  .scribe-row {
+    grid-template-columns: 1fr;
+  }
+
+  .scribe-label {
+    font-size: 15px;
+  }
+
+  .letter-greeting,
+  .letter-closing,
+  .scroll-body,
+  .letter-copy {
+    font-size: 16px;
+  }
+
+  .seal-button {
+    height: 84px;
+    margin-bottom: -12px;
+    width: 84px;
+  }
+
+  .ink-pot {
+    bottom: -7%;
+    left: -18%;
+    width: 84%;
+  }
+}

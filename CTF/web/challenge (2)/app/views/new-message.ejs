@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<%- include('partials/head', { title: 'Compose' }) %>
+<body>
+  <%- include('partials/nav') %>
+  <main>
+    <h1>Write a Letter</h1>
+    <% if (error) { %>
+      <p class="error"><%= error %></p>
+    <% } %>
+    <form class="actual-scroll compose-scroll" action="/messages" method="post" data-letter-form>
+      <input type="hidden" name="to_username" value="<%= form.to_username || '' %>">
+      <input type="hidden" name="content" value="<%= form.content || '' %>">
+
+      <div class="scroll-content">
+        <div class="scroll-top">
+          <div class="address-block">
+            <div class="scribe-row">
+              <span class="scribe-label">To</span>
+              <span class="scribe-field" contenteditable="true" data-field="to_username" data-placeholder="the recipient username"><%= form.to_username || '' %></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="letter-greeting">To the named recipient,</div>
+        <div class="scroll-body" contenteditable="true" data-field="content" data-placeholder="Write the letter here..."><%= form.content || '' %></div>
+
+        <button class="seal-button" type="submit">Seal<br>Send</button>
+      </div>
+      <img class="ink-pot" src="/assets/ink-pot.png" alt="">
+    </form>
+  </main>
+
+  <script src="/assets/compose.js" defer></script>
+</body>
+</html>

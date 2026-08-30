@@ -1,0 +1,68 @@
+# Cryptographic Analysis & Solution: Keystream Reuse (One-Time Pad / Nonce Reuse)
+
+## 1. Core Concept: Stream Ciphers & Keystream Reuse
+A stream cipher (such as ChaCha20, RC4, or AES in CTR mode) encrypts plaintext by generating a pseudo-random sequence of bytes called a **keystream** (based on a secret key and a unique Initialization Vector/Nonce). This keystream is then combined bitwise with the plaintext using the Exclusive-OR (XOR, $\oplus$) operation:
+
+$$\text{Ciphertext} (C) = \text{Plaintext} (P) \oplus \text{Keystream} (K)$$
+
+XOR has key mathematical properties that make it reversible:
+* $A \oplus 0 = A$
+* $A \oplus A = 0$
+* $(A \oplus B) \oplus B = A \oplus (B \oplus B) = A \oplus 0 = A$
+
+### The Nonce Reuse (Many-Time Pad) Vulnerability
+The initialization vector/nonce (Number used ONCE) is designed to ensure that even if the same key is used to encrypt two different messages, the generated keystream is completely different.
+
+If a developer **reuses** both the same key and the same nonce/IV to encrypt two different messages (as seen in [source.py](file:///home/white/white/Documents/htb/CTF/crypto/crypto_the_last_dance/source.py)), the cipher will generate the **exact same keystream** ($K$) for both operations:
+
+$$C_1 = P_1 \oplus K$$
+$$C_2 = P_2 \oplus K$$
+
+XORing the two ciphertexts together cancels out the keystream:
+$$C_1 \oplus C_2 = (P_1 \oplus K) \oplus (P_2 \oplus K) = P_1 \oplus P_2$$
+
+Because we know $P_1$ (the intercepted warning message) and both ciphertexts $C_1$ and $C_2$, we can easily recover $P_2$ (the flag):
+$$P_2 = C_2 \oplus C_1 \oplus P_1$$
+
+---
+
+## 2. Solving Manually
+You can solve this challenge using two different manual approaches.
+
+### Method A: Using CyberChef
+CyberChef is an intuitive web utility for cryptographic operations.
+
+1. **Find the Keystream**:
+   * Put Ciphertext 1 (`7aa343...`) in the **Input** box.
+   * Add the **XOR** recipe. Set the key format to `UTF8` (or `Hex` if converting plaintext to hex).
+   * Enter the Plaintext 1 message (`Our counter agencies have...`) as the XOR key.
+   * The resulting output in hex is the secret **Keystream**.
+2. **Decrypt Ciphertext 2**:
+   * Put Ciphertext 2 (`7d8273...`) in the **Input** box.
+   * Use the **XOR** recipe with the **Keystream** you obtained from Step 1 (using `Hex` format).
+   * The output is the flag: `HTB{und3r57AnD1n9...}`.
+
+### Method B: Using Python CLI
+You can solve it directly in a terminal by launching an interactive Python shell (`python3`) and running:
+
+```python
+# 1. Define ciphertext 1, ciphertext 2, and the known plaintext
+ct1 = bytes.fromhex("7aa34395a258f5893e3db1822139b8c1f04cfab9d757b9b9cca57e1df33d093f07c7f06e06bb6293676f9060a838ea138b6bc9f20b08afeb73120506e2ce7b9b9dcd9e4a421584cfaba2481132dfbdf4216e98e3facec9ba199ca3a97641e9ca9782868d0222a1d7c0d3119b867edaf2e72e2a6f7d344df39a14edc39cb6f960944ddac2aaef324827c36cba67dcb76b22119b43881a3f1262752990")
+ct2 = bytes.fromhex("7d8273ceb459e4d4386df4e32e1aecc1aa7aaafda50cb982f6c62623cf6b29693d86b15457aa76ac7e2eef6cf814ae3a8d39c7")
+pt1 = b"Our counter agencies have intercepted your messages and a lot of your agent's identities have been exposed. In a matter of days all of them will be captured"
+
+# 2. XOR ct1 with pt1 to get the keystream
+keystream = bytes(c ^ p for c, p in zip(ct1, pt1))
+
+# 3. XOR ct2 with the keystream to decrypt pt2 (the flag)
+flag = bytes(c ^ k for c, k in zip(ct2, keystream))
+
+print(flag.decode())
+```
+
+---
+
+## 3. Mitigation: How to Prevent Keystream Reuse
+To secure stream ciphers:
+1. **Never Reuse Nonces**: Always generate a cryptographically secure random nonce or increment a monotonic counter for every message encrypted with the same key.
+2. **Use Authenticated Encryption (AEAD)**: Use algorithms like ChaCha20-Poly1305 or AES-GCM. These modes authenticate the ciphertext and the nonce, preventing tampering and providing confidentiality.

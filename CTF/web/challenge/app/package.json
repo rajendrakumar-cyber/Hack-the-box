@@ -1,0 +1,19 @@
+{
+  "name": "gatery",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "start": "bun run index.ts"
+  },
+  "dependencies": {
+    "bcryptjs": "2.4.3",
+    "elysia": "1.4.18"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "6.0.2",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "vite": "8.0.16"
+  }
+}

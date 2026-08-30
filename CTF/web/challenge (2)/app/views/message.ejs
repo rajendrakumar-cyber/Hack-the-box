@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<%- include('partials/head', { title: 'Message' }) %>
+<body>
+  <%- include('partials/nav') %>
+  <main>
+    <h1 data-message-title>Sealed Letter</h1>
+    <section class="sealed-scroll" data-sealed-scroll>
+      <button class="open-seal-button" type="button" data-open-seal aria-label="Open sealed letter"></button>
+    </section>
+    <section class="actual-scroll read-scroll" data-opened-scroll hidden>
+      <div class="scroll-content">
+        <div class="letter-meta">
+          <strong>From: <%= message.sender_username %></strong>
+          <span class="muted">Sent by <%= message.sender_username %> on <%= message.created_at %></span>
+        </div>
+        <pre class="letter-copy"><%- message.content %></pre>
+      </div>
+    </section>
+  </main>
+  <script src="/assets/message.js" defer></script>
+</body>
+</html>

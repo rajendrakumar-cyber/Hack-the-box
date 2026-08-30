@@ -1,0 +1,303 @@
+:root {
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  color: #f8fafc;
+  background: #15151f;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.game-shell {
+  width: 100vw;
+  min-height: 100vh;
+  background: #090b12;
+  overflow: hidden;
+}
+
+.game-frame {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: #090b12;
+  overflow: hidden;
+}
+
+canvas {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: block;
+  width: max(100vw, 177.778vh);
+  height: max(56.25vw, 100vh);
+  transform: translate(-50%, -50%);
+  image-rendering: pixelated;
+}
+
+.hud {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  pointer-events: none;
+  color: #101624;
+  z-index: 2;
+}
+
+.hud strong,
+.hud span,
+.badge {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  padding: 6px 8px;
+  background: rgba(252, 238, 184, 0.9);
+  border: 2px solid #2d2430;
+  box-shadow: 3px 3px 0 #2d2430;
+}
+
+.hud span {
+  margin-top: 8px;
+  font-size: 0.78rem;
+}
+
+.badge {
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  color: #f8fafc;
+  background: #8f2e38;
+}
+
+.badge.open {
+  background: #2d7a46;
+}
+
+.music-button {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  min-height: 32px;
+  padding: 6px 8px;
+  color: #f8fafc;
+  background: #3f3a65;
+  border: 2px solid #2d2430;
+  box-shadow: 3px 3px 0 #2d2430;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  pointer-events: auto;
+  text-transform: uppercase;
+}
+
+.music-button.active {
+  background: #2d7a46;
+}
+
+.music-button:focus-visible {
+  outline: 2px solid #f2d27b;
+  outline-offset: 3px;
+}
+
+.login-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(5, 7, 12, 0.42);
+  backdrop-filter: blur(3px);
+}
+
+.login-panel {
+  width: min(320px, 100%);
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+  color: #f8fafc;
+  background: rgba(20, 17, 27, 0.92);
+  border: 3px solid #f2d27b;
+  box-shadow: 5px 5px 0 #2d2430;
+}
+
+.login-panel label {
+  display: grid;
+  gap: 4px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.login-panel input {
+  width: 100%;
+  min-height: 34px;
+  padding: 7px 8px;
+  color: #f8fafc;
+  background: #25283a;
+  border: 2px solid #51495e;
+  outline: none;
+}
+
+.login-panel input:focus {
+  border-color: #f2d27b;
+}
+
+.login-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.login-panel button,
+.logout-button {
+  min-height: 36px;
+  border: 0;
+  color: #1d1720;
+  background: #f2d27b;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 #2d2430;
+}
+
+.login-panel p {
+  margin: 0;
+  color: #ffb3b3;
+  font-size: 0.85rem;
+}
+
+.npc-dialog {
+  position: absolute;
+  z-index: 3;
+  width: min(280px, calc(100vw - 24px));
+  padding: 10px;
+  display: grid;
+  gap: 8px;
+  color: #f8fafc;
+  background: rgba(20, 17, 27, 0.94);
+  border: 3px solid #f2d27b;
+  border-radius: 8px;
+  box-shadow: 5px 5px 0 #2d2430;
+}
+
+.thought-bubble::before,
+.thought-bubble::after {
+  content: "";
+  position: absolute;
+  display: block;
+  background: rgba(20, 17, 27, 0.94);
+  border: 2px solid #f2d27b;
+  border-radius: 50%;
+  box-shadow: 2px 2px 0 #2d2430;
+}
+
+.thought-bubble::before {
+  left: -18px;
+  top: 22px;
+  width: 14px;
+  height: 14px;
+}
+
+.thought-bubble::after {
+  left: -34px;
+  top: 36px;
+  width: 9px;
+  height: 9px;
+}
+
+.npc-dialog p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.npc-dialog code {
+  display: block;
+  max-width: 100%;
+  padding: 8px;
+  overflow-wrap: anywhere;
+  color: #1d1720;
+  background: #f2d27b;
+  border: 2px solid #2d2430;
+  font-size: 0.9rem;
+}
+
+.npc-dialog button {
+  min-height: 36px;
+  width: max-content;
+  max-width: 100%;
+  padding: 0 12px;
+  border: 0;
+  color: #1d1720;
+  background: #f2d27b;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 #2d2430;
+}
+
+.npc-dialog button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.npc-dialog .dialog-error {
+  color: #ffb3b3;
+}
+
+.logout-button {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  padding: 0 14px;
+  z-index: 3;
+}
+
+@media (max-width: 720px) {
+  .hud {
+    left: 10px;
+    right: 10px;
+    top: 10px;
+  }
+
+  .hud span {
+    display: none;
+  }
+
+  .login-overlay {
+    padding: 10px;
+  }
+
+  .login-panel {
+    width: min(290px, 100%);
+  }
+
+  .logout-button {
+    right: 10px;
+    bottom: 10px;
+  }
+}

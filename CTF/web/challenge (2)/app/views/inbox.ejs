@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<%- include('partials/head', { title: 'Inbox' }) %>
+<body>
+  <%- include('partials/nav') %>
+  <main>
+    <h1>Received Letters</h1>
+    <% if (messages.length === 0) { %>
+      <section class="panel">
+        <p class="muted">No messages.</p>
+      </section>
+    <% } else { %>
+      <ul class="message-list">
+        <% messages.forEach((message) => { %>
+          <li>
+            <a href="/messages/<%= message.id %>">
+              <img class="raven-icon" src="/assets/raven.png" alt="">
+              <div class="raven-meta">
+                <span class="raven-label">Raven from</span>
+                <strong><%= message.sender_username %></strong>
+                <time class="raven-date" datetime="<%= message.created_at %>"><%= message.created_at %></time>
+              </div>
+            </a>
+          </li>
+        <% }) %>
+      </ul>
+    <% } %>
+  </main>
+</body>
+</html>

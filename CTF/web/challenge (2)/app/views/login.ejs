@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<%- include('partials/head', { title: 'Login' }) %>
+<body>
+  <%- include('partials/nav') %>
+  <main>
+    <h1>Login</h1>
+    <section class="panel">
+      <% if (error) { %>
+        <p class="error"><%= error %></p>
+      <% } %>
+      <form action="/login" method="post">
+        <label>
+          Username
+          <input name="username" autocomplete="username" required>
+        </label>
+        <label>
+          Password
+          <input name="password" type="password" autocomplete="current-password" required>
+        </label>
+        <button class="button" type="submit">Login</button>
+      </form>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,975 @@
+Process: Procmon64.exe (PID: 7404)
+  Command Line: "D:\Procmon64.exe" 
+  Image Path: D:\Procmon64.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: Idle (PID: 0)
+  Command Line: 
+  Image Path: Idle
+  User: 
+--------------------------------------------------
+Process: System (PID: 4)
+  Command Line: 
+  Image Path: System
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: Registry (PID: 92)
+  Command Line: 
+  Image Path: Registry
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: smss.exe (PID: 324)
+  Command Line: \SystemRoot\System32\smss.exe
+  Image Path: C:\Windows\System32\smss.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: csrss.exe (PID: 440)
+  Command Line: %SystemRoot%\system32\csrss.exe ObjectDirectory=\Windows SharedSection=1024,20480,768 Windows=On SubSystemType=Windows ServerDll=basesrv,1 ServerDll=winsrv:UserServerDllInitialization,3 ServerDll=sxssrv,4 ProfileControl=Off MaxRequestThreads=16
+  Image Path: C:\Windows\system32\csrss.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: csrss.exe (PID: 520)
+  Command Line: %SystemRoot%\system32\csrss.exe ObjectDirectory=\Windows SharedSection=1024,20480,768 Windows=On SubSystemType=Windows ServerDll=basesrv,1 ServerDll=winsrv:UserServerDllInitialization,3 ServerDll=sxssrv,4 ProfileControl=Off MaxRequestThreads=16
+  Image Path: C:\Windows\system32\csrss.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: wininit.exe (PID: 528)
+  Command Line: wininit.exe
+  Image Path: C:\Windows\system32\wininit.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: winlogon.exe (PID: 584)
+  Command Line: winlogon.exe
+  Image Path: C:\Windows\system32\winlogon.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: services.exe (PID: 652)
+  Command Line: C:\Windows\system32\services.exe
+  Image Path: C:\Windows\system32\services.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: lsass.exe (PID: 672)
+  Command Line: C:\Windows\system32\lsass.exe
+  Image Path: C:\Windows\system32\lsass.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 780)
+  Command Line: C:\Windows\system32\svchost.exe -k DcomLaunch -p
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: fontdrvhost.exe (PID: 808)
+  Command Line: "fontdrvhost.exe"
+  Image Path: C:\Windows\system32\fontdrvhost.exe
+  User: Font Driver Host\UMFD-1
+--------------------------------------------------
+Process: fontdrvhost.exe (PID: 816)
+  Command Line: "fontdrvhost.exe"
+  Image Path: C:\Windows\system32\fontdrvhost.exe
+  User: Font Driver Host\UMFD-0
+--------------------------------------------------
+Process: svchost.exe (PID: 904)
+  Command Line: C:\Windows\system32\svchost.exe -k RPCSS -p
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\NETWORK SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 956)
+  Command Line: C:\Windows\system32\svchost.exe -k DcomLaunch -p -s LSM
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: dwm.exe (PID: 288)
+  Command Line: "dwm.exe"
+  Image Path: C:\Windows\system32\dwm.exe
+  User: Window Manager\DWM-1
+--------------------------------------------------
+Process: svchost.exe (PID: 680)
+  Command Line: C:\Windows\System32\svchost.exe -k NetworkService -s TermService
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\NETWORK SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 1084)
+  Command Line: C:\Windows\system32\svchost.exe -k LocalServiceNetworkRestricted -s BTAGService
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 1092)
+  Command Line: C:\Windows\system32\svchost.exe -k LocalService -p -s BthAvctpSvc
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 1100)
+  Command Line: C:\Windows\system32\svchost.exe -k LocalService -p -s bthserv
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 1108)
+  Command Line: C:\Windows\System32\svchost.exe -k LocalServiceNetworkRestricted -p -s lmhosts
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 1192)
+  Command Line: C:\Windows\system32\svchost.exe -k LocalServiceNetworkRestricted -p -s TimeBrokerSvc
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 1204)
+  Command Line: C:\Windows\System32\svchost.exe -k LocalSystemNetworkRestricted -p -s NcbService
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 1300)
+  Command Line: C:\Windows\system32\svchost.exe -k LocalServiceNoNetwork -p
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 1376)
+  Command Line: C:\Windows\system32\svchost.exe -k netsvcs -p -s Schedule
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 1404)
+  Command Line: C:\Windows\System32\svchost.exe -k LocalServiceNetworkRestricted -p -s EventLog
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 1464)
+  Command Line: C:\Windows\system32\svchost.exe -k netsvcs -p -s ProfSvc
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 1552)
+  Command Line: C:\Windows\system32\svchost.exe -k netsvcs -p -s UserManager
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 1592)
+  Command Line: C:\Windows\system32\svchost.exe -k LocalService -p -s nsi
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 1604)
+  Command Line: C:\Windows\system32\svchost.exe -k LocalSystemNetworkRestricted -p -s DeviceAssociationService
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 1700)
+  Command Line: C:\Windows\system32\svchost.exe -k LocalServiceNetworkRestricted -p -s Dhcp
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 1708)
+  Command Line: C:\Windows\System32\svchost.exe -k LocalSystemNetworkRestricted -p -s UmRdpService
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 1752)
+  Command Line: C:\Windows\system32\svchost.exe -k LocalService -p -s DispBrokerDesktopSvc
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 1788)
+  Command Line: C:\Windows\system32\svchost.exe -k LocalService -p -s EventSystem
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 1796)
+  Command Line: C:\Windows\System32\svchost.exe -k netsvcs -p -s Themes
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: WUDFHost.exe (PID: 1892)
+  Command Line: "C:\Windows\System32\WUDFHost.exe" -HostGUID:{193a1820-d9ac-4997-8c55-be817523f6aa} -IoEventPortName:\UMDFCommunicationPorts\WUDF\HostProcess-e791aab5-44a1-4d2a-bd1d-02fa21c9695d -SystemEventPortName:\UMDFCommunicationPorts\WUDF\HostProcess-ab608df7-6cb7-4e7c-932b-6e4d9529687e -IoCancelEventPortName:\UMDFCommunicationPorts\WUDF\HostProcess-e2c5e402-435e-454c-84d6-701260b27cee -NonStateChangingEventPortName:\UMDFCommunicationPorts\WUDF\HostProcess-12e797d9-26cc-4cca-aea4-7ee38100dfc2 -LifetimeId:06af7220-55a3-41c4-b60b-1442033a8f7d -DeviceGroupId:WpdFsGroup -HostArg:0
+  Image Path: C:\Windows\System32\WUDFHost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 2020)
+  Command Line: C:\Windows\system32\svchost.exe -k netsvcs -p -s SENS
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 1004)
+  Command Line: C:\Windows\system32\svchost.exe -k netsvcs -s CertPropSvc
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 2076)
+  Command Line: C:\Windows\System32\svchost.exe -k NetworkService -p -s NlaSvc
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\NETWORK SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 2112)
+  Command Line: C:\Windows\System32\svchost.exe -k LocalSystemNetworkRestricted -p -s AudioEndpointBuilder
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 2148)
+  Command Line: C:\Windows\system32\svchost.exe -k LocalService -p -s FontCache
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 2196)
+  Command Line: C:\Windows\System32\svchost.exe -k NetworkService -p -s LanmanWorkstation
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\NETWORK SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 2264)
+  Command Line: C:\Windows\System32\svchost.exe -k LocalService -p -s netprofm
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 2272)
+  Command Line: C:\Windows\System32\svchost.exe -k LocalServiceNetworkRestricted -p
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 2324)
+  Command Line: C:\Windows\System32\svchost.exe -k netsvcs -p -s SessionEnv
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 2384)
+  Command Line: C:\Windows\system32\svchost.exe -k NetworkService -p -s Dnscache
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\NETWORK SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 2400)
+  Command Line: C:\Windows\System32\svchost.exe -k LocalServiceNetworkRestricted -p
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 2408)
+  Command Line: C:\Windows\system32\svchost.exe -k LocalServiceNetworkRestricted -p
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 2496)
+  Command Line: C:\Windows\System32\svchost.exe -k NetworkService -p -s DoSvc
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\NETWORK SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 2508)
+  Command Line: C:\Windows\system32\svchost.exe -k LocalServiceNoNetworkFirewall -p
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 2532)
+  Command Line: C:\Windows\System32\svchost.exe -k netsvcs -p -s ShellHWDetection
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 2548)
+  Command Line: C:\Windows\system32\svchost.exe -k netsvcs -p -s wuauserv
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 2676)
+  Command Line: C:\Windows\system32\svchost.exe -k appmodel -p -s StateRepository
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 2876)
+  Command Line: C:\Windows\system32\svchost.exe -k LocalServiceNetworkRestricted -p -s WinHttpAutoProxySvc
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 2932)
+  Command Line: C:\Windows\system32\svchost.exe -k NetworkServiceNetworkRestricted -p -s PolicyAgent
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\NETWORK SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 2940)
+  Command Line: C:\Windows\system32\svchost.exe -k netsvcs -p -s IKEEXT
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 2992)
+  Command Line: C:\Windows\system32\svchost.exe -k NetworkService -p -s CryptSvc
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\NETWORK SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 3008)
+  Command Line: C:\Windows\system32\svchost.exe -k netsvcs -p -s Winmgmt
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: OfficeClickToRun.exe (PID: 3028)
+  Command Line: "C:\Program Files\Common Files\Microsoft Shared\ClickToRun\OfficeClickToRun.exe" /service
+  Image Path: C:\Program Files\Common Files\Microsoft Shared\ClickToRun\OfficeClickToRun.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 3064)
+  Command Line: C:\Windows\System32\svchost.exe -k utcsvc -p
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 2092)
+  Command Line: C:\Windows\System32\svchost.exe -k LocalServiceNoNetwork -p -s DPS
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 3104)
+  Command Line: C:\Windows\System32\svchost.exe -k LocalServiceNoNetwork -p -s NcdAutoSetup
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 3128)
+  Command Line: C:\Windows\system32\svchost.exe -k LocalService -p -s fdPHost
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: MpDefenderCoreService.exe (PID: 3148)
+  Command Line: "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.26050.15-0\MpDefenderCoreService.exe"
+  Image Path: C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.26050.15-0\MpDefenderCoreService.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 3188)
+  Command Line: C:\Windows\system32\svchost.exe -k netsvcs -p -s LanmanServer
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 3212)
+  Command Line: C:\Windows\system32\svchost.exe -k LocalService -p -s SstpSvc
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 3228)
+  Command Line: C:\Windows\System32\svchost.exe -k NetSvcs -p -s iphlpsvc
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: UltraViewer_Service.exe (PID: 3244)
+  Command Line: "C:\Program Files (x86)\UltraViewer\UltraViewer_Service.exe"
+  Image Path: C:\Program Files (x86)\UltraViewer\UltraViewer_Service.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: VGAuthService.exe (PID: 3252)
+  Command Line: "C:\Program Files\VMware\VMware Tools\VMware VGAuth\VGAuthService.exe"
+  Image Path: C:\Program Files\VMware\VMware Tools\VMware VGAuth\VGAuthService.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 3268)
+  Command Line: C:\Windows\System32\svchost.exe -k LocalSystemNetworkRestricted -p -s TrkWks
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: vm3dservice.exe (PID: 3280)
+  Command Line: C:\Windows\system32\vm3dservice.exe
+  Image Path: C:\Windows\system32\vm3dservice.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: vmtoolsd.exe (PID: 3304)
+  Command Line: "C:\Program Files\VMware\VMware Tools\vmtoolsd.exe"
+  Image Path: C:\Program Files\VMware\VMware Tools\vmtoolsd.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 3332)
+  Command Line: C:\Windows\system32\svchost.exe -k netsvcs -p -s WpnService
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: MsMpEng.exe (PID: 3340)
+  Command Line: "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.26050.15-0\MsMpEng.exe"
+  Image Path: C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.26050.15-0\MsMpEng.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 3452)
+  Command Line: C:\Windows\System32\svchost.exe -k LocalService -p -s WdiServiceHost
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: vm3dservice.exe (PID: 3648)
+  Command Line: vm3dservice.exe -n
+  Image Path: C:\Windows\system32\vm3dservice.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 3836)
+  Command Line: C:\Windows\System32\svchost.exe -k netsvcs
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 3984)
+  Command Line: C:\Windows\system32\svchost.exe -k LocalServiceAndNoImpersonation -p -s FDResPub
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 4084)
+  Command Line: C:\Windows\System32\svchost.exe -k LocalServiceNetworkRestricted -s RmSvc
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: DllHost.exe (PID: 4676)
+  Command Line: C:\Windows\system32\DllHost.exe /Processid:{3EB3C877-1F16-487C-9050-104DBCD66683}
+  Image Path: C:\Windows\system32\DllHost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: wmiprvse.exe (PID: 4828)
+  Command Line: C:\Windows\system32\wbem\wmiprvse.exe
+  Image Path: C:\Windows\system32\wbem\wmiprvse.exe
+  User: NT AUTHORITY\NETWORK SERVICE
+--------------------------------------------------
+Process: dashost.exe (PID: 4904)
+  Command Line: dashost.exe {9b6de87a-3833-401d-b2143fb975860514}
+  Image Path: C:\Windows\system32\dashost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 4932)
+  Command Line: C:\Windows\System32\svchost.exe -k LocalSystemNetworkRestricted -p -s StorSvc
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 4224)
+  Command Line: C:\Windows\system32\svchost.exe -k LocalServiceAndNoImpersonation -p -s SSDPSRV
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 5396)
+  Command Line: C:\Windows\System32\svchost.exe -k LocalService -p -s LicenseManager
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 5180)
+  Command Line: C:\Windows\system32\svchost.exe -k netsvcs -p -s TokenBroker
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 5828)
+  Command Line: C:\Windows\system32\svchost.exe -k LocalService -p -s CDPSvc
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: svchost.exe (PID: 6044)
+  Command Line: C:\Windows\system32\svchost.exe -k netsvcs -p -s UsoSvc
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 5364)
+  Command Line: C:\Windows\system32\svchost.exe -k LocalService -s W32Time
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: sihost.exe (PID: 732)
+  Command Line: sihost.exe
+  Image Path: C:\Windows\system32\sihost.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: svchost.exe (PID: 5404)
+  Command Line: C:\Windows\system32\svchost.exe -k UnistackSvcGroup -s CDPUserSvc
+  Image Path: C:\Windows\system32\svchost.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: svchost.exe (PID: 664)
+  Command Line: C:\Windows\system32\svchost.exe -k UnistackSvcGroup -s WpnUserService
+  Image Path: C:\Windows\system32\svchost.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: taskhostw.exe (PID: 2352)
+  Command Line: taskhostw.exe {222A245B-E637-4AE9-A93F-A59CA119A75E}
+  Image Path: C:\Windows\system32\taskhostw.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: MicrosoftEdgeUpdate.exe (PID: 2824)
+  Command Line: "C:\Program Files (x86)\Microsoft\EdgeUpdate\MicrosoftEdgeUpdate.exe" /c
+  Image Path: C:\Program Files (x86)\Microsoft\EdgeUpdate\MicrosoftEdgeUpdate.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 776)
+  Command Line: C:\Windows\system32\svchost.exe -k netsvcs -p -s Appinfo
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 2256)
+  Command Line: C:\Windows\System32\svchost.exe -k LocalSystemNetworkRestricted -p -s TabletInputService
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: ctfmon.exe (PID: 2464)
+  Command Line: "ctfmon.exe"
+  Image Path: C:\Windows\system32\ctfmon.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: Explorer.EXE (PID: 4288)
+  Command Line: C:\Windows\Explorer.EXE
+  Image Path: C:\Windows\Explorer.EXE
+  User: WIN10\admin
+--------------------------------------------------
+Process: svchost.exe (PID: 6048)
+  Command Line: C:\Windows\System32\svchost.exe -k LocalSystemNetworkRestricted -p -s WdiSystemHost
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 3856)
+  Command Line: C:\Windows\system32\svchost.exe -k LocalSystemNetworkRestricted -p -s PcaSvc
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 692)
+  Command Line: C:\Windows\system32\svchost.exe -k ClipboardSvcGroup -p -s cbdhsvc
+  Image Path: C:\Windows\system32\svchost.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: StartMenuExperienceHost.exe (PID: 5968)
+  Command Line: "C:\Windows\SystemApps\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\StartMenuExperienceHost.exe" -ServerName:App.AppXywbrabmsek0gm3tkwpr5kwzbs55tkqay.mca
+  Image Path: C:\Windows\SystemApps\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\StartMenuExperienceHost.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: RuntimeBroker.exe (PID: 5736)
+  Command Line: C:\Windows\System32\RuntimeBroker.exe -Embedding
+  Image Path: C:\Windows\System32\RuntimeBroker.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: SearchApp.exe (PID: 5908)
+  Command Line: "C:\Windows\SystemApps\Microsoft.Windows.Search_cw5n1h2txyewy\SearchApp.exe" -ServerName:CortanaUI.AppX8z9r6jm96hw4bsbneegw0kyxx296wr9t.mca
+  Image Path: C:\Windows\SystemApps\Microsoft.Windows.Search_cw5n1h2txyewy\SearchApp.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: svchost.exe (PID: 2696)
+  Command Line: C:\Windows\system32\svchost.exe -k appmodel -p -s camsvc
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: RuntimeBroker.exe (PID: 6036)
+  Command Line: C:\Windows\System32\RuntimeBroker.exe -Embedding
+  Image Path: C:\Windows\System32\RuntimeBroker.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: RuntimeBroker.exe (PID: 4344)
+  Command Line: C:\Windows\System32\RuntimeBroker.exe -Embedding
+  Image Path: C:\Windows\System32\RuntimeBroker.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: vmtoolsd.exe (PID: 5624)
+  Command Line: "C:\Program Files\VMware\VMware Tools\vmtoolsd.exe" -n vmusr
+  Image Path: C:\Program Files\VMware\VMware Tools\vmtoolsd.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: DllHost.exe (PID: 444)
+  Command Line: C:\Windows\system32\DllHost.exe /Processid:{973D20D7-562D-44B9-B70B-5A0F49CCDF3F}
+  Image Path: C:\Windows\system32\DllHost.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: svchost.exe (PID: 7596)
+  Command Line: C:\Windows\system32\svchost.exe -k UnistackSvcGroup
+  Image Path: C:\Windows\system32\svchost.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: svchost.exe (PID: 1528)
+  Command Line: C:\Windows\system32\svchost.exe -k netsvcs -p -s gpsvc
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: taskhostw.exe (PID: 6672)
+  Command Line: taskhostw.exe
+  Image Path: C:\Windows\system32\taskhostw.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: svchost.exe (PID: 5144)
+  Command Line: C:\Windows\system32\svchost.exe -k wsappx -p -s AppXSvc
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: svchost.exe (PID: 436)
+  Command Line: C:\Windows\system32\svchost.exe -k netsvcs -p -s wlidsvc
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: Telegram.exe (PID: 7908)
+  Command Line: "C:\Users\admin\AppData\Roaming\Telegram Desktop\Telegram.exe" 
+  Image Path: C:\Users\admin\AppData\Roaming\Telegram Desktop\Telegram.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: svchost.exe (PID: 8048)
+  Command Line: C:\Windows\system32\svchost.exe -k netsvcs -p -s lfsvc
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: explorer.exe (PID: 1148)
+  Command Line: C:\Windows\explorer.exe /factory,{5BD95610-9434-43C2-886C-57852CC8A120} -Embedding
+  Image Path: C:\Windows\explorer.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: AUDIODG.EXE (PID: 2052)
+  Command Line: C:\Windows\system32\AUDIODG.EXE 0x4fc
+  Image Path: C:\Windows\system32\AUDIODG.EXE
+  User: NT AUTHORITY\LOCAL SERVICE
+--------------------------------------------------
+Process: taskmgr.exe (PID: 3400)
+  Command Line: "C:\Windows\system32\taskmgr.exe" /4
+  Image Path: C:\Windows\system32\taskmgr.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: msedge.exe (PID: 4436)
+  Command Line: "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --no-startup-window
+  Image Path: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: msedge.exe (PID: 7696)
+  Command Line: "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --type=crashpad-handler "--user-data-dir=C:\Users\admin\AppData\Local\Microsoft\Edge\User Data" /prefetch:4 --monitor-self-annotation=ptype=crashpad-handler "--database=C:\Users\admin\AppData\Local\Microsoft\Edge\User Data\Crashpad" --annotation=IsOfficialBuild=1 --annotation=channel= --annotation=chromium-version=149.0.7827.156 "--annotation=exe=C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --annotation=plat=Win64 --annotation=prod=Edge --annotation=ver=149.0.4022.80 --initial-client-data=0x23c,0x240,0x244,0x238,0x24c,0x7ffe32559c38,0x7ffe32559c44,0x7ffe32559c50
+  Image Path: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: msedge.exe (PID: 3508)
+  Command Line: "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --type=utility --utility-sub-type=network.mojom.NetworkService --lang=en-US --service-sandbox-type=none --startup-read-main-dll --metrics-shmem-handle=1964,i,2024283279399260570,8048704107529684431,524288 --field-trial-handle=2008,i,13026026523772673813,2241159762887195217,262144 --variations-seed-version --pseudonymization-salt-handle=2016,i,11387971606221894290,17668172916242148394,4 --trace-process-track-uuid=3190708989122997041 --mojo-platform-channel-handle=2564 /prefetch:3
+  Image Path: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: msedge.exe (PID: 4016)
+  Command Line: "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --type=gpu-process --gpu-preferences=SAAAAAAAAADgAAAEAAAAAAAAAAAAAGAAAQAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAQAAAAAAAAABAAAAAAAAAACAAAAAAAAAAIAAAAAAAAAA== --startup-read-main-dll --metrics-shmem-handle=1808,i,2106039127236405915,11315129443914739035,262144 --field-trial-handle=2008,i,13026026523772673813,2241159762887195217,262144 --variations-seed-version --pseudonymization-salt-handle=2016,i,11387971606221894290,17668172916242148394,4 --trace-process-track-uuid=3190708988185955192 --mojo-platform-channel-handle=2012 /prefetch:2
+  Image Path: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: msedge.exe (PID: 5584)
+  Command Line: "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --type=utility --utility-sub-type=storage.mojom.StorageService --lang=en-US --service-sandbox-type=service --startup-read-main-dll --metrics-shmem-handle=2224,i,15561521225425499317,15810705210250021050,524288 --field-trial-handle=2008,i,13026026523772673813,2241159762887195217,262144 --variations-seed-version --pseudonymization-salt-handle=2016,i,11387971606221894290,17668172916242148394,4 --trace-process-track-uuid=3190708990060038890 --mojo-platform-channel-handle=2576 /prefetch:8
+  Image Path: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: msedge.exe (PID: 8028)
+  Command Line: "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --type=renderer --extension-process --renderer-sub-type=extension --pdf-upsell-enabled --video-capture-use-gpu-memory-buffer --lang=en-US --js-flags --device-scale-factor=1 --num-raster-threads=1 --renderer-client-id=5 --time-ticks-at-unix-epoch=-1782568628309948 --launch-time-ticks=1772468551 --ram-no-pressure-read-main-dll --metrics-shmem-handle=3560,i,13738263030421099740,7224024614438476016,2097152 --field-trial-handle=2008,i,13026026523772673813,2241159762887195217,262144 --variations-seed-version --pseudonymization-salt-handle=2016,i,11387971606221894290,17668172916242148394,4 --trace-process-track-uuid=3190708990997080739 --mojo-platform-channel-handle=3568 /prefetch:2
+  Image Path: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: msedge.exe (PID: 7272)
+  Command Line: "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --type=renderer --extension-process --renderer-sub-type=extension --pdf-upsell-enabled --video-capture-use-gpu-memory-buffer --lang=en-US --js-flags --device-scale-factor=1 --num-raster-threads=1 --renderer-client-id=6 --time-ticks-at-unix-epoch=-1782568628309948 --launch-time-ticks=1772572339 --skip-read-main-dll --metrics-shmem-handle=3464,i,3158392671293487246,14554809076866327259,2097152 --field-trial-handle=2008,i,13026026523772673813,2241159762887195217,262144 --variations-seed-version --pseudonymization-salt-handle=2016,i,11387971606221894290,17668172916242148394,4 --trace-process-track-uuid=3190708991934122588 --mojo-platform-channel-handle=4180 /prefetch:2
+  Image Path: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: msedge.exe (PID: 6668)
+  Command Line: "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --type=renderer --pdf-upsell-enabled --video-capture-use-gpu-memory-buffer --lang=en-US --js-flags --device-scale-factor=1 --num-raster-threads=1 --renderer-client-id=9 --time-ticks-at-unix-epoch=-1782568628309948 --launch-time-ticks=1775719288 --skip-read-main-dll --metrics-shmem-handle=5496,i,10480107976328439198,9012320015305945807,2097152 --field-trial-handle=2008,i,13026026523772673813,2241159762887195217,262144 --variations-seed-version --pseudonymization-salt-handle=2016,i,11387971606221894290,17668172916242148394,4 --trace-process-track-uuid=3190708994745248135 --mojo-platform-channel-handle=5520 /prefetch:1
+  Image Path: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: msedge.exe (PID: 5728)
+  Command Line: "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --type=renderer --pdf-upsell-enabled --video-capture-use-gpu-memory-buffer --lang=en-US --js-flags --device-scale-factor=1 --num-raster-threads=1 --renderer-client-id=10 --time-ticks-at-unix-epoch=-1782568628309948 --launch-time-ticks=1778472296 --skip-read-main-dll --metrics-shmem-handle=5920,i,7668926621267047809,18233638195714608795,2097152 --field-trial-handle=2008,i,13026026523772673813,2241159762887195217,262144 --variations-seed-version --pseudonymization-salt-handle=2016,i,11387971606221894290,17668172916242148394,4 --trace-process-track-uuid=3190708995682289984 --mojo-platform-channel-handle=5976 /prefetch:1
+  Image Path: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: svchost.exe (PID: 7516)
+  Command Line: C:\Windows\System32\svchost.exe -k wsappx -p -s ClipSVC
+  Image Path: C:\Windows\System32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: ShellExperienceHost.exe (PID: 2604)
+  Command Line: "C:\Windows\SystemApps\ShellExperienceHost_cw5n1h2txyewy\ShellExperienceHost.exe" -ServerName:App.AppXtk181tbxbce2qsex02s8tw7hfxa9xb3t.mca
+  Image Path: C:\Windows\SystemApps\ShellExperienceHost_cw5n1h2txyewy\ShellExperienceHost.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: RuntimeBroker.exe (PID: 380)
+  Command Line: C:\Windows\System32\RuntimeBroker.exe -Embedding
+  Image Path: C:\Windows\System32\RuntimeBroker.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: Telegram.exe (PID: 760)
+  Command Line: "C:\Users\admin\AppData\Roaming\Telegram Desktop\Telegram.exe" 
+  Image Path: C:\Users\admin\AppData\Roaming\Telegram Desktop\Telegram.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: DllHost.exe (PID: 6832)
+  Command Line: C:\Windows\SysWOW64\DllHost.exe /Processid:{06622D85-6856-4460-8DE1-A81921B41C4B}
+  Image Path: C:\Windows\SysWOW64\DllHost.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: msedge.exe (PID: 6476)
+  Command Line: "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --profile-directory=Default
+  Image Path: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: msedge.exe (PID: 6372)
+  Command Line: "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --type=renderer --instant-process --pdf-upsell-enabled --video-capture-use-gpu-memory-buffer --lang=en-US --js-flags --device-scale-factor=1 --num-raster-threads=1 --renderer-client-id=12 --time-ticks-at-unix-epoch=-1782568628309948 --launch-time-ticks=1836444929 --ram-no-pressure-read-main-dll --metrics-shmem-handle=6292,i,489498083587395212,18190970578610774793,2097152 --field-trial-handle=2008,i,13026026523772673813,2241159762887195217,262144 --variations-seed-version --pseudonymization-salt-handle=2016,i,11387971606221894290,17668172916242148394,4 --trace-process-track-uuid=3190708997556373682 --mojo-platform-channel-handle=6288 /prefetch:1
+  Image Path: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: msedge.exe (PID: 3516)
+  Command Line: "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --type=utility --utility-sub-type=entity_extraction_service.mojom.Extractor --lang=en-US --service-sandbox-type=entity_extraction --onnx-enabled-for-ee --skip-read-main-dll --metrics-shmem-handle=6600,i,15408191129559171342,5441432149640329654,524288 --field-trial-handle=2008,i,13026026523772673813,2241159762887195217,262144 --variations-seed-version --pseudonymization-salt-handle=2016,i,11387971606221894290,17668172916242148394,4 --trace-process-track-uuid=3190708998493415531 --mojo-platform-channel-handle=6628 /prefetch:8
+  Image Path: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: Update.exe (PID: 6916)
+  Command Line: "C:\Users\admin\AppData\Local\Discord\Update.exe" --processStart Discord.exe
+  Image Path: C:\Users\admin\AppData\Local\Discord\Update.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: Discord.exe (PID: 3612)
+  Command Line: "C:\Users\admin\AppData\Local\Discord\app-1.0.9243\Discord.exe" 
+  Image Path: C:\Users\admin\AppData\Local\Discord\app-1.0.9243\Discord.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: Discord.exe (PID: 7840)
+  Command Line: C:\Users\admin\AppData\Local\Discord\app-1.0.9243\Discord.exe --type=crashpad-handler --user-data-dir=C:\Users\admin\AppData\Roaming\discord /prefetch:4 --no-rate-limit --monitor-self-annotation=ptype=crashpad-handler --database=C:\Users\admin\AppData\Roaming\discord\Crashpad --url=https://f.a.k/e --annotation=_productName=discord --annotation=_version=1.0.9243 --annotation=plat=Win64 --annotation=prod=Electron --annotation=ver=37.6.0 --initial-client-data=0x494,0x498,0x49c,0x48c,0x4a0,0x7ff6fa4bc074,0x7ff6fa4bc080,0x7ff6fa4bc090
+  Image Path: C:\Users\admin\AppData\Local\Discord\app-1.0.9243\Discord.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: Discord.exe (PID: 6292)
+  Command Line: "C:\Users\admin\AppData\Local\Discord\app-1.0.9243\Discord.exe" --type=gpu-process --user-data-dir="C:\Users\admin\AppData\Roaming\discord" --gpu-preferences=UAAAAAAAAADgAAAEAAAAAAAAAAAAAAAAAABgAAEAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAAAAAAIAAAAAAAAAAgAAAAAAAAA --field-trial-handle=1820,i,11080694542163082189,11662995667990261053,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EnableTransparentHwndEnlargement --disable-features=AllowAggressiveThrottlingWithWebSocket,HardwareMediaKeyHandling,IntensiveWakeUpThrottling,MediaSessionService,ScreenAIOCREnabled,SpareRendererForSitePerProcess,UseEcoQoSForBackgroundProcess,WinDelaySpellcheckServiceInit,WinRetrieveSuggestionsOnlyOnDemand --variations-seed-version --mojo-platform-channel-handle=1816 /prefetch:2
+  Image Path: C:\Users\admin\AppData\Local\Discord\app-1.0.9243\Discord.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: Discord.exe (PID: 6944)
+  Command Line: "C:\Users\admin\AppData\Local\Discord\app-1.0.9243\Discord.exe" --type=utility --utility-sub-type=network.mojom.NetworkService --lang=en-US --service-sandbox-type=none --user-data-dir="C:\Users\admin\AppData\Roaming\discord" --standard-schemes=disclip --secure-schemes=disclip,sentry-ipc --bypasscsp-schemes=sentry-ipc --cors-schemes=sentry-ipc --fetch-schemes=disclip,sentry-ipc --streaming-schemes=disclip --field-trial-handle=1820,i,11080694542163082189,11662995667990261053,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EnableTransparentHwndEnlargement --disable-features=AllowAggressiveThrottlingWithWebSocket,HardwareMediaKeyHandling,IntensiveWakeUpThrottling,MediaSessionService,ScreenAIOCREnabled,SpareRendererForSitePerProcess,UseEcoQoSForBackgroundProcess,WinDelaySpellcheckServiceInit,WinRetrieveSuggestionsOnlyOnDemand --variations-seed-version --mojo-platform-channel-handle=2092 /prefetch:3
+  Image Path: C:\Users\admin\AppData\Local\Discord\app-1.0.9243\Discord.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: Discord.exe (PID: 6828)
+  Command Line: "C:\Users\admin\AppData\Local\Discord\app-1.0.9243\Discord.exe" --type=renderer --user-data-dir="C:\Users\admin\AppData\Roaming\discord" --standard-schemes=disclip --secure-schemes=disclip,sentry-ipc --bypasscsp-schemes=sentry-ipc --cors-schemes=sentry-ipc --fetch-schemes=disclip,sentry-ipc --streaming-schemes=disclip --app-user-model-id=com.squirrel.Discord.Discord --app-path="C:\Users\admin\AppData\Local\Discord\app-1.0.9243\resources\app.asar" --no-sandbox --no-zygote --autoplay-policy=no-user-gesture-required --disable-background-timer-throttling --enable-h264-mf --enable-h264-mf-zero-copy --video-capture-use-gpu-memory-buffer --lang=en-US --device-scale-factor=1 --num-raster-threads=1 --renderer-client-id=4 --time-ticks-at-unix-epoch=-1782568628310063 --launch-time-ticks=1850379117 --field-trial-handle=1820,i,11080694542163082189,11662995667990261053,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EnableTransparentHwndEnlargement --disable-features=AllowAggressiveThrottlingWithWebSocket,HardwareMediaKeyHandling,IntensiveWakeUpThrottling,MediaSessionService,ScreenAIOCREnabled,SpareRendererForSitePerProcess,UseEcoQoSForBackgroundProcess,WinDelaySpellcheckServiceInit,WinRetrieveSuggestionsOnlyOnDemand --variations-seed-version --mojo-platform-channel-handle=2420 --splash-media-format=webm /prefetch:1
+  Image Path: C:\Users\admin\AppData\Local\Discord\app-1.0.9243\Discord.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: 3uLauncher.exe (PID: 1560)
+  Command Line: "C:\Program Files\3uTools9\3uLauncher.exe" 
+  Image Path: C:\Program Files\3uTools9\3uLauncher.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: consent.exe (PID: 1588)
+  Command Line: consent.exe 776 366 00000000004531D0
+  Image Path: C:\Windows\system32\consent.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: Discord.exe (PID: 4524)
+  Command Line: "C:\Users\admin\AppData\Local\Discord\app-1.0.9243\Discord.exe" --type=renderer --user-data-dir="C:\Users\admin\AppData\Roaming\discord" --standard-schemes=disclip --secure-schemes=disclip,sentry-ipc --bypasscsp-schemes=sentry-ipc --cors-schemes=sentry-ipc --fetch-schemes=disclip,sentry-ipc --streaming-schemes=disclip --app-user-model-id=com.squirrel.Discord.Discord --app-path="C:\Users\admin\AppData\Local\Discord\app-1.0.9243\resources\app.asar" --no-sandbox --no-zygote --enable-blink-features=EnumerateDevices,AudioOutputDevices --autoplay-policy=no-user-gesture-required --disable-background-timer-throttling --enable-h264-mf --enable-h264-mf-zero-copy --disable-gpu-compositing --video-capture-use-gpu-memory-buffer --lang=en-US --device-scale-factor=1 --num-raster-threads=1 --renderer-client-id=5 --time-ticks-at-unix-epoch=-1782568628310063 --launch-time-ticks=1852816044 --field-trial-handle=1820,i,11080694542163082189,11662995667990261053,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EnableTransparentHwndEnlargement --disable-features=AllowAggressiveThrottlingWithWebSocket,HardwareMediaKeyHandling,IntensiveWakeUpThrottling,MediaSessionService,ScreenAIOCREnabled,SpareRendererForSitePerProcess,UseEcoQoSForBackgroundProcess,WinDelaySpellcheckServiceInit,WinRetrieveSuggestionsOnlyOnDemand --variations-seed-version --mojo-platform-channel-handle=3776 --enable-node-leakage-in-renderers /prefetch:1
+  Image Path: C:\Users\admin\AppData\Local\Discord\app-1.0.9243\Discord.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: Discord.exe (PID: 1244)
+  Command Line: "C:\Users\admin\AppData\Local\Discord\app-1.0.9243\Discord.exe" --type=renderer --user-data-dir="C:\Users\admin\AppData\Roaming\discord" --standard-schemes=disclip --secure-schemes=disclip,sentry-ipc --bypasscsp-schemes=sentry-ipc --cors-schemes=sentry-ipc --fetch-schemes=disclip,sentry-ipc --streaming-schemes=disclip --app-user-model-id=com.squirrel.Discord.Discord --app-path="C:\Users\admin\AppData\Local\Discord\app-1.0.9243\resources\app.asar" --no-sandbox --no-zygote --enable-blink-features=EnumerateDevices,AudioOutputDevices --autoplay-policy=no-user-gesture-required --disable-background-timer-throttling --enable-h264-mf --enable-h264-mf-zero-copy --disable-gpu-compositing --video-capture-use-gpu-memory-buffer --lang=en-US --device-scale-factor=1 --num-raster-threads=1 --renderer-client-id=6 --time-ticks-at-unix-epoch=-1782568628310063 --launch-time-ticks=1852915677 --field-trial-handle=1820,i,11080694542163082189,11662995667990261053,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EnableTransparentHwndEnlargement --disable-features=AllowAggressiveThrottlingWithWebSocket,HardwareMediaKeyHandling,IntensiveWakeUpThrottling,MediaSessionService,ScreenAIOCREnabled,SpareRendererForSitePerProcess,UseEcoQoSForBackgroundProcess,WinDelaySpellcheckServiceInit,WinRetrieveSuggestionsOnlyOnDemand --variations-seed-version --mojo-platform-channel-handle=3796 --enable-node-leakage-in-renderers /prefetch:1
+  Image Path: C:\Users\admin\AppData\Local\Discord\app-1.0.9243\Discord.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: 3uLauncher.exe (PID: 2640)
+  Command Line: "C:\Program Files\3uTools9\3uLauncher.exe" 
+  Image Path: C:\Program Files\3uTools9\3uLauncher.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: updater.exe (PID: 3844)
+  Command Line: "C:\Program Files\3uTools9\updater.exe" /background
+  Image Path: C:\Program Files\3uTools9\updater.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: Discord.exe (PID: 7248)
+  Command Line: "C:\Users\admin\AppData\Local\Discord\app-1.0.9243\Discord.exe" --type=utility --utility-sub-type=video_capture.mojom.VideoCaptureService --lang=en-US --service-sandbox-type=none --user-data-dir="C:\Users\admin\AppData\Roaming\discord" --standard-schemes=disclip --secure-schemes=disclip,sentry-ipc --bypasscsp-schemes=sentry-ipc --cors-schemes=sentry-ipc --fetch-schemes=disclip,sentry-ipc --streaming-schemes=disclip --field-trial-handle=1820,i,11080694542163082189,11662995667990261053,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EnableTransparentHwndEnlargement --disable-features=AllowAggressiveThrottlingWithWebSocket,HardwareMediaKeyHandling,IntensiveWakeUpThrottling,MediaSessionService,ScreenAIOCREnabled,SpareRendererForSitePerProcess,UseEcoQoSForBackgroundProcess,WinDelaySpellcheckServiceInit,WinRetrieveSuggestionsOnlyOnDemand --variations-seed-version --mojo-platform-channel-handle=3856 /prefetch:8
+  Image Path: C:\Users\admin\AppData\Local\Discord\app-1.0.9243\Discord.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: 3uTools.exe (PID: 6996)
+  Command Line: "C:\Program Files\3uTools9\3uTools.exe"
+  Image Path: C:\Program Files\3uTools9\3uTools.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: Discord.exe (PID: 7088)
+  Command Line: "C:\Users\admin\AppData\Local\Discord\app-1.0.9243\Discord.exe" --type=utility --utility-sub-type=audio.mojom.AudioService --lang=en-US --service-sandbox-type=audio --user-data-dir="C:\Users\admin\AppData\Roaming\discord" --standard-schemes=disclip --secure-schemes=disclip,sentry-ipc --bypasscsp-schemes=sentry-ipc --cors-schemes=sentry-ipc --fetch-schemes=disclip,sentry-ipc --streaming-schemes=disclip --field-trial-handle=1820,i,11080694542163082189,11662995667990261053,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EnableTransparentHwndEnlargement --disable-features=AllowAggressiveThrottlingWithWebSocket,HardwareMediaKeyHandling,IntensiveWakeUpThrottling,MediaSessionService,ScreenAIOCREnabled,SpareRendererForSitePerProcess,UseEcoQoSForBackgroundProcess,WinDelaySpellcheckServiceInit,WinRetrieveSuggestionsOnlyOnDemand --variations-seed-version --mojo-platform-channel-handle=3924 /prefetch:8
+  Image Path: C:\Users\admin\AppData\Local\Discord\app-1.0.9243\Discord.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: gpu_encoder_helper.exe (PID: 7432)
+  Command Line: "\\?\C:\Users\admin\AppData\Local\Discord\app-1.0.9243\modules\discord_voice-1\discord_voice\gpu_encoder_helper.exe" amd
+  Image Path: C:\Users\admin\AppData\Local\Discord\app-1.0.9243\modules\discord_voice-1\discord_voice\gpu_encoder_helper.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: gpu_encoder_helper.exe (PID: 7220)
+  Command Line: "\\?\C:\Users\admin\AppData\Local\Discord\app-1.0.9243\modules\discord_voice-1\discord_voice\gpu_encoder_helper.exe" intel
+  Image Path: C:\Users\admin\AppData\Local\Discord\app-1.0.9243\modules\discord_voice-1\discord_voice\gpu_encoder_helper.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: gpu_encoder_helper.exe (PID: 2708)
+  Command Line: "\\?\C:\Users\admin\AppData\Local\Discord\app-1.0.9243\modules\discord_voice-1\discord_voice\gpu_encoder_helper.exe" windows-media-foundation
+  Image Path: C:\Users\admin\AppData\Local\Discord\app-1.0.9243\modules\discord_voice-1\discord_voice\gpu_encoder_helper.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: gpu_encoder_helper.exe (PID: 5176)
+  Command Line: "\\?\C:\Users\admin\AppData\Local\Discord\app-1.0.9243\modules\discord_voice-1\discord_voice\gpu_encoder_helper.exe" nvidia
+  Image Path: C:\Users\admin\AppData\Local\Discord\app-1.0.9243\modules\discord_voice-1\discord_voice\gpu_encoder_helper.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: Conhost.exe (PID: 5268)
+  Command Line: \??\C:\Windows\system32\conhost.exe 0xffffffff -ForceV1
+  Image Path: C:\Windows\System32\Conhost.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: Conhost.exe (PID: 7208)
+  Command Line: \??\C:\Windows\system32\conhost.exe 0xffffffff -ForceV1
+  Image Path: C:\Windows\System32\Conhost.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: Conhost.exe (PID: 6548)
+  Command Line: \??\C:\Windows\system32\conhost.exe 0xffffffff -ForceV1
+  Image Path: C:\Windows\System32\Conhost.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: Conhost.exe (PID: 2584)
+  Command Line: \??\C:\Windows\system32\conhost.exe 0xffffffff -ForceV1
+  Image Path: C:\Windows\System32\Conhost.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: Discord.exe (PID: 7664)
+  Command Line: "C:\Users\admin\AppData\Local\Discord\app-1.0.9243\Discord.exe" --type=gpu-process --disable-gpu-sandbox --use-gl=disabled --gpu-vendor-id=5549 --gpu-device-id=1029 --gpu-sub-system-id=67442093 --gpu-revision=0 --gpu-driver-version=9.17.6.3 --user-data-dir="C:\Users\admin\AppData\Roaming\discord" --gpu-preferences=UAAAAAAAAADoAAAEAAAAAAAAAAAAAAAAAABgAAEAAAAAAAAAAAAAAAAAAABCAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAAAAAAIAAAAAAAAAAgAAAAAAAAA --field-trial-handle=1820,i,11080694542163082189,11662995667990261053,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EnableTransparentHwndEnlargement --disable-features=AllowAggressiveThrottlingWithWebSocket,HardwareMediaKeyHandling,IntensiveWakeUpThrottling,MediaSessionService,ScreenAIOCREnabled,SpareRendererForSitePerProcess,UseEcoQoSForBackgroundProcess,WinDelaySpellcheckServiceInit,WinRetrieveSuggestionsOnlyOnDemand --variations-seed-version --mojo-platform-channel-handle=4524 /prefetch:8
+  Image Path: C:\Users\admin\AppData\Local\Discord\app-1.0.9243\Discord.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: DiscordSystemHelper.exe (PID: 3156)
+  Command Line: "\\?\C:\Users\admin\AppData\Local\Discord\app-1.0.9243\modules\discord_utils-1\discord_utils\DiscordSystemHelper.exe" "tools" "--pid" "1244" "--counter" "1"
+  Image Path: C:\Users\admin\AppData\Local\Discord\app-1.0.9243\modules\discord_utils-1\discord_utils\DiscordSystemHelper.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: DiscordSystemHelper.exe (PID: 7984)
+  Command Line: "\\?\C:\Users\admin\AppData\Local\Discord\app-1.0.9243\modules\discord_utils-1\discord_utils\DiscordSystemHelper.exe" "keybinds" "--pid" "1244" "--counter" "1"
+  Image Path: C:\Users\admin\AppData\Local\Discord\app-1.0.9243\modules\discord_utils-1\discord_utils\DiscordSystemHelper.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: DiscordSystemHelper.exe (PID: 1188)
+  Command Line: "C:\Program Files\Common Files\Discord\Discord\DiscordSystemHelper.exe" service
+  Image Path: C:\Program Files\Common Files\Discord\Discord\DiscordSystemHelper.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: rundll32.exe (PID: 8152)
+  Command Line: rundll32.exe "C:\Users\admin\AppData\Local\Discord\app-1.0.9243\d3d11.dll",D3D11CreateDevice
+  Image Path: C:\Windows\system32\rundll32.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: DiscordSystemHelper.exe (PID: 2552)
+  Command Line: "\\?\C:\Users\admin\AppData\Local\Discord\app-1.0.9243\modules\discord_utils-1\discord_utils\DiscordSystemHelper.exe" "tools" "--pid" "1244" "--counter" "1" "--admin"
+  Image Path: C:\Users\admin\AppData\Local\Discord\app-1.0.9243\modules\discord_utils-1\discord_utils\DiscordSystemHelper.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: DiscordSystemHelper.exe (PID: 5976)
+  Command Line: "C:\Program Files\Common Files\Discord\Discord\DiscordSystemHelper.exe" service
+  Image Path: C:\Program Files\Common Files\Discord\Discord\DiscordSystemHelper.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: DiscordSystemHelper.exe (PID: 3400)
+  Command Line: "\\?\C:\Users\admin\AppData\Local\Discord\app-1.0.9243\modules\discord_utils-1\discord_utils\DiscordSystemHelper.exe" "keybinds" "--pid" "1244" "--counter" "1" "--admin"
+  Image Path: C:\Users\admin\AppData\Local\Discord\app-1.0.9243\modules\discord_utils-1\discord_utils\DiscordSystemHelper.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: 3uViewer.exe (PID: 3236)
+  Command Line: 3uViewer.exe  /reg 1
+  Image Path: C:\Program Files\3uTools9\3uViewer.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: 3uViewer.exe (PID: 6080)
+  Command Line: 3uViewer.exe  /reg 2
+  Image Path: C:\Program Files\3uTools9\3uViewer.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: InfInstallerx64.exe (PID: 7432)
+  Command Line: "C:\Program Files\3uTools9\files\inf\InfInstallerx64.exe" -i "C:\Users\admin\AppData\Local\Temp\itunes_fix\applekis\x64\AppleKIS.inf"
+  Image Path: C:\Program Files\3uTools9\files\inf\InfInstallerx64.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: Conhost.exe (PID: 7268)
+  Command Line: \??\C:\Windows\system32\conhost.exe 0xffffffff -ForceV1
+  Image Path: C:\Windows\System32\Conhost.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: takeown.exe (PID: 5064)
+  Command Line: takeown /F C:\Windows\System32\DriverStore\FileRepository\ /A
+  Image Path: C:\Windows\SYSTEM32\takeown.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: Conhost.exe (PID: 1180)
+  Command Line: \??\C:\Windows\system32\conhost.exe 0xffffffff -ForceV1
+  Image Path: C:\Windows\System32\Conhost.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: cacls.exe (PID: 5980)
+  Command Line: cacls C:\Windows\System32\DriverStore\FileRepository*.* /E /G Everyone:F
+  Image Path: C:\Windows\SYSTEM32\cacls.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: Conhost.exe (PID: 1736)
+  Command Line: \??\C:\Windows\system32\conhost.exe 0xffffffff -ForceV1
+  Image Path: C:\Windows\System32\Conhost.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: pnputil.exe (PID: 7908)
+  Command Line: pnputil -i -a "C:\Users\admin\AppData\Local\Temp\itunes_fix\applekis\x64\AppleKIS.inf"
+  Image Path: C:\Windows\SYSTEM32\pnputil.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: Conhost.exe (PID: 7400)
+  Command Line: \??\C:\Windows\system32\conhost.exe 0xffffffff -ForceV1
+  Image Path: C:\Windows\System32\Conhost.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: svchost.exe (PID: 7732)
+  Command Line: C:\Windows\system32\svchost.exe -k DcomLaunch -p -s DeviceInstall
+  Image Path: C:\Windows\system32\svchost.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: DrvInst.exe (PID: 3932)
+  Command Line: DrvInst.exe "4" "0" "C:\Users\admin\AppData\Local\Temp\{29b60f04-7b32-ea4d-bc8d-7ef4eb8c3ad3}\AppleKIS.inf" "9" "4639b046f" "0000000000000154" "WinSta0\Default" "0000000000000164" "208" "C:\Users\admin\AppData\Local\Temp\itunes_fix\applekis\x64"
+  Image Path: C:\Windows\system32\DrvInst.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: msedge.exe (PID: 8152)
+  Command Line: "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --type=utility --utility-sub-type=edge_search_indexer.mojom.SearchIndexerInterfaceBroker --lang=en-US --service-sandbox-type=search_indexer --message-loop-type-ui --ram-no-pressure-read-main-dll --metrics-shmem-handle=4128,i,13704220907944417821,1625158021216251641,524288 --field-trial-handle=2008,i,13026026523772673813,2241159762887195217,262144 --variations-seed-version --pseudonymization-salt-handle=2016,i,11387971606221894290,17668172916242148394,4 --trace-process-track-uuid=3190708999430457380 --mojo-platform-channel-handle=5152 /prefetch:8
+  Image Path: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: msedge.exe (PID: 6896)
+  Command Line: "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --type=gpu-process --disable-gpu-sandbox --use-gl=disabled --gpu-vendor-id=5140 --gpu-device-id=140 --gpu-sub-system-id=0 --gpu-revision=0 --gpu-driver-version=10.0.19041.546 --gpu-preferences=SAAAAAAAAADoAAAEAAAAAAAAAAAAAGAAAQAAAAAAAAAAAAAAAAAAAEIAAAAAAAAAAAAAAAAAAAAQAAAAAAAAABAAAAAAAAAACAAAAAAAAAAIAAAAAAAAAA== --skip-read-main-dll --metrics-shmem-handle=4212,i,9403113630295522425,17093516971353056075,262144 --field-trial-handle=2008,i,13026026523772673813,2241159762887195217,262144 --variations-seed-version --pseudonymization-salt-handle=2016,i,11387971606221894290,17668172916242148394,4 --trace-process-track-uuid=3190709000367499229 --mojo-platform-channel-handle=5244 /prefetch:8
+  Image Path: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: InfInstallerx64.exe (PID: 7272)
+  Command Line: "C:\Program Files\3uTools9\files\inf\InfInstallerx64.exe" -i "C:\Users\admin\AppData\Local\Temp\itunes_fix\applersm\x64\AppleRSM.inf"
+  Image Path: C:\Program Files\3uTools9\files\inf\InfInstallerx64.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: Conhost.exe (PID: 7060)
+  Command Line: \??\C:\Windows\system32\conhost.exe 0xffffffff -ForceV1
+  Image Path: C:\Windows\System32\Conhost.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: takeown.exe (PID: 7036)
+  Command Line: takeown /F C:\Windows\System32\DriverStore\FileRepository\ /A
+  Image Path: C:\Windows\SYSTEM32\takeown.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: Conhost.exe (PID: 7344)
+  Command Line: \??\C:\Windows\system32\conhost.exe 0xffffffff -ForceV1
+  Image Path: C:\Windows\System32\Conhost.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: cacls.exe (PID: 2284)
+  Command Line: cacls C:\Windows\System32\DriverStore\FileRepository*.* /E /G Everyone:F
+  Image Path: C:\Windows\SYSTEM32\cacls.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: Conhost.exe (PID: 5128)
+  Command Line: \??\C:\Windows\system32\conhost.exe 0xffffffff -ForceV1
+  Image Path: C:\Windows\System32\Conhost.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: pnputil.exe (PID: 7956)
+  Command Line: pnputil -i -a "C:\Users\admin\AppData\Local\Temp\itunes_fix\applersm\x64\AppleRSM.inf"
+  Image Path: C:\Windows\SYSTEM32\pnputil.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: Conhost.exe (PID: 8164)
+  Command Line: \??\C:\Windows\system32\conhost.exe 0xffffffff -ForceV1
+  Image Path: C:\Windows\System32\Conhost.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: DrvInst.exe (PID: 2612)
+  Command Line: DrvInst.exe "4" "0" "C:\Users\admin\AppData\Local\Temp\{1760e484-a0d0-4447-bc49-b4bec113e238}\AppleRSM.inf" "9" "4c7809927" "0000000000000168" "WinSta0\Default" "0000000000000160" "208" "C:\Users\admin\AppData\Local\Temp\itunes_fix\applersm\x64"
+  Image Path: C:\Windows\system32\DrvInst.exe
+  User: NT AUTHORITY\SYSTEM
+--------------------------------------------------
+Process: msedge.exe (PID: 5636)
+  Command Line: "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --type=renderer --extension-process --renderer-sub-type=extension --pdf-upsell-enabled --disable-gpu-compositing --video-capture-use-gpu-memory-buffer --lang=en-US --js-flags --device-scale-factor=1 --num-raster-threads=1 --renderer-client-id=16 --time-ticks-at-unix-epoch=-1782568628309948 --launch-time-ticks=1909123277 --skip-read-main-dll --metrics-shmem-handle=4352,i,11856963054917405487,14236036722719067628,2097152 --field-trial-handle=2008,i,13026026523772673813,2241159762887195217,262144 --variations-seed-version --pseudonymization-salt-handle=2016,i,11387971606221894290,17668172916242148394,4 --trace-process-track-uuid=3190709001304541078 --mojo-platform-channel-handle=7076 /prefetch:2
+  Image Path: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: msedge.exe (PID: 7284)
+  Command Line: "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --type=renderer --pdf-upsell-enabled --disable-gpu-compositing --video-capture-use-gpu-memory-buffer --lang=en-US --js-flags --device-scale-factor=1 --num-raster-threads=1 --renderer-client-id=17 --time-ticks-at-unix-epoch=-1782568628309948 --launch-time-ticks=1937332840 --ram-no-pressure-read-main-dll --metrics-shmem-handle=4464,i,6986999513010734075,5985442045197955173,2097152 --field-trial-handle=2008,i,13026026523772673813,2241159762887195217,262144 --variations-seed-version --pseudonymization-salt-handle=2016,i,11387971606221894290,17668172916242148394,4 --trace-process-track-uuid=3190709002241582927 --mojo-platform-channel-handle=4248 /prefetch:1
+  Image Path: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: msedge.exe (PID: 6840)
+  Command Line: "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --type=renderer --pdf-upsell-enabled --disable-gpu-compositing --video-capture-use-gpu-memory-buffer --lang=en-US --js-flags --device-scale-factor=1 --num-raster-threads=1 --renderer-client-id=18 --time-ticks-at-unix-epoch=-1782568628309948 --launch-time-ticks=1939012514 --skip-read-main-dll --metrics-shmem-handle=7284,i,7230764057528605275,6937790106324317180,2097152 --field-trial-handle=2008,i,13026026523772673813,2241159762887195217,262144 --variations-seed-version --pseudonymization-salt-handle=2016,i,11387971606221894290,17668172916242148394,4 --trace-process-track-uuid=3190709003178624776 --mojo-platform-channel-handle=6584 /prefetch:1
+  Image Path: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+  User: WIN10\admin
+--------------------------------------------------
+Process: msedge.exe (PID: 6448)
+  Command Line: "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --type=renderer --pdf-upsell-enabled --disable-gpu-compositing --video-capture-use-gpu-memory-buffer --lang=en-US --js-flags --device-scale-factor=1 --num-raster-threads=1 --renderer-client-id=19 --time-ticks-at-unix-epoch=-1782568628309948 --launch-time-ticks=1945021325 --skip-read-main-dll --metrics-shmem-handle=7352,i,5072156067995750088,12395183799471300033,2097152 --field-trial-handle=2008,i,13026026523772673813,2241159762887195217,262144 --variations-seed-version --pseudonymization-salt-handle=2016,i,11387971606221894290,17668172916242148394,4 --trace-process-track-uuid=3190709004115666625 --mojo-platform-channel-handle=7288 /prefetch:1
+  Image Path: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+  User: WIN10\admin
+--------------------------------------------------

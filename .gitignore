@@ -1,0 +1,30 @@
+# Ignore core dumps
+**/core.*
+core.*
+
+# Ignore extracted Windows Triage files/folders from Sherlock challenges
+**/Triage/
+**/triage_asset/
+**/prefetch/
+*.evtx
+**/*.evtx
+**/*.pf
+
+# Ignore Python cached files
+__pycache__/
+**/*.pyc
+
+# Ignore UAC and Linux System Updater extracted forensics logs
+**/uac_extracted/
+**/linux_sys_updater_extracted/
+**/a245b654-8b8d-4bd1-9723-2219522dd136-1784202954/
+**/crownspire-deploy/
+**/C_extracted/
+
+# GitHub rejects normal Git blobs over 100 MB; keep bulky challenge artifacts local.
+CTF/forenscis/C.zip
+CTF/forenscis/Logfile.PML
+CTF/forenscis/forensics_decryption_strategy.zip
+
+
+
