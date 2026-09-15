@@ -1,0 +1,474 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SecureBank Demo</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    body {
+        background: #f3f6fa;
+        color: #1f2937;
+    }
+
+    /* LOGIN */
+    #loginPage {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #0f172a, #1e3a8a);
+    }
+
+    .login-card {
+        width: 380px;
+        background: white;
+        padding: 40px;
+        border-radius: 14px;
+        box-shadow: 0 20px 50px rgba(0,0,0,.25);
+    }
+
+    .logo {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .logo h1 {
+        color: #1e3a8a;
+        margin-bottom: 6px;
+    }
+
+    .logo p {
+        color: #64748b;
+        font-size: 14px;
+    }
+
+    .input-group {
+        margin-bottom: 18px;
+    }
+
+    .input-group label {
+        display: block;
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 7px;
+    }
+
+    .input-group input {
+        width: 100%;
+        padding: 13px;
+        border: 1px solid #cbd5e1;
+        border-radius: 7px;
+        font-size: 15px;
+        outline: none;
+    }
+
+    .input-group input:focus {
+        border-color: #2563eb;
+    }
+
+    .login-btn {
+        width: 100%;
+        padding: 13px;
+        border: none;
+        border-radius: 7px;
+        background: #2563eb;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .login-btn:hover {
+        background: #1d4ed8;
+    }
+
+    .error {
+        color: #dc2626;
+        font-size: 14px;
+        margin-bottom: 15px;
+        display: none;
+    }
+
+    .demo-info {
+        margin-top: 20px;
+        padding: 12px;
+        background: #eff6ff;
+        border-radius: 7px;
+        font-size: 13px;
+        color: #1e40af;
+    }
+
+    /* DASHBOARD */
+    #dashboardPage {
+        display: none;
+        min-height: 100vh;
+    }
+
+    .navbar {
+        height: 65px;
+        background: #0f172a;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 35px;
+    }
+
+    .navbar h2 {
+        font-size: 21px;
+    }
+
+    .logout-btn {
+        background: #dc2626;
+        color: white;
+        border: none;
+        padding: 9px 17px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .container {
+        max-width: 1100px;
+        margin: 35px auto;
+        padding: 0 20px;
+    }
+
+    .welcome {
+        margin-bottom: 25px;
+    }
+
+    .welcome h1 {
+        font-size: 28px;
+        margin-bottom: 5px;
+    }
+
+    .welcome p {
+        color: #64748b;
+    }
+
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .card {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,.06);
+    }
+
+    .card-title {
+        color: #64748b;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    .balance {
+        font-size: 27px;
+        font-weight: bold;
+    }
+
+    .account {
+        color: #64748b;
+        font-size: 13px;
+        margin-top: 8px;
+    }
+
+    .transactions {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,.06);
+    }
+
+    .transactions h2 {
+        margin-bottom: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 14px 10px;
+        text-align: left;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    th {
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    .credit {
+        color: #16a34a;
+        font-weight: bold;
+    }
+
+    .debit {
+        color: #dc2626;
+        font-weight: bold;
+    }
+
+    @media(max-width: 750px) {
+        .cards {
+            grid-template-columns: 1fr;
+        }
+
+        .login-card {
+            width: 90%;
+        }
+
+        .navbar {
+            padding: 0 18px;
+        }
+
+        table {
+            font-size: 13px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN PAGE -->
+<section id="loginPage">
+
+    <div class="login-card">
+
+        <div class="logo">
+            <h1>SecureBank</h1>
+            <p>Demo Banking Portal</p>
+        </div>
+
+        <div id="errorMessage" class="error">
+            Invalid customer ID or password.
+        </div>
+
+        <form id="loginForm">
+
+            <div class="input-group">
+                <label for="customerId">Customer ID</label>
+                <input
+                    type="text"
+                    id="customerId"
+                    placeholder="Enter customer ID"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Enter password"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="login-btn">
+                Login
+            </button>
+
+        </form>
+
+        <div class="demo-info">
+            <strong>Demo credentials</strong><br>
+            Customer ID: DEMO1001<br>
+            Password: DemoBank@123
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- DASHBOARD PAGE -->
+<section id="dashboardPage">
+
+    <nav class="navbar">
+        <h2>SecureBank</h2>
+
+        <button class="logout-btn" onclick="logout()">
+            Logout
+        </button>
+    </nav>
+
+    <main class="container">
+
+        <div class="welcome">
+            <h1>Welcome, Amrit</h1>
+            <p>Here's your account overview.</p>
+        </div>
+
+        <div class="cards">
+
+            <div class="card">
+                <div class="card-title">
+                    Available Balance
+                </div>
+
+                <div class="balance">
+                    ₹1,25,430.50
+                </div>
+
+                <div class="account">
+                    Savings Account
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    Account Number
+                </div>
+
+                <div class="balance">
+                    XXXX 4582
+                </div>
+
+                <div class="account">
+                    SecureBank Savings
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    Last Login
+                </div>
+
+                <div class="balance">
+                    Today
+                </div>
+
+                <div class="account">
+                    09:42 PM
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="transactions">
+
+            <h2>Recent Transactions</h2>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>06 Sep 2026</td>
+                        <td>Salary Credit</td>
+                        <td>Credit</td>
+                        <td class="credit">+ ₹45,000</td>
+                    </tr>
+
+                    <tr>
+                        <td>05 Sep 2026</td>
+                        <td>Online Shopping</td>
+                        <td>Debit</td>
+                        <td class="debit">- ₹2,499</td>
+                    </tr>
+
+                    <tr>
+                        <td>03 Sep 2026</td>
+                        <td>Electricity Bill</td>
+                        <td>Debit</td>
+                        <td class="debit">- ₹1,840</td>
+                    </tr>
+
+                    <tr>
+                        <td>01 Sep 2026</td>
+                        <td>UPI Transfer</td>
+                        <td>Debit</td>
+                        <td class="debit">- ₹750</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+</section>
+
+
+<script>
+
+const loginForm = document.getElementById("loginForm");
+
+loginForm.addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+    const customerId =
+        document.getElementById("customerId").value;
+
+    const password =
+        document.getElementById("password").value;
+
+    const errorMessage =
+        document.getElementById("errorMessage");
+
+    // Dummy authentication
+    if (
+        customerId === "DEMO1001" &&
+        password === "DemoBank@123"
+    ) {
+
+        document.getElementById("loginPage").style.display = "none";
+
+        document.getElementById("dashboardPage").style.display = "block";
+
+        errorMessage.style.display = "none";
+
+    } else {
+
+        errorMessage.style.display = "block";
+
+    }
+
+});
+
+
+function logout() {
+
+    document.getElementById("dashboardPage").style.display = "none";
+
+    document.getElementById("loginPage").style.display = "flex";
+
+    document.getElementById("loginForm").reset();
+
+}
+
+</script>
+
+</body>
+</html>
+```

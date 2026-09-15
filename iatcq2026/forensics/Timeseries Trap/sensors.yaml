@@ -1,0 +1,392 @@
+# Aqualis WT-03 transmitter configuration
+# telemetry: UDP/5510 -> gateway 10.30.1.2
+# cadence: 500 ms nominal, +/- 15 ms tolerated (report larger deviations to SOC)
+plant:
+  name: Aqualis WT-03
+  nominal_interval_ms: 500
+  jitter_tolerance_ms: 15
+
+sensors:
+  - id: FT-101
+    kind: flow
+    unit: m3/h
+    range: [80.0, 160.0]
+    cal: 0x5c    # TX calibration byte
+
+  - id: FT-102
+    kind: flow
+    unit: m3/h
+    range: [80.0, 160.0]
+    cal: 0xd4    # TX calibration byte
+
+  - id: FT-103
+    kind: flow
+    unit: m3/h
+    range: [80.0, 160.0]
+    cal: 0xfd    # TX calibration byte
+
+  - id: FT-104
+    kind: flow
+    unit: m3/h
+    range: [80.0, 160.0]
+    cal: 0x00    # TX calibration byte
+
+  - id: FT-105
+    kind: flow
+    unit: m3/h
+    range: [80.0, 160.0]
+    cal: 0xd1    # TX calibration byte
+
+  - id: FT-106
+    kind: flow
+    unit: m3/h
+    range: [80.0, 160.0]
+    cal: 0x80    # TX calibration byte
+
+  - id: FT-107
+    kind: flow
+    unit: m3/h
+    range: [80.0, 160.0]
+    cal: 0x3e    # TX calibration byte
+
+  - id: FT-108
+    kind: flow
+    unit: m3/h
+    range: [80.0, 160.0]
+    cal: 0x66    # TX calibration byte
+
+  - id: FT-109
+    kind: flow
+    unit: m3/h
+    range: [80.0, 160.0]
+    cal: 0x64    # TX calibration byte
+
+  - id: FT-110
+    kind: flow
+    unit: m3/h
+    range: [80.0, 160.0]
+    cal: 0x1c    # TX calibration byte
+
+  - id: FT-111
+    kind: flow
+    unit: m3/h
+    range: [80.0, 160.0]
+    cal: 0xa9    # TX calibration byte
+
+  - id: FT-112
+    kind: flow
+    unit: m3/h
+    range: [80.0, 160.0]
+    cal: 0xa3    # TX calibration byte
+
+  - id: FT-113
+    kind: flow
+    unit: m3/h
+    range: [80.0, 160.0]
+    cal: 0xff    # TX calibration byte
+
+  - id: FT-114
+    kind: flow
+    unit: m3/h
+    range: [80.0, 160.0]
+    cal: 0xdf    # TX calibration byte
+
+  - id: FT-115
+    kind: flow
+    unit: m3/h
+    range: [80.0, 160.0]
+    cal: 0x87    # TX calibration byte
+
+  - id: FT-116
+    kind: flow
+    unit: m3/h
+    range: [80.0, 160.0]
+    cal: 0x54    # TX calibration byte
+
+  - id: LT-101
+    kind: level
+    unit: m
+    range: [1.0, 3.5]
+    cal: 0xf6    # TX calibration byte
+
+  - id: LT-102
+    kind: level
+    unit: m
+    range: [1.0, 3.5]
+    cal: 0x6b    # TX calibration byte
+
+  - id: LT-103
+    kind: level
+    unit: m
+    range: [1.0, 3.5]
+    cal: 0x9e    # TX calibration byte
+
+  - id: LT-104
+    kind: level
+    unit: m
+    range: [1.0, 3.5]
+    cal: 0x3c    # TX calibration byte
+
+  - id: LT-105
+    kind: level
+    unit: m
+    range: [1.0, 3.5]
+    cal: 0x6f    # TX calibration byte
+
+  - id: LT-106
+    kind: level
+    unit: m
+    range: [1.0, 3.5]
+    cal: 0xc1    # TX calibration byte
+
+  - id: LT-107
+    kind: level
+    unit: m
+    range: [1.0, 3.5]
+    cal: 0x33    # TX calibration byte
+
+  - id: LT-108
+    kind: level
+    unit: m
+    range: [1.0, 3.5]
+    cal: 0x72    # TX calibration byte
+
+  - id: LT-109
+    kind: level
+    unit: m
+    range: [1.0, 3.5]
+    cal: 0xc6    # TX calibration byte
+
+  - id: LT-110
+    kind: level
+    unit: m
+    range: [1.0, 3.5]
+    cal: 0x2c    # TX calibration byte
+
+  - id: LT-111
+    kind: level
+    unit: m
+    range: [1.0, 3.5]
+    cal: 0x8e    # TX calibration byte
+
+  - id: LT-112
+    kind: level
+    unit: m
+    range: [1.0, 3.5]
+    cal: 0x37    # TX calibration byte
+
+  - id: LT-113
+    kind: level
+    unit: m
+    range: [1.0, 3.5]
+    cal: 0x9b    # TX calibration byte
+
+  - id: LT-114
+    kind: level
+    unit: m
+    range: [1.0, 3.5]
+    cal: 0x8f    # TX calibration byte
+
+  - id: LT-115
+    kind: level
+    unit: m
+    range: [1.0, 3.5]
+    cal: 0x58    # TX calibration byte
+
+  - id: LT-116
+    kind: level
+    unit: m
+    range: [1.0, 3.5]
+    cal: 0x5d    # TX calibration byte
+
+  - id: PT-101
+    kind: pressure
+    unit: bar
+    range: [1.2, 3.8]
+    cal: 0x40    # TX calibration byte
+
+  - id: PT-102
+    kind: pressure
+    unit: bar
+    range: [1.2, 3.8]
+    cal: 0x9a    # TX calibration byte
+
+  - id: PT-103
+    kind: pressure
+    unit: bar
+    range: [1.2, 3.8]
+    cal: 0x5a    # TX calibration byte
+
+  - id: PT-104
+    kind: pressure
+    unit: bar
+    range: [1.2, 3.8]
+    cal: 0x5d    # TX calibration byte
+
+  - id: PT-105
+    kind: pressure
+    unit: bar
+    range: [1.2, 3.8]
+    cal: 0x26    # TX calibration byte
+
+  - id: PT-106
+    kind: pressure
+    unit: bar
+    range: [1.2, 3.8]
+    cal: 0x40    # TX calibration byte
+
+  - id: PT-107
+    kind: pressure
+    unit: bar
+    range: [1.2, 3.8]
+    cal: 0x45    # TX calibration byte
+
+  - id: PT-108
+    kind: pressure
+    unit: bar
+    range: [1.2, 3.8]
+    cal: 0x25    # TX calibration byte
+
+  - id: PT-109
+    kind: pressure
+    unit: bar
+    range: [1.2, 3.8]
+    cal: 0xf0    # TX calibration byte
+
+  - id: PT-110
+    kind: pressure
+    unit: bar
+    range: [1.2, 3.8]
+    cal: 0x7d    # TX calibration byte
+
+  - id: PT-111
+    kind: pressure
+    unit: bar
+    range: [1.2, 3.8]
+    cal: 0x9a    # TX calibration byte
+
+  - id: PT-112
+    kind: pressure
+    unit: bar
+    range: [1.2, 3.8]
+    cal: 0x78    # TX calibration byte
+
+  - id: PT-113
+    kind: pressure
+    unit: bar
+    range: [1.2, 3.8]
+    cal: 0x6f    # TX calibration byte
+
+  - id: PT-114
+    kind: pressure
+    unit: bar
+    range: [1.2, 3.8]
+    cal: 0x6b    # TX calibration byte
+
+  - id: PT-115
+    kind: pressure
+    unit: bar
+    range: [1.2, 3.8]
+    cal: 0x0e    # TX calibration byte
+
+  - id: PT-116
+    kind: pressure
+    unit: bar
+    range: [1.2, 3.8]
+    cal: 0xf9    # TX calibration byte
+
+  - id: TT-101
+    kind: temperature
+    unit: degC
+    range: [5.0, 25.0]
+    cal: 0x69    # TX calibration byte
+
+  - id: TT-102
+    kind: temperature
+    unit: degC
+    range: [5.0, 25.0]
+    cal: 0x24    # TX calibration byte
+
+  - id: TT-103
+    kind: temperature
+    unit: degC
+    range: [5.0, 25.0]
+    cal: 0x17    # TX calibration byte
+
+  - id: TT-104
+    kind: temperature
+    unit: degC
+    range: [5.0, 25.0]
+    cal: 0xb5    # TX calibration byte
+
+  - id: TT-105
+    kind: temperature
+    unit: degC
+    range: [5.0, 25.0]
+    cal: 0x2c    # TX calibration byte
+
+  - id: TT-106
+    kind: temperature
+    unit: degC
+    range: [5.0, 25.0]
+    cal: 0x35    # TX calibration byte
+
+  - id: TT-107
+    kind: temperature
+    unit: degC
+    range: [5.0, 25.0]
+    cal: 0xef    # TX calibration byte
+
+  - id: TT-108
+    kind: temperature
+    unit: degC
+    range: [5.0, 25.0]
+    cal: 0xb5    # TX calibration byte
+
+  - id: TT-109
+    kind: temperature
+    unit: degC
+    range: [5.0, 25.0]
+    cal: 0x52    # TX calibration byte
+
+  - id: TT-110
+    kind: temperature
+    unit: degC
+    range: [5.0, 25.0]
+    cal: 0x1f    # TX calibration byte
+
+  - id: TT-111
+    kind: temperature
+    unit: degC
+    range: [5.0, 25.0]
+    cal: 0xd4    # TX calibration byte
+
+  - id: TT-112
+    kind: temperature
+    unit: degC
+    range: [5.0, 25.0]
+    cal: 0x66    # TX calibration byte
+
+  - id: TT-113
+    kind: temperature
+    unit: degC
+    range: [5.0, 25.0]
+    cal: 0x35    # TX calibration byte
+
+  - id: TT-114
+    kind: temperature
+    unit: degC
+    range: [5.0, 25.0]
+    cal: 0x75    # TX calibration byte
+
+  - id: TT-115
+    kind: temperature
+    unit: degC
+    range: [5.0, 25.0]
+    cal: 0x0f    # TX calibration byte
+
+  - id: TT-116
+    kind: temperature
+    unit: degC
+    range: [5.0, 25.0]
+    cal: 0xa1    # TX calibration byte

